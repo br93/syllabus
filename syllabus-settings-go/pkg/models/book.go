@@ -3,11 +3,8 @@ package models
 import (
 	"errors"
 
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/config"
 	"gorm.io/gorm"
 )
-
-var db *gorm.DB
 
 type Book struct {
 	gorm.Model
@@ -15,12 +12,6 @@ type Book struct {
 	Author      string `json:"author"`
 	Publication string `json:"publication"`
 	BookId      string `json:"bookId"`
-}
-
-func init() {
-	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&Book{})
 }
 
 func (b *Book) CreateBook() *Book {

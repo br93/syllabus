@@ -11,5 +11,4 @@ var RegisterRoutes = func(router *mux.Router) {
 	router.HandleFunc("/api/v1/books/{bookId}", controllers.GetBookById).Methods("GET")
 	router.HandleFunc("/api/v1/books/{bookId}", controllers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/api/v1/books/{bookId}", controllers.DeleteBook).Methods("DELETE")
-	router.HandleFunc("/health", controllers.CheckStatusBooks).Methods("GET")
 }

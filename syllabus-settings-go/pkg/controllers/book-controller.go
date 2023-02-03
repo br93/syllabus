@@ -107,13 +107,3 @@ func updateValues(oldValue string, newValue string) string {
 
 	return oldValue
 }
-
-func CheckStatusBooks(w http.ResponseWriter, r *http.Request) {
-	health := &models.Health{}
-	health.Status = "UP"
-	res, _ := json.Marshal(health)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
-}
