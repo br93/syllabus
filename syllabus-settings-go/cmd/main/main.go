@@ -5,13 +5,15 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/routes"
-	"github.com/gorilla/mux"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := mux.NewRouter()
-	routes.RegisterRoutes(r)
-	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("localhost:9010", r))
+
+	router := gin.Default()
+	routes.RegisterTurnoRoutes(router)
+	router.Run(":9010")
+
+	log.Fatal(http.ListenAndServe("localhost:9010", router))
+
 }

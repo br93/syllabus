@@ -5,10 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func init() {
 	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&Book{}, &Dia{}, &Horario{}, &Turno{}, &Tipo{}, &Curso{}, &Disciplina{}, &HorarioAula{}, &Turma{}, &DisciplinaCurso{})
+	DB = config.GetDB()
+	DB.AutoMigrate(Book{}, Dia{}, Horario{}, TurnoEntity{}, Tipo{}, Curso{}, Disciplina{}, HorarioAula{}, Turma{}, DisciplinaCurso{})
 }
