@@ -6,12 +6,6 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 )
 
-//CreatePost(*models.CreatePostRequest) (*models.DBPost, error)
-//	UpdatePost(string, *models.UpdatePost) (*models.DBPost, error)
-//	FindPostById(string) (*models.DBPost, error)
-//	FindPosts(page int, limit int) ([]*models.DBPost, error)
-//	DeletePost(string) error
-
 func CreateTurno(req *models.TurnoEntity) error {
 	create := models.DB.Create(req)
 
@@ -32,4 +26,53 @@ func GetTurnoById(turnoId string) (*models.TurnoEntity, error) {
 	}
 
 	return &turno, nil
+}
+
+func GetTurnos() (*[]models.TurnoEntity, error) {
+
+	var turnos []models.TurnoEntity
+
+	result := models.DB.Find(&turnos)
+
+	if result.Error != nil {
+		return &turnos, result.Error
+	}
+
+	return &turnos, nil
+}
+
+func UpdateTurno(turnoId string, req *models.TurnoEntity) (*models.TurnoEntity, error) {
+	response, err := GetTurnoById(turnoId)
+
+	if err != nil {
+		return req, err
+	}
+
+	response.TurnoNome = req.TurnoNome
+	response.TurnoValor = req.TurnoValor
+
+	update := models.DB.Save(response)
+
+	if update.Error != nil {
+		return req, update.Error
+	}
+
+	return response, nil
+
+}
+
+func DeleteTurno(turnoId string) error {
+	get, err := GetTurnoById(turnoId)
+
+	if err != nil {
+		return err
+	}
+
+	delete := models.DB.Delete(get)
+
+	if delete.Error != nil {
+		return delete.Error
+	}
+
+	return nil
 }

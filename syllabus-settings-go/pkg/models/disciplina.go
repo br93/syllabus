@@ -1,51 +1,54 @@
 package models
 
 import (
-	"errors"
-
 	"gorm.io/gorm"
 )
 
-type Disciplina struct {
+type DisciplinaEntity struct {
 	gorm.Model
-	DisciplinaId  string            `gorm:"" json:"disciplina_id"`
-	Nome          string            `json:"nome"`
-	Codigo        string            `json:"codigo"`
-	CargaHoraria  int16             `json:"carga_horaria"`
-	Turmas        []Turma           `json:"turmas"`
-	Equivalentes  []*Disciplina     `gorm:"many2many:disciplinas_equivalentes"`
-	PreRequisitos []*Disciplina     `gorm:"many2many:disciplinas_prerequisitos"`
-	Cursos        []DisciplinaCurso `json:"cursos"`
+	DisciplinaId  string              `gorm:"" json:"disciplina_id"`
+	Nome          string              `json:"nome"`
+	Codigo        string              `json:"codigo"`
+	CargaHoraria  int16               `json:"carga_horaria"`
+	Turmas        []Turma             `gorm:"foreignKey:DisciplinaID;references:ID" json:"turmas"`
+	Equivalentes  *[]DisciplinaEntity `gorm:"many2many:disciplinas_equivalentes"`
+	PreRequisitos *[]DisciplinaEntity `gorm:"many2many:disciplinas_prerequisitos"`
+	Cursos        []DisciplinaCurso   `gorm:"foreignKey:DisciplinaID;references:ID" json:"cursos"`
 }
 
-func (d *Disciplina) CreateDisciplina() *Disciplina {
-	DB.Create(&d)
-	return d
+type DisciplinaRequestModel struct {
+	Nome         string `json:"nome"`
+	Codigo       string `json:"codigo"`
+	CargaHoraria int16  `json:"carga_horaria"`
 }
 
-func GetAllDisciplinas() []Disciplina {
-	var Disciplinas []Disciplina
-	DB.Find(&Disciplinas)
-	return Disciplinas
+type DisciplinaResponseModel struct {
+	DisciplinaId string `json:"disciplina_id"`
+	Codigo       string `json:"codigo"`
+	Nome         string `json:"nome"`
+	CargaHoraria int16  `json:"carga_horaria"`
 }
 
-func GetDisciplinaById(disciplinaId string) (*Disciplina, *gorm.DB, error) {
-	var getDisciplina Disciplina
-	db := DB.Where("disciplina_id=?", disciplinaId).Find(&getDisciplina)
-	if getDisciplina.ID == 0 {
-		return &getDisciplina, db, errors.New("Disciplina not found")
-	}
-
-	return &getDisciplina, db, nil
+type DisciplinaCodigoRequestModel struct {
+	Codigo string `json:"disciplina_codigo"`
 }
 
-func DeleteDisciplina(disciplinaId string) error {
-	var disciplina Disciplina
-	DB.Where("disciplina_id=?", disciplinaId).Delete(&disciplina)
+type DisciplinaEquivalentesResponseModel struct {
+	DisciplinaId string                    `json:"disciplina_id"`
+	Codigo       string                    `json:"codigo"`
+	Nome         string                    `json:"nome"`
+	CargaHoraria int16                     `json:"carga_horaria"`
+	Equivalentes []DisciplinaResponseModel `json:"disciplinas_equivalentes"`
+}
 
-	if disciplina.ID == 0 {
-		return errors.New("Disciplina not found")
-	}
+type DisciplinaPreRequisitosResponseModel struct {
+	DisciplinaId  string                    `json:"disciplina_id"`
+	Codigo        string                    `json:"codigo"`
+	Nome          string                    `json:"nome"`
+	CargaHoraria  int16                     `json:"carga_horaria"`
+	PreRequisitos []DisciplinaResponseModel `json:"disciplinas_prerequisitos"`
+}
 
-	return nil
+func (DisciplinaEntity) TableName() string {
+	return "tb_disciplina"
 }

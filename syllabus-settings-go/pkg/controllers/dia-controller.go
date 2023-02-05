@@ -10,50 +10,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewTurno models.TurnoEntity
+var NewDia models.DiaEntity
 
-func CreateTurno(ctx *gin.Context) {
-	body := models.TurnoRequestModel{}
+func CreateDia(ctx *gin.Context) {
+	body := models.DiaRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	turno := mappers.ToTurnoEntity(&body)
+	dia := mappers.ToDiaEntity(&body)
 
-	if err := services.CreateTurno(turno); err != nil {
+	if err := services.CreateDia(dia); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToTurnoResponse(turno)
+	response := mappers.ToDiaResponse(dia)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTurnoById(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
+func GetDiaById(ctx *gin.Context) {
+	diaId := ctx.Param("dia_id")
 
-	turno, err := services.GetTurnoById(turnoId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToTurnoResponse(turno)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetTurnos(ctx *gin.Context) {
-
-	turnos, err := services.GetTurnos()
+	dia, err := services.GetDiaById(diaId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -63,22 +45,38 @@ func GetTurnos(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurnoResponseArray(turnos)
+	response := mappers.ToDiaResponse(dia)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateTurno(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
-	body := models.TurnoRequestModel{}
+func GetDias(ctx *gin.Context) {
+	dias, err := services.GetDias()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToDiaResponseArray(dias)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func UpdateDia(ctx *gin.Context) {
+	diaId := ctx.Param("dia_id")
+	body := models.DiaRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	turno := mappers.ToTurnoEntity(&body)
-	update, err := services.UpdateTurno(turnoId, turno)
+	dia := mappers.ToDiaEntity(&body)
+	update, err := services.UpdateDia(diaId, dia)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -88,15 +86,15 @@ func UpdateTurno(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurnoResponse(update)
+	response := mappers.ToDiaResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteTurno(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
+func DeleteDia(ctx *gin.Context) {
+	diaId := ctx.Param("dia_id")
 
-	err := services.DeleteTurno(turnoId)
+	err := services.DeleteDia(diaId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return

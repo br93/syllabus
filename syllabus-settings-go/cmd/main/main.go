@@ -12,6 +12,9 @@ func main() {
 
 	router := gin.Default()
 	routes.RegisterTurnoRoutes(router)
+	routes.RegisterDiaRoutes(router)
+	routes.RegisterCursoRoutes(router)
+	routes.RegisterDisciplinaRoutes(router)
 	router.Run(":9010")
 
 	log.Fatal(http.ListenAndServe("localhost:9010", router))
