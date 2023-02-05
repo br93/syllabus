@@ -1,17 +1,13 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/gin-gonic/gin"
 )
 
-func CheckStatus(w http.ResponseWriter, r *http.Request) {
+func CheckStatus(ctx *gin.Context) {
 	health := utils.CheckStatus()
-	response, _ := json.Marshal(health)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(response)
+	ctx.JSON(http.StatusOK, health)
 }

@@ -11,6 +11,7 @@ import (
 func main() {
 
 	router := gin.Default()
+	routes.RegisterHealthRoutes(router)
 	routes.RegisterTurnoRoutes(router)
 	routes.RegisterDiaRoutes(router)
 	routes.RegisterCursoRoutes(router)
