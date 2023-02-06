@@ -156,7 +156,7 @@ func AddEquivalente(ctx *gin.Context) {
 func GetDisciplinaEquivalentes(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId, "Equivalentes", "")
+	disciplina, err := services.GetDisciplinaById(disciplinaId, "Equivalentes")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -176,7 +176,7 @@ func GetDisciplinaEquivalentes(ctx *gin.Context) {
 func GetDisciplinaPreRequisitos(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId, "PreRequisitos", "")
+	disciplina, err := services.GetDisciplinaById(disciplinaId, "PreRequisitos")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

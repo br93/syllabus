@@ -134,17 +134,14 @@ func db(db *gorm.DB, preload []string) *gorm.DB {
 	}
 
 	if len(preload) == 1 {
-		return eagerLoading(db, preload)
+		eagerLoading := eagerLoading(db, preload)
+		return eagerLoading
 	}
 
-	return eagerLoadingNested(db, preload)
+	return eagerLoading(eagerLoading(db, preload), preload)
 
 }
 
 func eagerLoading(db *gorm.DB, preload []string) *gorm.DB {
-	return db.Preload(preload[0])
-}
-
-func eagerLoadingNested(db *gorm.DB, preload []string) *gorm.DB {
-	return db.Preload(preload[0]).Preload(preload[1])
+	return db.Preload(preload[len(preload)-1])
 }
