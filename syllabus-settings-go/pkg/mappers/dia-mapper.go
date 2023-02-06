@@ -5,29 +5,29 @@ import (
 	"github.com/google/uuid"
 )
 
-func ToDiaEntity(req *models.DiaRequestModel) *models.DiaEntity {
-	newEntity := models.DiaEntity{DiaId: uuid.NewString(), DiaNome: req.DiaNome, DiaNumero: req.DiaNumero}
-	return &newEntity
+func ToDia(req *models.DiaRequestModel) *models.Dia {
+	new := models.Dia{DiaId: uuid.NewString(), DiaNome: req.DiaNome, DiaNumero: req.DiaNumero}
+	return &new
 }
 
-func ToDiaEntityArray(req *[]models.DiaRequestModel) *[]models.DiaEntity {
+func ToDiaArray(req *[]models.DiaRequestModel) *[]models.Dia {
 	size := len((*req))
-	var dias = make([]models.DiaEntity, size)
+	var dias = make([]models.Dia, size)
 	request := *req
 
 	for i := 0; i < size; i++ {
-		dias[i] = *ToDiaEntity(&request[i])
+		dias[i] = *ToDia(&request[i])
 	}
 
 	return &dias
 }
 
-func ToDiaResponse(dia *models.DiaEntity) *models.DiaResponseModel {
+func ToDiaResponse(dia *models.Dia) *models.DiaResponseModel {
 	newResponse := models.DiaResponseModel{DiaId: dia.DiaId, DiaNome: dia.DiaNome, DiaNumero: dia.DiaNumero}
 	return &newResponse
 }
 
-func ToDiaResponseArray(req *[]models.DiaEntity) *[]models.DiaResponseModel {
+func ToDiaResponseArray(req *[]models.Dia) *[]models.DiaResponseModel {
 	size := len((*req))
 	var dias = make([]models.DiaResponseModel, size)
 	request := *req

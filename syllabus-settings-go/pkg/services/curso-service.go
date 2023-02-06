@@ -6,7 +6,7 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 )
 
-func CreateCurso(req *models.CursoEntity) error {
+func CreateCurso(req *models.Curso) error {
 	create := models.DB.Create(req)
 
 	if create.Error != nil {
@@ -16,10 +16,10 @@ func CreateCurso(req *models.CursoEntity) error {
 	return nil
 }
 
-func GetCursoById(cursoId string) (*models.CursoEntity, error) {
-	var curso models.CursoEntity
+func GetCursoById(cursoId string) (*models.Curso, error) {
+	var curso models.Curso
 
-	models.DB.First(&curso, "curso_id = ?", cursoId)
+	models.DB.First(&curso, "curso_id", cursoId)
 
 	if curso.ID == 0 {
 		return &curso, errors.New("curso not found")
@@ -28,8 +28,8 @@ func GetCursoById(cursoId string) (*models.CursoEntity, error) {
 	return &curso, nil
 }
 
-func GetCursos() (*[]models.CursoEntity, error) {
-	var cursos []models.CursoEntity
+func GetCursos() (*[]models.Curso, error) {
+	var cursos []models.Curso
 
 	result := models.DB.Find(&cursos)
 
@@ -40,7 +40,7 @@ func GetCursos() (*[]models.CursoEntity, error) {
 	return &cursos, nil
 }
 
-func UpdateCurso(cursoId string, req *models.CursoEntity) (*models.CursoEntity, error) {
+func UpdateCurso(cursoId string, req *models.Curso) (*models.Curso, error) {
 	response, err := GetCursoById(cursoId)
 
 	if err != nil {

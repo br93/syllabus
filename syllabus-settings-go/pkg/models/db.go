@@ -10,5 +10,5 @@ var DB *gorm.DB
 func init() {
 	config.Connect()
 	DB = config.GetDB()
-	DB.AutoMigrate(Book{}, DiaEntity{}, Horario{}, TurnoEntity{}, Tipo{}, CursoEntity{}, DisciplinaEntity{}, HorarioAula{}, Turma{}, DisciplinaCurso{})
+	DB.AutoMigrate(Book{}, Dia{}, Horario{}, Turno{}, Tipo{}, Curso{}, Disciplina{}, HorarioAula{}, Turma{}, DisciplinaCurso{})
 }

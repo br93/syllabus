@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type TurnoEntity struct {
+type Turno struct {
 	gorm.Model
 	TurnoId    string `gorm:"" json:"turno_id"`
 	TurnoNome  string `json:"turno_nome"`
@@ -21,6 +21,6 @@ type TurnoResponseModel struct {
 	TurnoNome string `json:"turno_nome"`
 }
 
-func (TurnoEntity) TableName() string {
+func (Turno) TableName() string {
 	return "tb_turno"
 }

@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type DiaEntity struct {
+type Dia struct {
 	gorm.Model
 	DiaId     string `gorm:"" json:"dia_id"`
 	DiaNome   string `json:"dia_nome"`
@@ -22,6 +22,6 @@ type DiaResponseModel struct {
 	DiaNumero int16  `json:"dia_numero"`
 }
 
-func (DiaEntity) TableName() string {
+func (Dia) TableName() string {
 	return "tb_dia"
 }

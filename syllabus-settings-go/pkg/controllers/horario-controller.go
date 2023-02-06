@@ -10,50 +10,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewCurso models.Curso
+var NewHorario models.Horario
 
-func CreateCurso(ctx *gin.Context) {
-	body := models.CursoRequestModel{}
+func CreateHorario(ctx *gin.Context) {
+	body := models.HorarioRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	curso := mappers.ToCurso(&body)
+	horario := mappers.ToHorario(&body)
 
-	if err := services.CreateCurso(curso); err != nil {
+	if err := services.CreateHorario(horario); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToCursoResponse(curso)
+	response := mappers.ToHorarioResponse(horario)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetCursoById(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
+func GetHorarioById(ctx *gin.Context) {
+	horarioId := ctx.Param("horario_id")
 
-	curso, err := services.GetCursoById(cursoId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToCursoResponse(curso)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetCursos(ctx *gin.Context) {
-
-	cursos, err := services.GetCursos()
+	horario, err := services.GetHorarioById(horarioId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -63,22 +45,40 @@ func GetCursos(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToCursoResponseArray(cursos)
+	response := mappers.ToHorarioResponse(horario)
+
+	ctx.JSON(http.StatusOK, response)
+
+}
+
+func GetHorarios(ctx *gin.Context) {
+
+	horarios, err := services.GetHorarios()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToHorarioResponseArray(horarios)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateCurso(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
-	body := models.CursoRequestModel{}
+func UpdateHorario(ctx *gin.Context) {
+	horarioId := ctx.Param("horario_id")
+	body := models.HorarioRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	curso := mappers.ToCurso(&body)
-	update, err := services.UpdateCurso(cursoId, curso)
+	horario := mappers.ToHorario(&body)
+	update, err := services.UpdateHorario(horarioId, horario)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -88,15 +88,15 @@ func UpdateCurso(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToCursoResponse(update)
+	response := mappers.ToHorarioResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteCurso(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
+func DeleteHorario(ctx *gin.Context) {
+	horarioId := ctx.Param("horario_id")
 
-	err := services.DeleteCurso(cursoId)
+	err := services.DeleteHorario(horarioId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return

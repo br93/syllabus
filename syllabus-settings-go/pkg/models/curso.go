@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type CursoEntity struct {
+type Curso struct {
 	gorm.Model
 	CursoId     string            `gorm:"" json:"curso_id"`
 	Nome        string            `json:"nome"`
@@ -33,6 +33,6 @@ type CursoResponseModel struct {
 	Disciplinas []DisciplinaCursoRequestModel `json:"disciplinas"`
 }*/
 
-func (CursoEntity) TableName() string {
+func (Curso) TableName() string {
 	return "tb_curso"
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewTurno models.TurnoEntity
+var NewTurno models.Turno
 
 func CreateTurno(ctx *gin.Context) {
 	body := models.TurnoRequestModel{}
@@ -20,7 +20,7 @@ func CreateTurno(ctx *gin.Context) {
 		return
 	}
 
-	turno := mappers.ToTurnoEntity(&body)
+	turno := mappers.ToTurno(&body)
 
 	if err := services.CreateTurno(turno); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -77,7 +77,7 @@ func UpdateTurno(ctx *gin.Context) {
 		return
 	}
 
-	turno := mappers.ToTurnoEntity(&body)
+	turno := mappers.ToTurno(&body)
 	update, err := services.UpdateTurno(turnoId, turno)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {

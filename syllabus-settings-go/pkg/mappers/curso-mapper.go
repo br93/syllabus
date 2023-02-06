@@ -5,31 +5,31 @@ import (
 	"github.com/google/uuid"
 )
 
-func ToCursoEntity(req *models.CursoRequestModel) *models.CursoEntity {
+func ToCurso(req *models.CursoRequestModel) *models.Curso {
 
-	newEntity := models.CursoEntity{CursoId: uuid.NewString(), Nome: req.Nome, Codigo: req.Codigo}
-	return &newEntity
+	new := models.Curso{CursoId: uuid.NewString(), Nome: req.Nome, Codigo: req.Codigo}
+	return &new
 }
 
-func ToCursoEntityArray(req *[]models.CursoRequestModel) *[]models.CursoEntity {
+func ToCursoArray(req *[]models.CursoRequestModel) *[]models.Curso {
 	size := len((*req))
-	var cursos = make([]models.CursoEntity, size)
+	var cursos = make([]models.Curso, size)
 	request := *req
 
 	for i := 0; i < size; i++ {
-		cursos[i] = *ToCursoEntity(&request[i])
+		cursos[i] = *ToCurso(&request[i])
 	}
 
 	return &cursos
 }
 
-func ToCursoResponse(curso *models.CursoEntity) *models.CursoResponseModel {
+func ToCursoResponse(curso *models.Curso) *models.CursoResponseModel {
 
 	newResponse := models.CursoResponseModel{CursoId: curso.CursoId, Codigo: curso.Codigo, Nome: curso.Nome}
 	return &newResponse
 }
 
-func ToCursoResponseArray(req *[]models.CursoEntity) *[]models.CursoResponseModel {
+func ToCursoResponseArray(req *[]models.Curso) *[]models.CursoResponseModel {
 	size := len((*req))
 	var cursos = make([]models.CursoResponseModel, size)
 	request := *req

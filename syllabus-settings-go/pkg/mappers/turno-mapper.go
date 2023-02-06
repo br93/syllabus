@@ -5,31 +5,31 @@ import (
 	"github.com/google/uuid"
 )
 
-func ToTurnoEntity(req *models.TurnoRequestModel) *models.TurnoEntity {
+func ToTurno(req *models.TurnoRequestModel) *models.Turno {
 
-	newEntity := models.TurnoEntity{TurnoId: uuid.NewString(), TurnoNome: req.TurnoNome, TurnoValor: req.TurnoValor}
-	return &newEntity
+	new := models.Turno{TurnoId: uuid.NewString(), TurnoNome: req.TurnoNome, TurnoValor: req.TurnoValor}
+	return &new
 }
 
-func ToTurnoEntityArray(req *[]models.TurnoRequestModel) *[]models.TurnoEntity {
+func ToTurnoArray(req *[]models.TurnoRequestModel) *[]models.Turno {
 	size := len((*req))
-	var turnos = make([]models.TurnoEntity, size)
+	var turnos = make([]models.Turno, size)
 	request := *req
 
 	for i := 0; i < size; i++ {
-		turnos[i] = *ToTurnoEntity(&request[i])
+		turnos[i] = *ToTurno(&request[i])
 	}
 
 	return &turnos
 }
 
-func ToTurnoResponse(turno *models.TurnoEntity) *models.TurnoResponseModel {
+func ToTurnoResponse(turno *models.Turno) *models.TurnoResponseModel {
 
 	newResponse := models.TurnoResponseModel{TurnoId: turno.TurnoId, TurnoNome: turno.TurnoNome}
 	return &newResponse
 }
 
-func ToTurnoResponseArray(req *[]models.TurnoEntity) *[]models.TurnoResponseModel {
+func ToTurnoResponseArray(req *[]models.Turno) *[]models.TurnoResponseModel {
 	size := len((*req))
 	var turnos = make([]models.TurnoResponseModel, size)
 	request := *req

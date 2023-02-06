@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewDia models.DiaEntity
+var NewDia models.Dia
 
 func CreateDia(ctx *gin.Context) {
 	body := models.DiaRequestModel{}
@@ -20,7 +20,7 @@ func CreateDia(ctx *gin.Context) {
 		return
 	}
 
-	dia := mappers.ToDiaEntity(&body)
+	dia := mappers.ToDia(&body)
 
 	if err := services.CreateDia(dia); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -75,7 +75,7 @@ func UpdateDia(ctx *gin.Context) {
 		return
 	}
 
-	dia := mappers.ToDiaEntity(&body)
+	dia := mappers.ToDia(&body)
 	update, err := services.UpdateDia(diaId, dia)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {

@@ -4,9 +4,10 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"gorm.io/gorm"
 )
 
-func CreateDisciplina(req *models.DisciplinaEntity) error {
+func CreateDisciplina(req *models.Disciplina) error {
 	create := models.DB.Create(req)
 
 	if create.Error != nil {
@@ -16,22 +17,11 @@ func CreateDisciplina(req *models.DisciplinaEntity) error {
 	return nil
 }
 
-func GetDisciplinaById(disciplinaId string) (*models.DisciplinaEntity, error) {
-	var disciplina models.DisciplinaEntity
+func GetDisciplinaById(disciplinaId string, preload ...string) (*models.Disciplina, error) {
+	var disciplina models.Disciplina
 
-	models.DB.First(&disciplina, "disciplina_id = ?", disciplinaId)
-
-	if disciplina.ID == 0 {
-		return &disciplina, errors.New("disciplina not found")
-	}
-
-	return &disciplina, nil
-}
-
-func GetDisciplinaByCodigo(codigo string) (*models.DisciplinaEntity, error) {
-	var disciplina models.DisciplinaEntity
-
-	models.DB.First(&disciplina, "codigo = ?", codigo)
+	db(models.DB, preload).First(&disciplina, "disciplina_id", disciplinaId)
+	eagerLoading(models.DB, preload)
 
 	if disciplina.ID == 0 {
 		return &disciplina, errors.New("disciplina not found")
@@ -40,9 +30,21 @@ func GetDisciplinaByCodigo(codigo string) (*models.DisciplinaEntity, error) {
 	return &disciplina, nil
 }
 
-func GetDisciplinas() (*[]models.DisciplinaEntity, error) {
+func GetDisciplinaByCodigo(codigo string) (*models.Disciplina, error) {
+	var disciplina models.Disciplina
 
-	var disciplinas []models.DisciplinaEntity
+	models.DB.First(&disciplina, "codigo", codigo)
+
+	if disciplina.ID == 0 {
+		return &disciplina, errors.New("disciplina not found")
+	}
+
+	return &disciplina, nil
+}
+
+func GetDisciplinas() (*[]models.Disciplina, error) {
+
+	var disciplinas []models.Disciplina
 
 	result := models.DB.Find(&disciplinas)
 
@@ -53,7 +55,7 @@ func GetDisciplinas() (*[]models.DisciplinaEntity, error) {
 	return &disciplinas, nil
 }
 
-func UpdateDisciplina(disciplinaId string, req *models.DisciplinaEntity) (*models.DisciplinaEntity, error) {
+func UpdateDisciplina(disciplinaId string, req *models.Disciplina) (*models.Disciplina, error) {
 	response, err := GetDisciplinaById(disciplinaId)
 
 	if err != nil {
@@ -74,11 +76,11 @@ func UpdateDisciplina(disciplinaId string, req *models.DisciplinaEntity) (*model
 
 }
 
-func CreatePreRequisito(disciplinaId string, req *[]models.DisciplinaEntity) (*models.DisciplinaEntity, error) {
+func CreatePreRequisito(disciplinaId string, req *[]models.Disciplina) (*models.Disciplina, error) {
 	disciplina, err := GetDisciplinaById(disciplinaId)
 
 	if err != nil {
-		return &models.DisciplinaEntity{}, err
+		return &models.Disciplina{}, err
 	}
 
 	disciplina.PreRequisitos = req
@@ -86,7 +88,25 @@ func CreatePreRequisito(disciplinaId string, req *[]models.DisciplinaEntity) (*m
 	update := models.DB.Save(disciplina)
 
 	if update.Error != nil {
-		return &models.DisciplinaEntity{}, update.Error
+		return &models.Disciplina{}, update.Error
+	}
+
+	return disciplina, nil
+}
+
+func CreateEquivalente(disciplinaId string, req *[]models.Disciplina) (*models.Disciplina, error) {
+	disciplina, err := GetDisciplinaById(disciplinaId)
+
+	if err != nil {
+		return &models.Disciplina{}, err
+	}
+
+	disciplina.Equivalentes = req
+
+	update := models.DB.Save(disciplina)
+
+	if update.Error != nil {
+		return &models.Disciplina{}, update.Error
 	}
 
 	return disciplina, nil
@@ -106,4 +126,25 @@ func DeleteDisciplina(disciplinaId string) error {
 	}
 
 	return nil
+}
+
+func db(db *gorm.DB, preload []string) *gorm.DB {
+	if preload == nil {
+		return db
+	}
+
+	if len(preload) == 1 {
+		return eagerLoading(db, preload)
+	}
+
+	return eagerLoadingNested(db, preload)
+
+}
+
+func eagerLoading(db *gorm.DB, preload []string) *gorm.DB {
+	return db.Preload(preload[0])
+}
+
+func eagerLoadingNested(db *gorm.DB, preload []string) *gorm.DB {
+	return db.Preload(preload[0]).Preload(preload[1])
 }

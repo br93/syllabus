@@ -6,13 +6,13 @@ import (
 
 type Turma struct {
 	gorm.Model
-	TurmaId      string           `gorm:"" json:"turma_id"`
-	Codigo       string           `json:"codigo"`
-	Turno        TurnoEntity      `json:"turno"`
-	Disciplina   DisciplinaEntity `json:"disciplina"`
-	HorariosAula []HorarioAula    `json:"horarios_aula"`
-	TurnoID      uint             `json:"turno_id"`
-	DisciplinaID uint             `json:"disciplina_id"`
+	TurmaId      string        `gorm:"" json:"turma_id"`
+	Codigo       string        `json:"codigo"`
+	Turno        Turno         `json:"turno"`
+	Disciplina   Disciplina    `json:"disciplina"`
+	HorariosAula []HorarioAula `gorm:"foreignKey:TurmaID;references:ID" json:"horarios_aula"`
+	TurnoID      uint          `json:"turno_id"`
+	DisciplinaID uint          `json:"disciplina_id"`
 }
 
 type TurmaRequestModel struct {
@@ -22,15 +22,19 @@ type TurmaRequestModel struct {
 }
 
 type TurmaResponseModel struct {
-	TurmaId    string `json:"turma_id"`
-	Codigo     string `json:"codigo"`
-	Turno      string `json:"turno"`
-	Disciplina string `json:"disciplina"`
+	TurmaId string `json:"turma_id"`
+	Codigo  string `json:"codigo"`
+	Turno   string `json:"turno"`
 }
 
 /*type TurmaHorariosAulaResponseModel struct {
 	TurmaId    string `json:"turma_id"`
 	Codigo     string `json:"codigo"`
-	Turno      string `json:"turno"`
+	Turma      string `json:"turma"`
 	Disciplina string `json:"disciplina"`
+	HorariosAula []HorarioAulaResponseModel `json:"horarios_aula"`
 }*/
+
+func (Turma) TableName() string {
+	return "tb_turma"
+}
