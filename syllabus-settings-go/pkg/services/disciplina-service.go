@@ -21,7 +21,7 @@ func GetDisciplinaById(disciplinaId string, preload ...string) (*models.Discipli
 	var disciplina models.Disciplina
 
 	db(models.DB, preload).First(&disciplina, "disciplina_id", disciplinaId)
-	eagerLoading(models.DB, preload)
+	//eagerLoading(models.DB, preload)
 
 	if disciplina.ID == 0 {
 		return &disciplina, errors.New("disciplina not found")
