@@ -52,3 +52,12 @@ func ToTurmaResponseArray(req *[]models.Turma) *[]models.TurmaResponseModel {
 
 	return &turmas
 }
+
+func ToTurmaHorariosAula(turma *models.Turma) *models.TurmaHorariosAulaResponseModel {
+	var horariosAula = turma.HorariosAula
+
+	var response = ToHorarioAulaResponseArray(&horariosAula)
+
+	newResponse := models.TurmaHorariosAulaResponseModel{TurmaId: turma.TurmaId, Disciplina: turma.Disciplina.Codigo, Turno: turma.Turno.TurnoNome, HorariosAula: *response}
+	return &newResponse
+}

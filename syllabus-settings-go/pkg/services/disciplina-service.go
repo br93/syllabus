@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
-	"gorm.io/gorm"
 )
 
 func CreateDisciplina(req *models.Disciplina) error {
@@ -20,7 +19,7 @@ func CreateDisciplina(req *models.Disciplina) error {
 func GetDisciplinaById(disciplinaId string, preload ...string) (*models.Disciplina, error) {
 	var disciplina models.Disciplina
 
-	db(models.DB, preload).First(&disciplina, "disciplina_id", disciplinaId)
+	models.DBConfig(models.DB, preload).First(&disciplina, "disciplina_id", disciplinaId)
 	//eagerLoading(models.DB, preload)
 
 	if disciplina.ID == 0 {
@@ -126,22 +125,4 @@ func DeleteDisciplina(disciplinaId string) error {
 	}
 
 	return nil
-}
-
-func db(db *gorm.DB, preload []string) *gorm.DB {
-	if preload == nil {
-		return db
-	}
-
-	if len(preload) == 1 {
-		eagerLoading := eagerLoading(db, preload)
-		return eagerLoading
-	}
-
-	return eagerLoading(eagerLoading(db, preload), preload)
-
-}
-
-func eagerLoading(db *gorm.DB, preload []string) *gorm.DB {
-	return db.Preload(preload[len(preload)-1])
 }

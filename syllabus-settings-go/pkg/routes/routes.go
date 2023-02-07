@@ -13,4 +13,5 @@ var RegisterRoutes = func(router *gin.Engine) {
 	RegisterHorarioRoutes(router)
 	RegisterTurmaRoutes(router)
 	RegisterHorarioAulaRoutes(router)
+	RegisterTipoRoutes(router)
 }

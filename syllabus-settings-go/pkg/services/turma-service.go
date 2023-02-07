@@ -22,10 +22,10 @@ func CreateTurma(req *models.Turma) error {
 	return nil
 }
 
-func GetTurmaById(turmaId string) (*models.Turma, error) {
+func GetTurmaById(turmaId string, preload ...string) (*models.Turma, error) {
 	var turma models.Turma
 
-	models.DB.Preload(clause.Associations).First(&turma, "turma_id", turmaId)
+	models.DBConfig(models.DB.Preload(clause.Associations), preload).First(&turma, "turma_id", turmaId)
 
 	if turma.ID == 0 {
 		return &turma, errors.New("turma not found")

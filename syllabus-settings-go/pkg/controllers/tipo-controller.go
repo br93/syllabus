@@ -10,50 +10,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewTurma models.Turma
+var NewTipo models.Tipo
 
-func CreateTurma(ctx *gin.Context) {
-	body := models.TurmaRequestModel{}
+func CreateTipo(ctx *gin.Context) {
+	body := models.TipoRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	turma := mappers.ToTurma(&body)
+	tipo := mappers.ToTipo(&body)
 
-	if err := services.CreateTurma(turma); err != nil {
+	if err := services.CreateTipo(tipo); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToTurmaResponse(turma)
+	response := mappers.ToTipoResponse(tipo)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTurmaById(ctx *gin.Context) {
-	turmaId := ctx.Param("turma_id")
+func GetTipoById(ctx *gin.Context) {
+	tipoId := ctx.Param("tipo_id")
 
-	turma, err := services.GetTurmaById(turmaId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToTurmaResponse(turma)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetTurmas(ctx *gin.Context) {
-
-	turmas, err := services.GetTurmas()
+	tipo, err := services.GetTipoById(tipoId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -63,22 +45,40 @@ func GetTurmas(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurmaResponseArray(turmas)
+	response := mappers.ToTipoResponse(tipo)
+
+	ctx.JSON(http.StatusOK, response)
+
+}
+
+func GetTipos(ctx *gin.Context) {
+
+	tipos, err := services.GetTipos()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToTipoResponseArray(tipos)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateTurma(ctx *gin.Context) {
-	turmaId := ctx.Param("turma_id")
-	body := models.TurmaRequestModel{}
+func UpdateTipo(ctx *gin.Context) {
+	tipoId := ctx.Param("tipo_id")
+	body := models.TipoRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	turma := mappers.ToTurma(&body)
-	update, err := services.UpdateTurma(turmaId, turma)
+	tipo := mappers.ToTipo(&body)
+	update, err := services.UpdateTipo(tipoId, tipo)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -88,15 +88,15 @@ func UpdateTurma(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurmaResponse(update)
+	response := mappers.ToTipoResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteTurma(ctx *gin.Context) {
-	turmaId := ctx.Param("turma_id")
+func DeleteTipo(ctx *gin.Context) {
+	tipoId := ctx.Param("tipo_id")
 
-	err := services.DeleteTurma(turmaId)
+	err := services.DeleteTipo(tipoId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
@@ -106,22 +106,4 @@ func DeleteTurma(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, nil)
-}
-
-func GetHorariosAulaByTurma(ctx *gin.Context) {
-	turmaId := ctx.Param("turma_id")
-
-	turma, err := services.GetTurmaById(turmaId, "HorariosAula", "HorariosAula.Horario", "HorariosAula.Dia")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToTurmaHorariosAula(turma)
-
-	ctx.JSON(http.StatusOK, response)
 }

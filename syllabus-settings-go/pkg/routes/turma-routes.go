@@ -11,4 +11,5 @@ var RegisterTurmaRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/turmas/:turma_id", controllers.GetTurmaById)
 	router.PUT("/api/v1/turmas/:turma_id", controllers.UpdateTurma)
 	router.DELETE("/api/v1/turmas/:turma_id", controllers.DeleteTurma)
+	router.GET("/api/v1/turmas/:turma_id/horarios/", controllers.GetHorariosAulaByTurma)
 }
