@@ -6,8 +6,8 @@ import (
 
 type Tipo struct {
 	gorm.Model
-	TipoId    string `gorm:"" json:"tipo_id"`
-	TipoNome  string `json:"tipo_nome"`
+	TipoId    string `gorm:"index:idx_tipo_id,unique"`
+	TipoNome  string `gorm:"unique" json:"tipo_nome"`
 	TipoValor int16  `json:"tipo_valor"`
 }
 

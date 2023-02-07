@@ -7,7 +7,7 @@ import (
 
 func ToCurso(req *models.CursoRequestModel) *models.Curso {
 
-	new := models.Curso{CursoId: uuid.NewString(), Nome: req.Nome, Codigo: req.Codigo}
+	new := models.Curso{CursoId: uuid.NewString(), Nome: req.Nome, Codigo: req.Codigo, Periodos: req.Periodos}
 	return &new
 }
 
@@ -25,7 +25,7 @@ func ToCursoArray(req *[]models.CursoRequestModel) *[]models.Curso {
 
 func ToCursoResponse(curso *models.Curso) *models.CursoResponseModel {
 
-	newResponse := models.CursoResponseModel{CursoId: curso.CursoId, Codigo: curso.Codigo, Nome: curso.Nome}
+	newResponse := models.CursoResponseModel{CursoId: curso.CursoId, Codigo: curso.Codigo, Nome: curso.Nome, Periodos: curso.Periodos}
 	return &newResponse
 }
 
@@ -39,4 +39,13 @@ func ToCursoResponseArray(req *[]models.Curso) *[]models.CursoResponseModel {
 	}
 
 	return &cursos
+}
+
+func ToCursoDisciplinas(curso *models.Curso) *models.CursoDisciplinasResponseModel {
+	var disciplinas = curso.Disciplinas
+
+	var response = ToDisciplinaCursoResponseArray(&disciplinas)
+
+	newResponse := models.CursoDisciplinasResponseModel{CursoId: curso.CursoId, Codigo: curso.Codigo, Nome: curso.Nome, Disciplinas: *response}
+	return &newResponse
 }

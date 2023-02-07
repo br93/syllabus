@@ -6,9 +6,9 @@ import (
 
 type Disciplina struct {
 	gorm.Model
-	DisciplinaId  string            `gorm:"" json:"disciplina_id"`
+	DisciplinaId  string            `gorm:"index:idx_disciplina_id, unique"`
 	Nome          string            `json:"nome"`
-	Codigo        string            `json:"codigo"`
+	Codigo        string            `gorm:"unique" json:"codigo"`
 	CargaHoraria  int16             `json:"carga_horaria"`
 	Turmas        []Turma           `gorm:"foreignKey:DisciplinaID;references:ID" json:"turmas"`
 	Equivalentes  *[]Disciplina     `gorm:"many2many:disciplinas_equivalentes"`

@@ -6,7 +6,7 @@ import (
 
 type DisciplinaCurso struct {
 	gorm.Model
-	DisciplinaCursoId string     `gorm:"" json:"disciplina_curso_id"`
+	DisciplinaCursoId string     `gorm:"index:idx_disciplina_curso_id, unique"`
 	Curso             Curso      `json:"curso"`
 	Disciplina        Disciplina `json:"disciplina"`
 	Tipo              Tipo       `json:"tipo"`
@@ -28,4 +28,8 @@ type DisciplinaCursoResponseModel struct {
 	Disciplina        string `json:"codigo_disciplina"`
 	Tipo              string `json:"tipo_nome"`
 	Periodo           int16  `json:"periodo"`
+}
+
+func (DisciplinaCurso) TableNome() string {
+	return "tb_disciplina_curso"
 }

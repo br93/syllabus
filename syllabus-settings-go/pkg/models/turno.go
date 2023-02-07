@@ -6,8 +6,8 @@ import (
 
 type Turno struct {
 	gorm.Model
-	TurnoId    string `gorm:"" json:"turno_id"`
-	TurnoNome  string `json:"turno_nome"`
+	TurnoId    string `gorm:"index:idx_turno_id,unique"`
+	TurnoNome  string `gorm:"unique" json:"turno_nome"`
 	TurnoValor int16  `json:"turno_valor"`
 }
 

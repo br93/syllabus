@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"gorm.io/gorm/clause"
 )
 
 func CreateCurso(req *models.Curso) error {
@@ -16,10 +17,22 @@ func CreateCurso(req *models.Curso) error {
 	return nil
 }
 
-func GetCursoById(cursoId string) (*models.Curso, error) {
+func GetCursoById(cursoId string, preload ...string) (*models.Curso, error) {
 	var curso models.Curso
 
-	models.DB.First(&curso, "curso_id", cursoId)
+	models.DBConfig(models.DB.Preload(clause.Associations), preload).First(&curso, "curso_id", cursoId)
+
+	if curso.ID == 0 {
+		return &curso, errors.New("curso not found")
+	}
+
+	return &curso, nil
+}
+
+func GetCursoByCodigo(codigo string) (*models.Curso, error) {
+	var curso models.Curso
+
+	models.DB.First(&curso, "codigo", codigo)
 
 	if curso.ID == 0 {
 		return &curso, errors.New("curso not found")

@@ -6,8 +6,8 @@ import (
 
 type Turma struct {
 	gorm.Model
-	TurmaId      string        `gorm:"" json:"turma_id"`
-	Codigo       string        `json:"codigo"`
+	TurmaId      string        `gorm:"index:idx_turma_id,unique"`
+	Codigo       string        `gorm:"unique" json:"codigo"`
 	Turno        Turno         `json:"turno"`
 	Disciplina   Disciplina    `json:"disciplina"`
 	HorariosAula []HorarioAula `gorm:"foreignKey:TurmaID;references:ID" json:"horarios_aula"`

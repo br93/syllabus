@@ -6,9 +6,9 @@ import (
 
 type Curso struct {
 	gorm.Model
-	CursoId     string            `gorm:"" json:"curso_id"`
+	CursoId     string            `gorm:"index:idx_curso_id, unique"`
 	Nome        string            `json:"nome"`
-	Codigo      string            `json:"codigo"`
+	Codigo      string            `gorm:"unique" json:"codigo"`
 	Periodos    int16             `json:"periodos"`
 	Disciplinas []DisciplinaCurso `gorm:"foreignKey:CursoID;references:ID" json:"disciplinas"`
 }
@@ -26,12 +26,12 @@ type CursoResponseModel struct {
 	Periodos int16  `json:"periodos"`
 }
 
-/*type CursoDisciplinasResponseModel struct {
-	CursoId     string                        `json:"curso_id"`
-	Codigo      string                        `json:"codigo"`
-	Nome        string                        `json:"nome"`
-	Disciplinas []DisciplinaCursoRequestModel `json:"disciplinas"`
-}*/
+type CursoDisciplinasResponseModel struct {
+	CursoId     string                         `json:"curso_id"`
+	Codigo      string                         `json:"codigo"`
+	Nome        string                         `json:"nome"`
+	Disciplinas []DisciplinaCursoResponseModel `json:"disciplinas"`
+}
 
 func (Curso) TableName() string {
 	return "tb_curso"

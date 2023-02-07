@@ -6,9 +6,9 @@ import (
 
 type Dia struct {
 	gorm.Model
-	DiaId     string `gorm:"" json:"dia_id"`
+	DiaId     string `gorm:"index:idx_dia_id,unique"`
 	DiaNome   string `json:"dia_nome"`
-	DiaNumero int16  `json:"dia_numero"`
+	DiaNumero int16  `gorm:"unique" json:"dia_numero"`
 }
 
 type DiaRequestModel struct {
