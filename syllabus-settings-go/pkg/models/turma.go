@@ -27,13 +27,12 @@ type TurmaResponseModel struct {
 	Turno   string `json:"turno"`
 }
 
-/*type TurmaHorariosAulaResponseModel struct {
-	TurmaId    string `json:"turma_id"`
-	Codigo     string `json:"codigo"`
-	Turma      string `json:"turma"`
-	Disciplina string `json:"disciplina"`
+type TurmaHorariosAulaResponseModel struct {
+	TurmaId      string                     `json:"turma_id"`
+	Disciplina   string                     `json:"disciplina"`
+	Turno        string                     `json:"turno"`
 	HorariosAula []HorarioAulaResponseModel `json:"horarios_aula"`
-}*/
+}
 
 func (Turma) TableName() string {
 	return "tb_turma"

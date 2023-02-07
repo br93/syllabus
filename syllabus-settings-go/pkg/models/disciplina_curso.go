@@ -24,7 +24,8 @@ type DisciplinaCursoRequestModel struct {
 }
 
 type DisciplinaCursoResponseModel struct {
-	Disciplina string `json:"codigo_disciplina"`
-	Tipo       string `json:"tipo_nome"`
-	Periodo    int16  `json:"periodo"`
+	DisciplinaCursoId string `json:"disciplina_curso_id"`
+	Disciplina        string `json:"codigo_disciplina"`
+	Tipo              string `json:"tipo_nome"`
+	Periodo           int16  `json:"periodo"`
 }
