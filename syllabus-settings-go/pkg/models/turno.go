@@ -12,8 +12,8 @@ type Turno struct {
 }
 
 type TurnoRequestModel struct {
-	TurnoNome  string `json:"turno_nome"`
-	TurnoValor int16  `json:"turno_valor"`
+	TurnoNome  string `json:"turno_nome" binding:"required"`
+	TurnoValor int16  `json:"turno_valor" binding:"required,gte=1,lte=10"`
 }
 
 type TurnoResponseModel struct {

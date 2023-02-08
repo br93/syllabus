@@ -7,6 +7,7 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +16,8 @@ var NewHorario models.Horario
 func CreateHorario(ctx *gin.Context) {
 	body := models.HorarioRequestModel{}
 
-	if err := ctx.BindJSON(&body); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		utils.ErrorHandling(ctx, err)
 		return
 	}
 
@@ -72,8 +73,8 @@ func UpdateHorario(ctx *gin.Context) {
 	horarioId := ctx.Param("horario_id")
 	body := models.HorarioRequestModel{}
 
-	if err := ctx.BindJSON(&body); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		utils.ErrorHandling(ctx, err)
 		return
 	}
 

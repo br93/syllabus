@@ -16,9 +16,9 @@ type HorarioAula struct {
 }
 
 type HorarioAulaRequestModel struct {
-	Turma   string `json:"codigo_turma"`
-	Dia     int16  `json:"dia_numero"`
-	Horario string `json:"horario_sigla"`
+	Turma   string `json:"codigo_turma" binding:"required,min=3,max=10"`
+	Dia     int16  `json:"dia_numero" binding:"required,gte=2,lte=7"`
+	Horario string `json:"horario_sigla" binding:"len=2"`
 }
 
 type HorarioAulaResponseModel struct {

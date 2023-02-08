@@ -12,8 +12,8 @@ type Dia struct {
 }
 
 type DiaRequestModel struct {
-	DiaNome   string `json:"dia_nome"`
-	DiaNumero int16  `json:"dia_numero"`
+	DiaNome   string `json:"dia_nome" binding:"required,max=50"`
+	DiaNumero int16  `json:"dia_numero" binding:"required,gte=2,lte=7"`
 }
 
 type DiaResponseModel struct {

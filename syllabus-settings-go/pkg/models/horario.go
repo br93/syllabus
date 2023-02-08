@@ -12,8 +12,8 @@ type Horario struct {
 }
 
 type HorarioRequestModel struct {
-	Sigla string `json:"sigla"`
-	Faixa string `json:"faixa"`
+	Sigla string `json:"sigla" binding:"required,len=2"`
+	Faixa string `json:"faixa" binding:"required, len=20"`
 }
 
 type HorarioResponseModel struct {

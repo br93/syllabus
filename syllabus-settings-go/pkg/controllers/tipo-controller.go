@@ -7,6 +7,7 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +16,8 @@ var NewTipo models.Tipo
 func CreateTipo(ctx *gin.Context) {
 	body := models.TipoRequestModel{}
 
-	if err := ctx.BindJSON(&body); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		utils.ErrorHandling(ctx, err)
 		return
 	}
 
@@ -72,8 +73,8 @@ func UpdateTipo(ctx *gin.Context) {
 	tipoId := ctx.Param("tipo_id")
 	body := models.TipoRequestModel{}
 
-	if err := ctx.BindJSON(&body); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		utils.ErrorHandling(ctx, err)
 		return
 	}
 

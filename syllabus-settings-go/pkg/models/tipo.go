@@ -12,8 +12,8 @@ type Tipo struct {
 }
 
 type TipoRequestModel struct {
-	TipoNome  string `json:"tipo_nome"`
-	TipoValor int16  `json:"tipo_valor"`
+	TipoNome  string `json:"tipo_nome" binding:"required"`
+	TipoValor int16  `json:"tipo_valor" binding:"required,gte=1,lte=10"`
 }
 
 type TipoResponseModel struct {

@@ -17,10 +17,10 @@ type DisciplinaCurso struct {
 }
 
 type DisciplinaCursoRequestModel struct {
-	Disciplina string `json:"codigo_disciplina"`
-	Curso      string `json:"codigo_curso"`
-	Tipo       string `json:"tipo_nome"`
-	Periodo    int16  `json:"periodo"`
+	Disciplina string `json:"codigo_disciplina" binding:"required,min=3,max=10"`
+	Curso      string `json:"codigo_curso" binding:"required,min=3,max=10"`
+	Tipo       string `json:"tipo_nome" binding:"required"`
+	Periodo    int16  `json:"periodo" binding:"required,gte=1,lte=10"`
 }
 
 type DisciplinaCursoResponseModel struct {

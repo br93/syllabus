@@ -17,9 +17,9 @@ type Disciplina struct {
 }
 
 type DisciplinaRequestModel struct {
-	Nome         string `json:"nome"`
-	Codigo       string `json:"codigo"`
-	CargaHoraria int16  `json:"carga_horaria"`
+	Nome         string `json:"nome" binding:"required"`
+	Codigo       string `json:"codigo" binding:"required,min=3,max=10"`
+	CargaHoraria int16  `json:"carga_horaria" binding:"required,gte=10,lte=200"`
 }
 
 type DisciplinaResponseModel struct {

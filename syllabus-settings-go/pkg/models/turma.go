@@ -16,9 +16,9 @@ type Turma struct {
 }
 
 type TurmaRequestModel struct {
-	Codigo     string `json:"codigo"`
-	Turno      string `json:"turno"`
-	Disciplina string `json:"disciplina"`
+	Codigo     string `json:"codigo" binding:"required,min=3,max=10"`
+	Turno      string `json:"turno" binding:"required"`
+	Disciplina string `json:"disciplina" binding:"required,min=3,max=10"`
 }
 
 type TurmaResponseModel struct {

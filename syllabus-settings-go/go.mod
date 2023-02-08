@@ -7,13 +7,13 @@ require (
 	github.com/google/uuid v1.3.0
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
+	github.com/go-playground/validator/v10 v10.11.1
 )
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.11.1 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

@@ -14,9 +14,9 @@ type Curso struct {
 }
 
 type CursoRequestModel struct {
-	Nome     string `json:"nome"`
-	Codigo   string `json:"codigo"`
-	Periodos int16  `json:"periodos"`
+	Nome     string `json:"nome" binding:"required,max=50"`
+	Codigo   string `json:"codigo" binding:"required,min=3,max=10"`
+	Periodos int16  `json:"periodos" binding:"required,gte=1,lte=10"`
 }
 
 type CursoResponseModel struct {
