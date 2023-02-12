@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
 func CreateTipo(req *models.Tipo) error {
@@ -40,6 +41,15 @@ func GetTipoByNome(tipoNome string) (*models.Tipo, error) {
 	return &tipo, nil
 }
 
+func GetTipoByIdOrNome(tipoId string) (*models.Tipo, error) {
+	if utils.IsValidUUID(tipoId) {
+		return GetTipoById(tipoId)
+	}
+
+	tipoNome := tipoId
+	return GetTipoByNome(tipoNome)
+}
+
 func GetTipos() (*[]models.Tipo, error) {
 
 	var tipos []models.Tipo
@@ -53,8 +63,8 @@ func GetTipos() (*[]models.Tipo, error) {
 	return &tipos, nil
 }
 
-func UpdateTipo(tipoId string, req *models.Tipo) (*models.Tipo, error) {
-	response, err := GetTipoById(tipoId)
+func UpdateTipo(tipo string, req *models.Tipo) (*models.Tipo, error) {
+	response, err := GetTipoByIdOrNome(tipo)
 
 	if err != nil {
 		return req, err
@@ -73,8 +83,8 @@ func UpdateTipo(tipoId string, req *models.Tipo) (*models.Tipo, error) {
 
 }
 
-func DeleteTipo(tipoId string) error {
-	get, err := GetTipoById(tipoId)
+func DeleteTipo(tipo string) error {
+	get, err := GetTipoByIdOrNome(tipo)
 
 	if err != nil {
 		return err

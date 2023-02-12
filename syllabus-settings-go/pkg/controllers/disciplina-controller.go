@@ -33,10 +33,10 @@ func CreateDisciplina(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetDisciplinaById(ctx *gin.Context) {
+func GetDisciplinaByIdOrCodigo(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId)
+	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -157,7 +157,7 @@ func AddEquivalente(ctx *gin.Context) {
 func GetDisciplinaEquivalentes(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId, "Equivalentes")
+	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "Equivalentes")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -177,7 +177,7 @@ func GetDisciplinaEquivalentes(ctx *gin.Context) {
 func GetDisciplinaPreRequisitos(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId, "PreRequisitos")
+	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "PreRequisitos")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -197,7 +197,7 @@ func GetDisciplinaPreRequisitos(ctx *gin.Context) {
 func GetTurmasByDisciplina(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplina_id")
 
-	disciplina, err := services.GetDisciplinaById(disciplinaId, "Turmas", "Turmas.Turno")
+	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "Turmas", "Turmas.Turno")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

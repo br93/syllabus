@@ -8,7 +8,7 @@ import (
 var RegisterTurmaRoutes = func(router *gin.Engine) {
 	router.POST("/api/v1/config/turmas", controllers.CreateTurma)
 	router.GET("/api/v1/config/turmas", controllers.GetTurmas)
-	router.GET("/api/v1/config/turmas/:turma_id", controllers.GetTurmaById)
+	router.GET("/api/v1/config/turmas/:turma_id", controllers.GetTurmaByIdOrCodigo)
 	router.PUT("/api/v1/config/turmas/:turma_id", controllers.UpdateTurma)
 	router.DELETE("/api/v1/config/turmas/:turma_id", controllers.DeleteTurma)
 	router.GET("/api/v1/config/turmas/:turma_id/horarios/", controllers.GetHorariosAulaByTurma)

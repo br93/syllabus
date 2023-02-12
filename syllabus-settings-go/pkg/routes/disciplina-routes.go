@@ -8,7 +8,7 @@ import (
 var RegisterDisciplinaRoutes = func(router *gin.Engine) {
 	router.POST("/api/v1/config/disciplinas", controllers.CreateDisciplina)
 	router.GET("/api/v1/config/disciplinas", controllers.GetDisciplinas)
-	router.GET("/api/v1/config/disciplinas/:disciplina_id", controllers.GetDisciplinaById)
+	router.GET("/api/v1/config/disciplinas/:disciplina_id", controllers.GetDisciplinaByIdOrCodigo)
 	router.PUT("/api/v1/config/disciplinas/:disciplina_id", controllers.UpdateDisciplina)
 	router.DELETE("/api/v1/config/disciplinas/:disciplina_id", controllers.DeleteDisciplina)
 	router.PUT("/api/v1/config/disciplinas/:disciplina_id/pre/", controllers.AddPreRequisito)

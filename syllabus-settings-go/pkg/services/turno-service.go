@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
 func CreateTurno(req *models.Turno) error {
@@ -40,6 +41,14 @@ func GetTurnoByNome(turnoNome string) (*models.Turno, error) {
 	return &turno, nil
 }
 
+func GetTurnoByIdOrNome(turno string) (*models.Turno, error) {
+	if utils.IsValidUUID(turno) {
+		return GetTurnoById(turno)
+	}
+
+	return GetTurnoByNome(turno)
+}
+
 func GetTurnos() (*[]models.Turno, error) {
 
 	var turnos []models.Turno
@@ -53,8 +62,8 @@ func GetTurnos() (*[]models.Turno, error) {
 	return &turnos, nil
 }
 
-func UpdateTurno(turnoId string, req *models.Turno) (*models.Turno, error) {
-	response, err := GetTurnoById(turnoId)
+func UpdateTurno(turno string, req *models.Turno) (*models.Turno, error) {
+	response, err := GetTurnoByIdOrNome(turno)
 
 	if err != nil {
 		return req, err
@@ -73,8 +82,8 @@ func UpdateTurno(turnoId string, req *models.Turno) (*models.Turno, error) {
 
 }
 
-func DeleteTurno(turnoId string) error {
-	get, err := GetTurnoById(turnoId)
+func DeleteTurno(turno string) error {
+	get, err := GetTurnoByIdOrNome(turno)
 
 	if err != nil {
 		return err

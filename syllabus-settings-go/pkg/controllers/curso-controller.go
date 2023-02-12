@@ -33,10 +33,10 @@ func CreateCurso(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetCursoById(ctx *gin.Context) {
+func GetCursoByIdOrCodigo(ctx *gin.Context) {
 	cursoId := ctx.Param("curso_id")
 
-	curso, err := services.GetCursoById(cursoId)
+	curso, err := services.GetCursoByIdOrCodigo(cursoId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -112,7 +112,7 @@ func DeleteCurso(ctx *gin.Context) {
 func GetDisciplinasByCurso(ctx *gin.Context) {
 	cursoId := ctx.Param("curso_id")
 
-	curso, err := services.GetCursoById(cursoId, "Disciplinas", "Disciplinas.Disciplina", "Disciplinas.Tipo")
+	curso, err := services.GetCursoByIdOrCodigo(cursoId, "Disciplinas", "Disciplinas.Disciplina", "Disciplinas.Tipo")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

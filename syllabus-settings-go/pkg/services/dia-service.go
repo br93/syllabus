@@ -2,8 +2,10 @@ package services
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
 func CreateDia(req *models.Dia) error {
@@ -40,6 +42,20 @@ func GetDiaByNumero(numero int16) (*models.Dia, error) {
 	return &dia, nil
 }
 
+func GetDiaByIdOrNumero(dia string) (*models.Dia, error) {
+	if utils.IsValidUUID(dia) {
+		return GetDiaById(dia)
+	}
+
+	diaNumero, err := strconv.ParseInt(dia, 10, 16)
+
+	if err != nil {
+		return &models.Dia{}, errors.New("dia not found")
+	}
+
+	return GetDiaByNumero(int16(diaNumero))
+}
+
 func GetDias() (*[]models.Dia, error) {
 	var dias []models.Dia
 
@@ -52,8 +68,8 @@ func GetDias() (*[]models.Dia, error) {
 	return &dias, nil
 }
 
-func UpdateDia(diaId string, req *models.Dia) (*models.Dia, error) {
-	response, err := GetDiaById(diaId)
+func UpdateDia(dia string, req *models.Dia) (*models.Dia, error) {
+	response, err := GetDiaByIdOrNumero(dia)
 
 	if err != nil {
 		return req, err
@@ -71,8 +87,8 @@ func UpdateDia(diaId string, req *models.Dia) (*models.Dia, error) {
 	return response, nil
 }
 
-func DeleteDia(diaId string) error {
-	get, err := GetDiaById(diaId)
+func DeleteDia(dia string) error {
+	get, err := GetDiaByIdOrNumero(dia)
 
 	if err != nil {
 		return err

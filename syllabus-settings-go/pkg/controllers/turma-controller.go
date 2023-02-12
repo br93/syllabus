@@ -33,10 +33,9 @@ func CreateTurma(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTurmaById(ctx *gin.Context) {
+func GetTurmaByIdOrCodigo(ctx *gin.Context) {
 	turmaId := ctx.Param("turma_id")
-
-	turma, err := services.GetTurmaById(turmaId)
+	turma, err := services.GetTurmaByIdOrCodigo(turmaId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -112,7 +111,7 @@ func DeleteTurma(ctx *gin.Context) {
 func GetHorariosAulaByTurma(ctx *gin.Context) {
 	turmaId := ctx.Param("turma_id")
 
-	turma, err := services.GetTurmaById(turmaId, "HorariosAula", "HorariosAula.Horario", "HorariosAula.Dia")
+	turma, err := services.GetTurmaByIdOrCodigo(turmaId, "HorariosAula", "HorariosAula.Horario", "HorariosAula.Dia")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

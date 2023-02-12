@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 	"gorm.io/gorm/clause"
 )
 
@@ -34,16 +35,25 @@ func GetTurmaById(turmaId string, preload ...string) (*models.Turma, error) {
 	return &turma, nil
 }
 
-func GetTurmaByCodigo(codigo string) (*models.Turma, error) {
+func GetTurmaByCodigo(codigo string, preload ...string) (*models.Turma, error) {
 	var turma models.Turma
 
-	models.DB.Preload(clause.Associations).First(&turma, "codigo", codigo)
+	models.DBConfig(models.DB.Preload(clause.Associations), preload).First(&turma, "codigo", codigo)
 
 	if turma.ID == 0 {
 		return &turma, errors.New("turma not found")
 	}
 
 	return &turma, nil
+}
+
+func GetTurmaByIdOrCodigo(turma string, preload ...string) (*models.Turma, error) {
+
+	if utils.IsValidUUID(turma) {
+		return GetTurmaById(turma, preload...)
+	}
+
+	return GetTurmaByCodigo(turma)
 }
 
 func GetTurmas() (*[]models.Turma, error) {
@@ -71,13 +81,13 @@ func GetTurmasByDisciplinaId(disciplinaId uint) (*[]models.Turma, error) {
 	return &turmas, nil
 }
 
-func UpdateTurma(turmaId string, req *models.Turma) (*models.Turma, error) {
+func UpdateTurma(turma string, req *models.Turma) (*models.Turma, error) {
 
 	if req.Disciplina.ID == 0 || req.Turno.ID == 0 {
 		return &models.Turma{}, errors.New("failed to update turma")
 	}
 
-	response, err := GetTurmaById(turmaId)
+	response, err := GetTurmaByIdOrCodigo(turma)
 
 	if err != nil {
 		return req, err
@@ -97,8 +107,8 @@ func UpdateTurma(turmaId string, req *models.Turma) (*models.Turma, error) {
 
 }
 
-func DeleteTurma(turmaId string) error {
-	get, err := GetTurmaById(turmaId)
+func DeleteTurma(turma string) error {
+	get, err := GetTurmaByIdOrCodigo(turma)
 
 	if err != nil {
 		return err

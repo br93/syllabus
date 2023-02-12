@@ -6,9 +6,9 @@ import (
 )
 
 var RegisterHorarioAulaRoutes = func(router *gin.Engine) {
-	router.POST("/api/v1/horarioaulas", controllers.CreateHorarioAula)
-	router.GET("/api/v1/horarioaulas", controllers.GetHorarioAulas)
-	router.GET("/api/v1/horarioaulas/:horarioaula_id", controllers.GetHorarioAulaById)
-	router.PUT("/api/v1/horarioaulas/:horarioaula_id", controllers.UpdateHorarioAula)
-	router.DELETE("/api/v1/horarioaulas/:horarioaula_id", controllers.DeleteHorarioAula)
+	router.POST("/api/v1/config/horarioaulas", controllers.CreateHorarioAula)
+	router.GET("/api/v1/config/horarioaulas", controllers.GetHorarioAulas)
+	router.GET("/api/v1/config/horarioaulas/:horarioaula_id", controllers.GetHorarioAulaById)
+	router.PUT("/api/v1/config/horarioaulas/:horarioaula_id", controllers.UpdateHorarioAula)
+	router.DELETE("/api/v1/config/horarioaulas/:horarioaula_id", controllers.DeleteHorarioAula)
 }

@@ -33,10 +33,9 @@ func CreateTipo(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTipoById(ctx *gin.Context) {
+func GetTipoByIdOrNome(ctx *gin.Context) {
 	tipoId := ctx.Param("tipo_id")
-
-	tipo, err := services.GetTipoById(tipoId)
+	tipo, err := services.GetTipoByIdOrNome(tipoId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

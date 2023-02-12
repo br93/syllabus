@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
 func CreateHorario(req *models.Horario) error {
@@ -40,6 +41,14 @@ func GetHorarioBySigla(sigla string) (*models.Horario, error) {
 	return &horario, nil
 }
 
+func GetHorarioByIdOrSigla(horario string) (*models.Horario, error) {
+	if utils.IsValidUUID(horario) {
+		return GetHorarioById(horario)
+	}
+
+	return GetHorarioBySigla(horario)
+}
+
 func GetHorarios() (*[]models.Horario, error) {
 
 	var horarios []models.Horario
@@ -53,8 +62,8 @@ func GetHorarios() (*[]models.Horario, error) {
 	return &horarios, nil
 }
 
-func UpdateHorario(horarioId string, req *models.Horario) (*models.Horario, error) {
-	response, err := GetHorarioById(horarioId)
+func UpdateHorario(horario string, req *models.Horario) (*models.Horario, error) {
+	response, err := GetHorarioByIdOrSigla(horario)
 
 	if err != nil {
 		return req, err
@@ -73,8 +82,8 @@ func UpdateHorario(horarioId string, req *models.Horario) (*models.Horario, erro
 
 }
 
-func DeleteHorario(horarioId string) error {
-	get, err := GetHorarioById(horarioId)
+func DeleteHorario(horario string) error {
+	get, err := GetHorarioByIdOrSigla(horario)
 
 	if err != nil {
 		return err

@@ -33,10 +33,10 @@ func CreateDia(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetDiaById(ctx *gin.Context) {
+func GetDiaByIdOrNumero(ctx *gin.Context) {
 	diaId := ctx.Param("dia_id")
 
-	dia, err := services.GetDiaById(diaId)
+	dia, err := services.GetDiaByIdOrNumero(diaId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

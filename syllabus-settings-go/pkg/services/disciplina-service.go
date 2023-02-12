@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
 func CreateDisciplina(req *models.Disciplina) error {
@@ -20,7 +21,6 @@ func GetDisciplinaById(disciplinaId string, preload ...string) (*models.Discipli
 	var disciplina models.Disciplina
 
 	models.DBConfig(models.DB, preload).First(&disciplina, "disciplina_id", disciplinaId)
-	//eagerLoading(models.DB, preload)
 
 	if disciplina.ID == 0 {
 		return &disciplina, errors.New("disciplina not found")
@@ -29,16 +29,24 @@ func GetDisciplinaById(disciplinaId string, preload ...string) (*models.Discipli
 	return &disciplina, nil
 }
 
-func GetDisciplinaByCodigo(codigo string) (*models.Disciplina, error) {
+func GetDisciplinaByCodigo(codigo string, preload ...string) (*models.Disciplina, error) {
 	var disciplina models.Disciplina
 
-	models.DB.First(&disciplina, "codigo", codigo)
+	models.DBConfig(models.DB, preload).First(&disciplina, "codigo", codigo)
 
 	if disciplina.ID == 0 {
 		return &disciplina, errors.New("disciplina not found")
 	}
 
 	return &disciplina, nil
+}
+
+func GetDisciplinaByIdOrCodigo(disciplina string, preload ...string) (*models.Disciplina, error) {
+	if utils.IsValidUUID(disciplina) {
+		return GetDisciplinaById(disciplina, preload...)
+	}
+
+	return GetDisciplinaByCodigo(disciplina, preload...)
 }
 
 func GetDisciplinas() (*[]models.Disciplina, error) {
@@ -54,8 +62,8 @@ func GetDisciplinas() (*[]models.Disciplina, error) {
 	return &disciplinas, nil
 }
 
-func UpdateDisciplina(disciplinaId string, req *models.Disciplina) (*models.Disciplina, error) {
-	response, err := GetDisciplinaById(disciplinaId)
+func UpdateDisciplina(disciplina string, req *models.Disciplina) (*models.Disciplina, error) {
+	response, err := GetDisciplinaByIdOrCodigo(disciplina)
 
 	if err != nil {
 		return req, err
@@ -75,8 +83,8 @@ func UpdateDisciplina(disciplinaId string, req *models.Disciplina) (*models.Disc
 
 }
 
-func CreatePreRequisito(disciplinaId string, req *[]models.Disciplina) (*models.Disciplina, error) {
-	disciplina, err := GetDisciplinaById(disciplinaId)
+func CreatePreRequisito(d string, req *[]models.Disciplina) (*models.Disciplina, error) {
+	disciplina, err := GetDisciplinaByIdOrCodigo(d)
 
 	if err != nil {
 		return &models.Disciplina{}, err
@@ -93,8 +101,8 @@ func CreatePreRequisito(disciplinaId string, req *[]models.Disciplina) (*models.
 	return disciplina, nil
 }
 
-func CreateEquivalente(disciplinaId string, req *[]models.Disciplina) (*models.Disciplina, error) {
-	disciplina, err := GetDisciplinaById(disciplinaId)
+func CreateEquivalente(d string, req *[]models.Disciplina) (*models.Disciplina, error) {
+	disciplina, err := GetDisciplinaByIdOrCodigo(d)
 
 	if err != nil {
 		return &models.Disciplina{}, err
@@ -111,8 +119,8 @@ func CreateEquivalente(disciplinaId string, req *[]models.Disciplina) (*models.D
 	return disciplina, nil
 }
 
-func DeleteDisciplina(disciplinaId string) error {
-	get, err := GetDisciplinaById(disciplinaId)
+func DeleteDisciplina(disciplina string) error {
+	get, err := GetDisciplinaByIdOrCodigo(disciplina)
 
 	if err != nil {
 		return err

@@ -33,10 +33,10 @@ func CreateHorario(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetHorarioById(ctx *gin.Context) {
+func GetHorarioByIdOrSigla(ctx *gin.Context) {
 	horarioId := ctx.Param("horario_id")
 
-	horario, err := services.GetHorarioById(horarioId)
+	horario, err := services.GetHorarioByIdOrSigla(horarioId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
