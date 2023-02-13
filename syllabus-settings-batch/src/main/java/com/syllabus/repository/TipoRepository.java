@@ -6,4 +6,5 @@ import com.syllabus.model.TipoModel;
 
 public interface TipoRepository extends JpaRepository<TipoModel, Long> {
 
+	TipoModel findByTipoNome(String tipoNome);
 }

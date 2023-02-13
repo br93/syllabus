@@ -6,4 +6,5 @@ import com.syllabus.model.DiaModel;
 
 public interface DiaRepository extends JpaRepository<DiaModel, Long> {
 
+	DiaModel findByDiaNumero(Short diaNumero);
 }

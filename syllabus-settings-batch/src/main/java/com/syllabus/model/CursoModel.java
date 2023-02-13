@@ -37,4 +37,5 @@ public class CursoModel {
 	private String nome;
 	private String codigo;
 	private Short periodos;
+	
 }

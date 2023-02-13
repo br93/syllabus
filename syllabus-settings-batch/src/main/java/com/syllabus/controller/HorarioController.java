@@ -10,24 +10,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.syllabus.helper.CSVHelper;
 import com.syllabus.message.ResponseMessage;
-import com.syllabus.service.TurnoService;
+import com.syllabus.service.HorarioService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/csv")
-public class TurnoController {
+public class HorarioController {
 	
-	private final TurnoService turnoService;
+	private final HorarioService horarioService;
 	
-	@PostMapping("turnos")
+	@PostMapping("horarios")
 	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file){
 		String message = "";
 		
 		if (CSVHelper.hasCSVFormat(file)) {
 			try {
-				turnoService.save(file);
+				horarioService.save(file);
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(message));
 			} catch (Exception ex) {

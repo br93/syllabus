@@ -6,4 +6,5 @@ import com.syllabus.model.DisciplinaCursoModel;
 
 public interface DisciplinaCursoRepository extends JpaRepository<DisciplinaCursoModel, Long> {
 
+	DisciplinaCursoModel findByDisciplinaCursoId(String disciplinaCursoId);
 }

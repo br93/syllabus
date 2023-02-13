@@ -6,4 +6,5 @@ import com.syllabus.model.HorarioAulaModel;
 
 public interface HorarioAulaRepository extends JpaRepository<HorarioAulaModel, Long> {
 
+	HorarioAulaModel findByHorarioAulaId(String horarioAulaId);
 }

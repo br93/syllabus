@@ -6,4 +6,5 @@ import com.syllabus.model.TurmaModel;
 
 public interface TurmaRepository extends JpaRepository<TurmaModel, Long> {
 
+	TurmaModel findByCodigo(String codigo);
 }

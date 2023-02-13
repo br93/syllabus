@@ -6,4 +6,5 @@ import com.syllabus.model.TurnoModel;
 
 public interface TurnoRepository extends JpaRepository<TurnoModel, Long> {
 
+	TurnoModel findByTurnoSigla(String turnoSigla);
 }

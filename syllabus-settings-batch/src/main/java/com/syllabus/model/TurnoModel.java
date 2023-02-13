@@ -35,6 +35,6 @@ public class TurnoModel {
 	
 	private String turnoId;
 	private String turnoNome;
-	private Short turnoValor;
+	private String turnoSigla;
 	
 }

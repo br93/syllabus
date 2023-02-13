@@ -7,22 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.syllabus.helper.CSVHelper;
-import com.syllabus.model.TurnoModel;
-import com.syllabus.repository.TurnoRepository;
+import com.syllabus.model.DiaModel;
+import com.syllabus.repository.DiaRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TurnoService {
+public class DiaService {
 	
-	private final TurnoRepository turnoRepository;
+	private final DiaRepository diaRepository;
 	private final CSVHelper csvHelper;
 
 	public void save(MultipartFile file){
 		try {
-			List<TurnoModel> turnos = csvHelper.csvToTurno(file.getInputStream());
-			turnoRepository.saveAll(turnos);
+			List<DiaModel> dias = csvHelper.csvToDia(file.getInputStream());
+			diaRepository.saveAll(dias);
 		} catch (IOException ex) {
 			throw new RuntimeException("fail to store csv data: " + ex.getMessage());
 		}
