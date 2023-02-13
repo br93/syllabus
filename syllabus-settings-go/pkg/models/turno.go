@@ -7,18 +7,19 @@ import (
 type Turno struct {
 	gorm.Model
 	TurnoId    string `gorm:"index:idx_turno_id,unique"`
-	TurnoNome  string `gorm:"unique" json:"turno_nome"`
-	TurnoValor int16  `json:"turno_valor"`
+	TurnoNome  string `json:"turno_nome"`
+	TurnoSigla string `gorm:"unique" json:"turno_sigla"`
 }
 
 type TurnoRequestModel struct {
 	TurnoNome  string `json:"turno_nome" binding:"required"`
-	TurnoValor int16  `json:"turno_valor" binding:"required,gte=1,lte=10"`
+	TurnoSigla string `json:"turno_sigla" binding:"required"`
 }
 
 type TurnoResponseModel struct {
-	TurnoId   string `json:"turno_id"`
-	TurnoNome string `json:"turno_nome"`
+	TurnoId    string `json:"turno_id"`
+	TurnoNome  string `json:"turno_nome"`
+	TurnoSigla string `json:"turno_sigla"`
 }
 
 func (Turno) TableName() string {

@@ -7,7 +7,7 @@ import (
 
 func ToTurno(req *models.TurnoRequestModel) *models.Turno {
 
-	new := models.Turno{TurnoId: uuid.NewString(), TurnoNome: req.TurnoNome, TurnoValor: req.TurnoValor}
+	new := models.Turno{TurnoId: uuid.NewString(), TurnoNome: req.TurnoNome, TurnoSigla: req.TurnoSigla}
 	return &new
 }
 
@@ -25,7 +25,7 @@ func ToTurnoArray(req *[]models.TurnoRequestModel) *[]models.Turno {
 
 func ToTurnoResponse(turno *models.Turno) *models.TurnoResponseModel {
 
-	newResponse := models.TurnoResponseModel{TurnoId: turno.TurnoId, TurnoNome: turno.TurnoNome}
+	newResponse := models.TurnoResponseModel{TurnoId: turno.TurnoId, TurnoNome: turno.TurnoNome, TurnoSigla: turno.TurnoSigla}
 	return &newResponse
 }
 

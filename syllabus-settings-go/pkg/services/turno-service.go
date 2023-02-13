@@ -29,10 +29,10 @@ func GetTurnoById(turnoId string) (*models.Turno, error) {
 	return &turno, nil
 }
 
-func GetTurnoByNome(turnoNome string) (*models.Turno, error) {
+func GetTurnoBySigla(turnoSigla string) (*models.Turno, error) {
 	var turno models.Turno
 
-	models.DB.First(&turno, "turno_nome", turnoNome)
+	models.DB.First(&turno, "turno_sigla", turnoSigla)
 
 	if turno.ID == 0 {
 		return &turno, errors.New("turno not found")
@@ -41,12 +41,12 @@ func GetTurnoByNome(turnoNome string) (*models.Turno, error) {
 	return &turno, nil
 }
 
-func GetTurnoByIdOrNome(turno string) (*models.Turno, error) {
+func GetTurnoByIdOrSigla(turno string) (*models.Turno, error) {
 	if utils.IsValidUUID(turno) {
 		return GetTurnoById(turno)
 	}
 
-	return GetTurnoByNome(turno)
+	return GetTurnoBySigla(turno)
 }
 
 func GetTurnos() (*[]models.Turno, error) {
@@ -63,14 +63,14 @@ func GetTurnos() (*[]models.Turno, error) {
 }
 
 func UpdateTurno(turno string, req *models.Turno) (*models.Turno, error) {
-	response, err := GetTurnoByIdOrNome(turno)
+	response, err := GetTurnoByIdOrSigla(turno)
 
 	if err != nil {
 		return req, err
 	}
 
 	response.TurnoNome = req.TurnoNome
-	response.TurnoValor = req.TurnoValor
+	response.TurnoSigla = req.TurnoSigla
 
 	update := models.DB.Save(response)
 
@@ -83,7 +83,7 @@ func UpdateTurno(turno string, req *models.Turno) (*models.Turno, error) {
 }
 
 func DeleteTurno(turno string) error {
-	get, err := GetTurnoByIdOrNome(turno)
+	get, err := GetTurnoByIdOrSigla(turno)
 
 	if err != nil {
 		return err

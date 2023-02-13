@@ -33,9 +33,9 @@ func CreateTurno(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTurnoByIdOrNome(ctx *gin.Context) {
+func GetTurnoByIdOrSigla(ctx *gin.Context) {
 	turnoId := ctx.Param("turno_id")
-	turno, err := services.GetTurnoByIdOrNome(turnoId)
+	turno, err := services.GetTurnoByIdOrSigla(turnoId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

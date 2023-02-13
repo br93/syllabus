@@ -11,7 +11,7 @@ import (
 func ToTurma(req *models.TurmaRequestModel) *models.Turma {
 
 	disciplina, errDisciplina := services.GetDisciplinaByCodigo(req.Disciplina)
-	turno, errTurno := services.GetTurnoByNome(req.Turno)
+	turno, errTurno := services.GetTurnoBySigla(req.Turno)
 
 	if errDisciplina != nil || errTurno != nil {
 		return &models.Turma{}
