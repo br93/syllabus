@@ -1,10 +1,10 @@
-package com.syllabus;
+package com.syllabus.settings.sidecar;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SyllabusAuthApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {
