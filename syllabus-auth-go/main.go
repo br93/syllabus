@@ -11,7 +11,7 @@ import (
 
 func init() {
 	initializers.LoadEnv()
-	//initializers.DBConnection()
+	initializers.DBConnection()
 }
 
 func main() {
