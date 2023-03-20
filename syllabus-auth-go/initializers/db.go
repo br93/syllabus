@@ -3,6 +3,7 @@ package initializers
 import (
 	"os"
 
+	"github.com/br93/syllabus/syllabus-auth-go/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,6 +20,10 @@ func DBConnection() {
 	}
 
 	DB = connection
+}
+
+func SyncDB() {
+	DB.AutoMigrate(&models.User{})
 }
 
 func GetDB() *gorm.DB {
