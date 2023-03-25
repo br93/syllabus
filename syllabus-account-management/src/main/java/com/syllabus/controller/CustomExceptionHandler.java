@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.syllabus.exception.EmailOrPasswordException;
+import com.syllabus.exception.UserNotAuthorizedException;
 import com.syllabus.exception.UserNotFoundException;
 
 @RestControllerAdvice
@@ -25,6 +26,12 @@ public class CustomExceptionHandler {
         List<String> errors = ex.getBindingResult().getFieldErrors()
                 .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotAuthorizedException.class)
+    public ResponseEntity<Map<String, List<String>>> handleUserNotAuthorizedException(UserNotAuthorizedException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

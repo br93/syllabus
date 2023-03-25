@@ -11,6 +11,7 @@ import com.syllabus.client.AuthClient;
 import com.syllabus.client.ClientResponse;
 import com.syllabus.data.model.AccountModel;
 import com.syllabus.exception.EmailOrPasswordException;
+import com.syllabus.exception.UserNotAuthorizedException;
 import com.syllabus.exception.UserNotFoundException;
 import com.syllabus.repository.AccountManagementRepository;
 
@@ -30,7 +31,7 @@ public class AccountManagementService {
     public String extractCookie(Map<String, String> headers) {
         var values = headers.values();
 
-        return values.stream().filter(x -> x.contains("Authorization")).findFirst().orElseThrow(RuntimeException::new);
+        return values.stream().filter(x -> x.contains("Authorization")).findFirst().orElseThrow(() -> new UserNotAuthorizedException("User not authorized"));
     }
 
     public ClientResponse getUser(String authorization) {
