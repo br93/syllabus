@@ -1,6 +1,5 @@
 package com.syllabus.controller;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.syllabus.model.APIResponse;
+import com.syllabus.service.AccountManagementService;
+import com.syllabus.util.AccountManagementMapper;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -17,14 +20,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountManagementController {
 
-    @GetMapping("hello")
-    public ResponseEntity<String> hello(@RequestHeader Map<String, String> headers) {
+    private final AccountManagementService accountManagementService;
+    private final AccountManagementMapper accountManagementMapper;
 
-        var values = headers.values();
-        var user = values.stream().filter(x -> x.contains("User")).findFirst().orElseThrow(RuntimeException::new);
-        var index = user.indexOf("User");
-        
-        return new ResponseEntity<>("Hello user " + user.substring(index+5, user.length()), HttpStatus.OK);
+    @GetMapping("user")
+    public ResponseEntity<APIResponse> hello(@RequestHeader Map<String, String> headers) {
+
+        var auth = accountManagementService.extractCookie(headers);
+        var user = accountManagementService.getUser(auth);
+
+        return new ResponseEntity<>(accountManagementMapper.toAPIResponse(user), HttpStatus.OK);
     }
 
 }
