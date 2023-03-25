@@ -15,7 +15,7 @@ type User struct {
 
 type UserRequestModel struct {
 	Email    string `json:"email"`
-	Password string `json:"senha"`
+	Password string `json:"password"`
 }
 
 type UserResponseModel struct {

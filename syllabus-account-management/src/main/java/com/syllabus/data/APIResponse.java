@@ -1,4 +1,4 @@
-package com.syllabus.model;
+package com.syllabus.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

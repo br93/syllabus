@@ -1,4 +1,4 @@
-package com.syllabus.model;
+package com.syllabus.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
