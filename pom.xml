@@ -51,7 +51,7 @@
 		<module>syllabus-enrichment</module>
 		<module>syllabus-account-management</module>
 		<module>syllabus-auth</module>
-		<module>syllabus-users</module>
 		<module>syllabus-settings-batch</module>
+		<module>syllabus-students</module>
 	</modules>
 </project>
