@@ -20,6 +20,7 @@ import com.syllabus.util.AccountManagementMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("api/v1/account")
@@ -30,24 +31,27 @@ public class AccountManagementController {
     private final AccountManagementMapper accountManagementMapper;
 
     @GetMapping("user")
-    public ResponseEntity<APIResponse> hello(@RequestHeader Map<String, String> headers) {
+    public Mono<ResponseEntity<APIResponse>> hello(@RequestHeader Map<String, String> headers) {
 
-        var auth = accountManagementService.extractCookie(headers);
-        var user = accountManagementService.getUser(auth);
+    	var auth = accountManagementService.extractCookie(headers);
+    	var user = accountManagementService.getUser(auth).map(accountManagementMapper::toAPIResponse);
+    	var response = user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
 
-        return new ResponseEntity<>(accountManagementMapper.toAPIResponse(user), HttpStatus.OK);
+        return response;
     }
 
     @PatchMapping("user/email")
-    public ResponseEntity<AccountResponse> updateEmail(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
+    public Mono<ResponseEntity<AccountResponse>> updateEmail(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
         
         var auth = accountManagementService.extractCookie(headers);
         var newUser = accountManagementService.updateEmail(auth, accountManagementMapper.toAccountModel(request));
-
-        return new ResponseEntity<>(accountManagementMapper.toAccountResponse(newUser), HttpStatus.OK);
+        var mappedUser = newUser.map(accountManagementMapper::toAccountResponse);
+        var response = mappedUser.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
+        
+        return response;
     }
 
-    @PatchMapping("user/password")
+    /*@PatchMapping("user/password")
     public ResponseEntity<AccountResponse> updatePassword(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
 
         var auth = accountManagementService.extractCookie(headers);
@@ -63,6 +67,6 @@ public class AccountManagementController {
         accountManagementService.delete(auth, accountManagementMapper.toAccountModel(request));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    }*/
 
 }

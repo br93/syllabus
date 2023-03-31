@@ -16,92 +16,103 @@ import com.syllabus.exception.UserNotFoundException;
 import com.syllabus.repository.AccountManagementRepository;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
 public class AccountManagementService {
 
-    private final AuthClient authClient;
-    private final AccountManagementRepository accountManagementRepository;
-    private final PasswordEncoder passwordEncoder;
+	private final AuthClient authClient;
+	private final AccountManagementRepository accountManagementRepository;
+	private final PasswordEncoder passwordEncoder;
 
-    private final Environment environment;
-    private static final String ERROR = "account.management.error";
+	private final Environment environment;
+	private static final String ERROR = "account.management.error";
 
-    public String extractCookie(Map<String, String> headers) {
-        var values = headers.values();
+	public Mono<String> extractCookie(Map<String, String> headers) {
 
-        return values.stream().filter(x -> x.contains("Authorization")).findFirst().orElseThrow(() -> new UserNotAuthorizedException("User not authorized"));
-    }
+		return Mono.just(headers.values()).flatMapIterable(list -> list).next()
+				.switchIfEmpty(Mono.error(new UserNotAuthorizedException("User not authorized")));
 
-    public ClientResponse getUser(String authorization) {
-        return authClient.getMe(authorization);
-    }
+	}
 
-    public AccountModel getUserByUserId(String userId) {
-        return accountManagementRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found", new Throwable("userId")));
-    }
+	public Mono<ClientResponse> getUser(Mono<String> authorization) {
+		return authorization.map(x -> authClient.getMe(x)).map(client -> new ClientResponse());
+	}
 
-    public AccountModel updateEmail(String authorization, AccountModel request) {
-        var userId = this.getUser(authorization).getUser().getUserId();
-        var user = this.getUserByUserId(userId);
+	public Mono<AccountModel> getUserByUserId(String userId) {
 
-        validateDifferentEmail(request.getEmail(), user.getEmail());
-        validateSamePassword(request.getPassword(), user.getPassword());
+		return accountManagementRepository.findByUserId(userId)
+				.switchIfEmpty(Mono.error(new UserNotFoundException("User not found", new Throwable("userId"))));
 
-        AccountModel updatedUser = user;
-        updatedUser.setEmail(request.getEmail());
-        updatedUser.setUpdatedAt(Instant.now());
+	}
 
-        return accountManagementRepository.save(updatedUser);
-    }
+	public Mono<AccountModel> updateEmail(Mono<String> authorization, AccountModel request) {
+		Mono<String> userId = this.getUser(authorization).map(auth -> auth.getUser().getUserId());
+		Mono<AccountModel> user = userId.flatMap(id -> this.getUserByUserId(id));
+		Mono<String> oldEmail = user.map(x -> x.getEmail());
+		Mono<String> oldPassword = user.map(x -> x.getPassword());
 
-    public AccountModel updatePassword(String authorization, AccountModel request) {
-        var userId = this.getUser(authorization).getUser().getUserId();
-        var user = this.getUserByUserId(userId);
+		Mono.fromSupplier(() -> this.validateDifferentEmail(request.getEmail(), oldEmail));
+		Mono.fromSupplier(() -> this.validateSamePassword(request.getPassword(), oldPassword));
 
-        validateSameEmail(request.getEmail(), user.getEmail());
-        validateDifferentPassword(request.getPassword(), user.getPassword());
-       
-        AccountModel updatedUser = user;
-        updatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        updatedUser.setUpdatedAt(Instant.now());
+		return user.flatMap(u -> {
+			u.setEmail(request.getEmail());
+			u.setPassword(request.getPassword());
+			return this.accountManagementRepository.save(u);
+		});
+		
+	}
 
-        return accountManagementRepository.save(updatedUser);
-    }
+	public AccountModel updatePassword(String authorization, AccountModel request) {
+		/*var userId = this.getUser(authorization).getUser().getUserId();
+		var user = this.getUserByUserId(userId);
 
-    public void delete(String authorization, AccountModel request) {
-        var userId = this.getUser(authorization).getUser().getUserId();
-        var user = this.getUserByUserId(userId);
+		validateSameEmail(request.getEmail(), user.getEmail());
+		validateDifferentPassword(request.getPassword(), user.getPassword());
 
-        validateSameEmail(request.getEmail(), user.getEmail());
-        validateSamePassword(request.getPassword(), user.getPassword());
+		AccountModel updatedUser = user;
+		updatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
+		updatedUser.setUpdatedAt(Instant.now());
 
-        user.setUpdatedAt(Instant.now());
-        user.setDeletedAt(Instant.now());
+		return accountManagementRepository.save(updatedUser);*/
+		return null;
+	}
 
-        accountManagementRepository.save(user);
-    }
+	public void delete(String authorization, AccountModel request) {
+		/*var userId = this.getUser(authorization).getUser().getUserId();
+		var user = this.getUserByUserId(userId);
 
-    private void validateDifferentEmail(String newEmail, String oldEmail){
-        if (oldEmail.equals(newEmail))
-            throw new EmailOrPasswordException(environment.getProperty(ERROR));
-    }
+		validateSameEmail(request.getEmail(), user.getEmail());
+		validateSamePassword(request.getPassword(), user.getPassword());
 
-    private void validateSameEmail(String newEmail, String oldEmail) {
-        if (!oldEmail.equals(newEmail))
-            throw new EmailOrPasswordException(environment.getProperty(ERROR));
-    }
+		user.setUpdatedAt(Instant.now());
+		user.setDeletedAt(Instant.now());
 
-    private void validateDifferentPassword(String newPassword, String oldPassword) {
-        if (passwordEncoder.matches(newPassword, oldPassword))
-            throw new EmailOrPasswordException(environment.getProperty(ERROR));
-    }  
+		accountManagementRepository.save(user);*/
+	}
 
-    private void validateSamePassword(String newPassword, String oldPassword) {
-        if (!passwordEncoder.matches(newPassword, oldPassword))
-            throw new EmailOrPasswordException(environment.getProperty(ERROR));
-    }
+	private Mono<String> validateDifferentEmail(String newEmail, Mono<String> oldEmail) {
+
+		return oldEmail.filter(x -> x.equals(newEmail))
+				.switchIfEmpty(Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR))));
+
+	}
+
+	private void validateSameEmail(String newEmail, String oldEmail) {
+		if (!oldEmail.equals(newEmail))
+			throw new EmailOrPasswordException(environment.getProperty(ERROR));
+	}
+
+	private void validateDifferentPassword(String newPassword, String oldPassword) {
+		if (passwordEncoder.matches(newPassword, oldPassword))
+			throw new EmailOrPasswordException(environment.getProperty(ERROR));
+	}
+
+	private Mono<String> validateSamePassword(String newPassword, Mono<String> oldPassword) {
+
+		return oldPassword.filter(x -> !passwordEncoder.matches(newPassword, x))
+				.switchIfEmpty(Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR))));
+	}
 
 }
