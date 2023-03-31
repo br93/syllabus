@@ -36,8 +36,9 @@ public class AccountManagementService {
 
 	}
 
-	public Mono<ClientResponse> getUser(Mono<String> authorization) {
-		return authorization.map(x -> authClient.getMe(x)).map(client -> new ClientResponse());
+	public Mono<ClientResponse> getUser(String authorization) {
+		return Mono.fromSupplier(() -> authClient.getMe(authorization)).map(client -> new ClientResponse()); 
+		
 	}
 
 	public Mono<AccountModel> getUserByUserId(String userId) {
@@ -47,9 +48,11 @@ public class AccountManagementService {
 
 	}
 
-	public Mono<AccountModel> updateEmail(Mono<String> authorization, AccountModel request) {
-		Mono<String> userId = this.getUser(authorization).map(auth -> auth.getUser().getUserId());
-		Mono<AccountModel> user = userId.flatMap(id -> this.getUserByUserId(id));
+	public Mono<AccountModel> updateEmail(String authorization, AccountModel request) {
+
+		Mono<ClientResponse> authorizedUser = Mono.just(authorization).flatMap(this::getUser);
+		Mono<String> userId = authorizedUser.map(auth -> auth.getUser().getUserId());
+		Mono<AccountModel> user = userId.flatMap(this::getUserByUserId);
 		Mono<String> oldEmail = user.map(x -> x.getEmail());
 		Mono<String> oldPassword = user.map(x -> x.getPassword());
 

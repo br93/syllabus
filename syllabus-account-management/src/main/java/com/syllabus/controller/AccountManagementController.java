@@ -33,18 +33,15 @@ public class AccountManagementController {
     @GetMapping("user")
     public Mono<ResponseEntity<APIResponse>> hello(@RequestHeader Map<String, String> headers) {
 
-    	var auth = accountManagementService.extractCookie(headers);
-    	var user = accountManagementService.getUser(auth).map(accountManagementMapper::toAPIResponse);
-    	var response = user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
-
-        return response;
+    	var auth = accountManagementService.extractCookie(headers).flatMap(accountManagementService::getUser).map(accountManagementMapper::toAPIResponse);
+    	return auth.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
     @PatchMapping("user/email")
     public Mono<ResponseEntity<AccountResponse>> updateEmail(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
         
         var auth = accountManagementService.extractCookie(headers);
-        var newUser = accountManagementService.updateEmail(auth, accountManagementMapper.toAccountModel(request));
+        var newUser = accountManagementService.updateEmail(auth.block(), accountManagementMapper.toAccountModel(request));
         var mappedUser = newUser.map(accountManagementMapper::toAccountResponse);
         var response = mappedUser.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
         
