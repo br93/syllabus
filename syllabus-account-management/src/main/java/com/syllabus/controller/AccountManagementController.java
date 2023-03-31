@@ -33,37 +33,46 @@ public class AccountManagementController {
     @GetMapping("user")
     public Mono<ResponseEntity<APIResponse>> hello(@RequestHeader Map<String, String> headers) {
 
-    	var auth = accountManagementService.extractCookie(headers).flatMap(accountManagementService::getUser).map(accountManagementMapper::toAPIResponse);
-    	return auth.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
+        var auth = accountManagementService.extractCookie(headers).flatMap(accountManagementService::getUser)
+                .map(accountManagementMapper::toAPIResponse);
+        return auth.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
     @PatchMapping("user/email")
-    public Mono<ResponseEntity<AccountResponse>> updateEmail(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
-        
-        var auth = accountManagementService.extractCookie(headers);
-        var newUser = accountManagementService.updateEmail(auth.block(), accountManagementMapper.toAccountModel(request));
-        var mappedUser = newUser.map(accountManagementMapper::toAccountResponse);
-        var response = mappedUser.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
-        
-        return response;
+    public Mono<ResponseEntity<AccountResponse>> updateEmail(@RequestHeader Map<String, String> headers,
+            @Valid @RequestBody AccountRequest request) {
+
+        var auth = accountManagementService.extractCookie(headers)
+                .flatMap(x -> accountManagementService.updateEmail(x, accountManagementMapper.toAccountModel(request)))
+                .map(accountManagementMapper::toAccountResponse);
+
+        return auth.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
-    /*@PatchMapping("user/password")
-    public ResponseEntity<AccountResponse> updatePassword(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
-
-        var auth = accountManagementService.extractCookie(headers);
-        var newUser = accountManagementService.updatePassword(auth, accountManagementMapper.toAccountModel(request));
-
-        return new ResponseEntity<>(accountManagementMapper.toAccountResponse(newUser), HttpStatus.OK);
-    }
-
-    @DeleteMapping("user")
-    public ResponseEntity<AccountResponse> deleteAccount(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
-        
-        var auth = accountManagementService.extractCookie(headers);
-        accountManagementService.delete(auth, accountManagementMapper.toAccountModel(request));
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
+    /*
+     * @PatchMapping("user/password")
+     * public ResponseEntity<AccountResponse> updatePassword(@RequestHeader
+     * Map<String, String> headers, @Valid @RequestBody AccountRequest request){
+     * 
+     * var auth = accountManagementService.extractCookie(headers);
+     * var newUser = accountManagementService.updatePassword(auth,
+     * accountManagementMapper.toAccountModel(request));
+     * 
+     * return new
+     * ResponseEntity<>(accountManagementMapper.toAccountResponse(newUser),
+     * HttpStatus.OK);
+     * }
+     * 
+     * @DeleteMapping("user")
+     * public ResponseEntity<AccountResponse> deleteAccount(@RequestHeader
+     * Map<String, String> headers, @Valid @RequestBody AccountRequest request){
+     * 
+     * var auth = accountManagementService.extractCookie(headers);
+     * accountManagementService.delete(auth,
+     * accountManagementMapper.toAccountModel(request));
+     * 
+     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+     * }
+     */
 
 }

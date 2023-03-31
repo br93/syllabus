@@ -31,14 +31,16 @@ public class AccountManagementService {
 
 	public Mono<String> extractCookie(Map<String, String> headers) {
 
-		return Mono.just(headers.values()).flatMapIterable(list -> list).next()
+		return Mono.just(headers.values())
+				.flatMapIterable(list -> list).next()
 				.switchIfEmpty(Mono.error(new UserNotAuthorizedException("User not authorized")));
 
 	}
 
 	public Mono<ClientResponse> getUser(String authorization) {
-		return Mono.fromSupplier(() -> authClient.getMe(authorization)).map(client -> new ClientResponse()); 
-		
+		return Mono.fromSupplier(() -> authClient.getMe(authorization))
+				.map(client -> new ClientResponse());
+
 	}
 
 	public Mono<AccountModel> getUserByUserId(String userId) {
@@ -50,11 +52,13 @@ public class AccountManagementService {
 
 	public Mono<AccountModel> updateEmail(String authorization, AccountModel request) {
 
-		Mono<ClientResponse> authorizedUser = Mono.just(authorization).flatMap(this::getUser);
-		Mono<String> userId = authorizedUser.map(auth -> auth.getUser().getUserId());
-		Mono<AccountModel> user = userId.flatMap(this::getUserByUserId);
-		Mono<String> oldEmail = user.map(x -> x.getEmail());
-		Mono<String> oldPassword = user.map(x -> x.getPassword());
+		var user = Mono.just(authorization)
+			.flatMap(this::getUser)
+			.map(auth -> auth.getUser().getUserId())
+			.flatMap(this::getUserByUserId);
+		
+		var oldEmail = user.map(x -> x.getEmail());
+		var oldPassword = user.map(x -> x.getPassword());
 
 		Mono.fromSupplier(() -> this.validateDifferentEmail(request.getEmail(), oldEmail));
 		Mono.fromSupplier(() -> this.validateSamePassword(request.getPassword(), oldPassword));
@@ -64,35 +68,39 @@ public class AccountManagementService {
 			u.setPassword(request.getPassword());
 			return this.accountManagementRepository.save(u);
 		});
-		
+
 	}
 
 	public AccountModel updatePassword(String authorization, AccountModel request) {
-		/*var userId = this.getUser(authorization).getUser().getUserId();
-		var user = this.getUserByUserId(userId);
-
-		validateSameEmail(request.getEmail(), user.getEmail());
-		validateDifferentPassword(request.getPassword(), user.getPassword());
-
-		AccountModel updatedUser = user;
-		updatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
-		updatedUser.setUpdatedAt(Instant.now());
-
-		return accountManagementRepository.save(updatedUser);*/
+		/*
+		 * var userId = this.getUser(authorization).getUser().getUserId();
+		 * var user = this.getUserByUserId(userId);
+		 * 
+		 * validateSameEmail(request.getEmail(), user.getEmail());
+		 * validateDifferentPassword(request.getPassword(), user.getPassword());
+		 * 
+		 * AccountModel updatedUser = user;
+		 * updatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
+		 * updatedUser.setUpdatedAt(Instant.now());
+		 * 
+		 * return accountManagementRepository.save(updatedUser);
+		 */
 		return null;
 	}
 
 	public void delete(String authorization, AccountModel request) {
-		/*var userId = this.getUser(authorization).getUser().getUserId();
-		var user = this.getUserByUserId(userId);
-
-		validateSameEmail(request.getEmail(), user.getEmail());
-		validateSamePassword(request.getPassword(), user.getPassword());
-
-		user.setUpdatedAt(Instant.now());
-		user.setDeletedAt(Instant.now());
-
-		accountManagementRepository.save(user);*/
+		/*
+		 * var userId = this.getUser(authorization).getUser().getUserId();
+		 * var user = this.getUserByUserId(userId);
+		 * 
+		 * validateSameEmail(request.getEmail(), user.getEmail());
+		 * validateSamePassword(request.getPassword(), user.getPassword());
+		 * 
+		 * user.setUpdatedAt(Instant.now());
+		 * user.setDeletedAt(Instant.now());
+		 * 
+		 * accountManagementRepository.save(user);
+		 */
 	}
 
 	private Mono<String> validateDifferentEmail(String newEmail, Mono<String> oldEmail) {
