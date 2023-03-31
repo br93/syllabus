@@ -52,21 +52,19 @@ public class AccountManagementService {
 
 	public Mono<AccountModel> updateEmail(String authorization, AccountModel request) {
 
-		var user = Mono.just(authorization)
+		return Mono.just(authorization)
 			.flatMap(this::getUser)
 			.map(auth -> auth.getUser().getUserId())
 			.flatMap(this::getUserByUserId)
 			.doOnNext(x -> {
 				this.validateDifferentEmail(request.getEmail(), x.getEmail());
 				this.validateSamePassword(request.getPassword(), x.getPassword());
+			})
+			.flatMap(u -> {
+				u.setEmail(request.getEmail());
+				u.setPassword(request.getPassword());
+				return this.accountManagementRepository.save(u);
 			});
-
-		return user.flatMap(u -> {
-			u.setEmail(request.getEmail());
-			u.setPassword(request.getPassword());
-			return this.accountManagementRepository.save(u);
-		});
-
 	}
 
 	public AccountModel updatePassword(String authorization, AccountModel request) {
