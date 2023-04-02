@@ -57,7 +57,7 @@ public class AccountManagementService {
 				.map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
                 .map(user-> {
-                    if (!emailIsEqual(request.getEmail(), user.getEmail()) && passwordIsEqual(request.getPassword(), user.getPassword()))
+                    if (emailIsEqual(request.getEmail(), user.getEmail()) || !passwordIsEqual(request.getPassword(), user.getPassword()))
                         throw new EmailOrPasswordException(environment.getProperty(ERROR));
                     return user;
                 })
@@ -75,7 +75,7 @@ public class AccountManagementService {
 				.map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
                 .map(user -> {
-                    if(emailIsEqual(request.getEmail(), user.getEmail()) && !passwordIsEqual(request.getPassword(), user.getPassword()))
+                    if(!emailIsEqual(request.getEmail(), user.getEmail()) || passwordIsEqual(request.getPassword(), user.getPassword()))
                         throw new EmailOrPasswordException(environment.getProperty(ERROR));
                     return user;
                 })
@@ -92,7 +92,7 @@ public class AccountManagementService {
 		return Mono.just(authorization).flatMap(this::getUser).map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
 				.map(user -> {
-                    if(emailIsEqual(request.getEmail(), user.getEmail()) && passwordIsEqual(request.getPassword(), user.getPassword()))
+                    if(!emailIsEqual(request.getEmail(), user.getEmail()) || !passwordIsEqual(request.getPassword(), user.getPassword()))
                         throw new EmailOrPasswordException(environment.getProperty(ERROR));
                     return user;
                 })
