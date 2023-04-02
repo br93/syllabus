@@ -56,13 +56,11 @@ public class AccountManagementService {
 				.flatMap(this::getUser)
 				.map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
-				.doOnNext(user -> {
-					this.validateDifferentEmail(request.getEmail(), user.getEmail());
-					this.validateSamePassword(request.getPassword(), user.getPassword());
-				})
-				.onErrorResume(error -> {
-					return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR), error));
-				})
+                .map(user-> {
+                    if (!emailIsEqual(request.getEmail(), user.getEmail()) && passwordIsEqual(request.getPassword(), user.getPassword()))
+                        throw new EmailOrPasswordException(environment.getProperty(ERROR));
+                    return user;
+                })
 				.flatMap(user -> {
 					user.setEmail(request.getEmail());
 					user.setUpdatedAt(Instant.now());
@@ -76,13 +74,11 @@ public class AccountManagementService {
 				.flatMap(this::getUser)
 				.map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
-				.doOnNext(user -> {
-					this.validateSameEmail(request.getEmail(), user.getEmail());
-					this.validateDifferentPassword(request.getPassword(), user.getPassword());
-				})
-				.onErrorResume(error -> {
-					return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR), error));
-				})
+                .map(user -> {
+                    if(emailIsEqual(request.getEmail(), user.getEmail()) && !passwordIsEqual(request.getPassword(), user.getPassword()))
+                        throw new EmailOrPasswordException(environment.getProperty(ERROR));
+                    return user;
+                })
 				.flatMap(user -> {
 					user.setPassword(passwordEncoder.encode(request.getPassword()));
 					user.setUpdatedAt(Instant.now());
@@ -95,13 +91,11 @@ public class AccountManagementService {
 
 		return Mono.just(authorization).flatMap(this::getUser).map(auth -> auth.getUser().getUserId())
 				.flatMap(this::getUserByUserId)
-				.doOnNext(user -> {
-					this.validateSameEmail(request.getEmail(), user.getEmail());
-					this.validateSamePassword(request.getPassword(), user.getPassword());
-				})
-				.onErrorResume(error -> {
-					return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR), error));
-				})
+				.map(user -> {
+                    if(emailIsEqual(request.getEmail(), user.getEmail()) && passwordIsEqual(request.getPassword(), user.getPassword()))
+                        throw new EmailOrPasswordException(environment.getProperty(ERROR));
+                    return user;
+                })
 				.flatMap(user -> {
 					user.setUpdatedAt(Instant.now());
 					user.setDeletedAt(Instant.now());
@@ -110,30 +104,13 @@ public class AccountManagementService {
 
 	}
 
-	private Mono<Void> validateDifferentEmail(String newEmail, String oldEmail) {
-		if (oldEmail.equals(newEmail))
-			return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR)));
-		return Mono.empty();
+    private Boolean emailIsEqual(String newEmail, String oldEmail){
+        return oldEmail.equals(newEmail);
+    }
 
-	}
+    private Boolean passwordIsEqual(String newPassword, String oldPassword){
+        return passwordEncoder.matches(newPassword, oldPassword);
+    }
 
-	private Mono<Void> validateSameEmail(String newEmail, String oldEmail) {
-		if (!oldEmail.equals(newEmail))
-			return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR)));
-		return Mono.empty();
-	}
-
-	private Mono<Void> validateDifferentPassword(String newPassword, String oldPassword) {
-		if (passwordEncoder.matches(newPassword, oldPassword))
-			return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR)));
-		return Mono.empty();
-	}
-
-	private Mono<Void> validateSamePassword(String newPassword, String oldPassword) {
-		if (!passwordEncoder.matches(newPassword, oldPassword))
-			return Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR)));
-		return Mono.empty();
-
-	}
-
+	
 }
