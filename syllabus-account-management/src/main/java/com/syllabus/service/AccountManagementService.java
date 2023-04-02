@@ -1,6 +1,5 @@
 package com.syllabus.service;
 
-import java.time.Instant;
 import java.util.Map;
 
 import org.springframework.core.env.Environment;
@@ -16,6 +15,7 @@ import com.syllabus.exception.UserNotFoundException;
 import com.syllabus.repository.AccountManagementRepository;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -30,16 +30,15 @@ public class AccountManagementService {
 	private static final String ERROR = "account.management.error";
 
 	public Mono<String> extractCookie(Map<String, String> headers) {
+		var values = Flux.fromIterable(headers.values());
 
-		return Mono.just(headers.values())
-			.flatMapIterable(list -> list).next()
-			.switchIfEmpty(Mono.error(new UserNotAuthorizedException("User not authorized")));
-
+		return values.filter(x -> x.contains("Authorization"))
+				.next()
+				.switchIfEmpty(Mono.error(new UserNotAuthorizedException("User not authorized")));
 	}
 
-	public Mono<ClientResponse> getUser(String authorization) {
-		return Mono.fromSupplier(() -> authClient.getMe(authorization))
-			.map(client -> new ClientResponse());
+	public Mono<ClientResponse> getUser(Map<String, String> authorization) {
+		return this.extractCookie(authorization).flatMap(authClient::getMe);
 
 	}
 
@@ -50,7 +49,7 @@ public class AccountManagementService {
 
 	}
 
-	public Mono<AccountModel> updateEmail(String authorization, AccountModel request) {
+	public Mono<AccountModel> updateEmail(Map<String, String> authorization, AccountModel request) {
 
 		return Mono.just(authorization)
 			.flatMap(this::getUser)
@@ -66,6 +65,7 @@ public class AccountManagementService {
 				return this.accountManagementRepository.save(u);
 			});
 	}
+
 
 	public AccountModel updatePassword(String authorization, AccountModel request) {
 		/*
@@ -99,12 +99,10 @@ public class AccountManagementService {
 		 */
 	}
 
-	private Mono<String> validateDifferentEmail(String newEmail, String oldEmail) {
-
-		return Mono.just(oldEmail).filter(x -> x.equals(newEmail))
-				.switchIfEmpty(Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR))));
-
-	}
+	private void validateDifferentEmail(String newEmail, String oldEmail){
+        if (oldEmail.equals(newEmail))
+            throw new EmailOrPasswordException(environment.getProperty(ERROR));
+    }
 
 	private void validateSameEmail(String newEmail, String oldEmail) {
 		if (!oldEmail.equals(newEmail))
@@ -116,10 +114,9 @@ public class AccountManagementService {
 			throw new EmailOrPasswordException(environment.getProperty(ERROR));
 	}
 
-	private Mono<String> validateSamePassword(String newPassword, String oldPassword) {
-
-		return Mono.just(oldPassword).filter(x -> !passwordEncoder.matches(newPassword, x))
-				.switchIfEmpty(Mono.error(new EmailOrPasswordException(environment.getProperty(ERROR))));
-	}
+	private void validateSamePassword(String newPassword, String oldPassword) {
+        if (!passwordEncoder.matches(newPassword, oldPassword))
+            throw new EmailOrPasswordException(environment.getProperty(ERROR));
+    }
 
 }
