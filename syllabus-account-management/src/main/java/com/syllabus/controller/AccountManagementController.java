@@ -2,11 +2,11 @@ package com.syllabus.controller;
 
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,49 +20,62 @@ import com.syllabus.util.AccountManagementMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/v1/account")
+@RequestMapping("api/v1/account/user")
 @RequiredArgsConstructor
 public class AccountManagementController {
 
     private final AccountManagementService accountManagementService;
     private final AccountManagementMapper accountManagementMapper;
 
-    @GetMapping("user")
-    public ResponseEntity<APIResponse> hello(@RequestHeader Map<String, String> headers) {
+    @GetMapping
+    public Mono<ResponseEntity<APIResponse>> hello(@RequestHeader Map<String, String> headers) {
 
-        var auth = accountManagementService.extractCookie(headers);
-        var user = accountManagementService.getUser(auth);
+        var user = accountManagementService.getUser(headers)
+                .map(accountManagementMapper::toAPIResponse);
 
-        return new ResponseEntity<>(accountManagementMapper.toAPIResponse(user), HttpStatus.OK);
+        return user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
-    @PatchMapping("user/email")
-    public ResponseEntity<AccountResponse> updateEmail(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
-        
-        var auth = accountManagementService.extractCookie(headers);
-        var newUser = accountManagementService.updateEmail(auth, accountManagementMapper.toAccountModel(request));
+    @GetMapping("{id}")
+    public Mono<ResponseEntity<AccountResponse>> getUserByUserId(@PathVariable String id) {
 
-        return new ResponseEntity<>(accountManagementMapper.toAccountResponse(newUser), HttpStatus.OK);
+        var user = accountManagementService.getUserByUserId(id).map(accountManagementMapper::toAccountResponse);
+
+        return user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("user/password")
-    public ResponseEntity<AccountResponse> updatePassword(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
+    @PatchMapping("email")
+    public Mono<ResponseEntity<AccountResponse>> updateEmail(@RequestHeader Map<String, String> headers,
+            @Valid @RequestBody Mono<AccountRequest> request) {
 
-        var auth = accountManagementService.extractCookie(headers);
-        var newUser = accountManagementService.updatePassword(auth, accountManagementMapper.toAccountModel(request));
+        var user = request.map(accountManagementMapper::toAccountModel)
+                .flatMap(model -> accountManagementService.updateEmail(headers, model))
+                .map(accountManagementMapper::toAccountResponse);
 
-        return new ResponseEntity<>(accountManagementMapper.toAccountResponse(newUser), HttpStatus.OK);
+        return user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
-    @DeleteMapping("user")
-    public ResponseEntity<AccountResponse> deleteAccount(@RequestHeader Map<String, String> headers, @Valid @RequestBody AccountRequest request){
-        
-        var auth = accountManagementService.extractCookie(headers);
-        accountManagementService.delete(auth, accountManagementMapper.toAccountModel(request));
+    @PatchMapping("password")
+    public Mono<ResponseEntity<AccountResponse>> updatePassword(@RequestHeader Map<String, String> headers,
+            @Valid @RequestBody Mono<AccountRequest> request) {
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        var user = request.map(accountManagementMapper::toAccountModel).flatMap(model -> accountManagementService
+                .updatePassword(headers, model).map(accountManagementMapper::toAccountResponse));
+
+        return user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
+    }
+
+    @DeleteMapping
+    public Mono<ResponseEntity<Void>> deleteAccount(@RequestHeader Map<String, String> headers,
+            @Valid @RequestBody Mono<AccountRequest> request) {
+
+        var user = request.map(accountManagementMapper::toAccountModel)
+                .flatMap(model -> accountManagementService.deleteAccount(headers, model));
+
+        return user.map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
 }

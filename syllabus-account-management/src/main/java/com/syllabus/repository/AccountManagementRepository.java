@@ -1,12 +1,14 @@
 package com.syllabus.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.syllabus.data.model.AccountModel;
 
-public interface AccountManagementRepository extends JpaRepository<AccountModel, Long> {
+import reactor.core.publisher.Mono;
+
+@Repository
+public interface AccountManagementRepository extends ReactiveCrudRepository<AccountModel, Long> {
     
-    Optional<AccountModel> findByUserId(String userId);
+    Mono<AccountModel> findByUserId(String userId);
 }
