@@ -9,7 +9,7 @@ var (
 	db *gorm.DB
 )
 
-const connection = "root:root1234@tcp(127.0.0.1:3306)/go_db?charset=utf8&parseTime=True&loc=Local"
+const connection = "root:root4567@tcp(127.0.0.1:3306)/go_db?charset=utf8&parseTime=True&loc=Local"
 
 func Connect() {
 	d, err := gorm.Open(mysql.Open(connection), &gorm.Config{})
