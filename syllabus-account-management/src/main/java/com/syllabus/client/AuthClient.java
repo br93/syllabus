@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public class AuthClient {
 
     private final WebClient webClient;
-    private static final String BASE_URL = "http://localhost:8765/api/v1/auth/";
+    private static final String BASE_URL = "${api.gateway}" + "${auth.path}";
 
     public AuthClient() {
         this.webClient = WebClient.builder().baseUrl(BASE_URL).build();
