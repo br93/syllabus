@@ -1,5 +1,6 @@
 package com.syllabus.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,10 +11,10 @@ import reactor.core.publisher.Mono;
 public class AuthClient {
 
     private final WebClient webClient;
-    private static final String BASE_URL = "${api.gateway}" + "${auth.path}";
 
-    public AuthClient() {
-        this.webClient = WebClient.builder().baseUrl(BASE_URL).build();
+    public AuthClient(@Value("${api.gateway}") final String apiGateway, @Value("${auth.path}") final String authPath) {
+
+        this.webClient = WebClient.builder().baseUrl(apiGateway.concat(authPath)).build();
     }
 
     @GetMapping("user")
