@@ -1,5 +1,8 @@
 package com.syllabus.data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +16,8 @@ public class AlunoRequest {
 
     private Integer periodo;
 
+    private String email;
+
     @JsonProperty("faculdade_sigla")
     private String siglaFaculdade;
 
@@ -20,7 +25,7 @@ public class AlunoRequest {
     private Integer codigoCurso;
 
     @JsonProperty("disciplinas_cursadas")
-    private DisciplinasDTO disciplinasCursadas;
+    private Set<String> codigoDisciplinas = new HashSet<>();
     
     
 }
