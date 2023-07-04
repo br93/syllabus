@@ -10,6 +10,7 @@ type ClassSchedule struct {
 	Class           Class    `json:"class"`
 	Day             Day      `json:"day"`
 	Schedule        Schedule `json:"schedule"`
+	ScheduleCode    string   `json:"schedule_code"`
 	ClassID         uint     `json:"class_id"`
 	DayID           uint     `json:"day_id"`
 	ScheduleID      uint     `json:"schedule_id"`
