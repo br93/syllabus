@@ -16,8 +16,6 @@ public class AlunoRequest {
 
     private Integer periodo;
 
-    private String email;
-
     @JsonProperty("faculdade_sigla")
     private String siglaFaculdade;
 

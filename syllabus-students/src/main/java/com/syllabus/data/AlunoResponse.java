@@ -16,6 +16,8 @@ public class AlunoResponse {
 
     @JsonProperty("aluno_id")
     private String alunoId;
+
+    private String email;
     
     private Integer periodo;
     

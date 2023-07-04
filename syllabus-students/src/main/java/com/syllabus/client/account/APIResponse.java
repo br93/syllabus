@@ -1,4 +1,4 @@
-package com.syllabus.client.auth;
+package com.syllabus.client.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ClientResponse {
+public class APIResponse {
 
-    private LoginResponse user;
+    private AccountResponse user;
     
 }
-
-

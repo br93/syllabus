@@ -1,6 +1,4 @@
-package com.syllabus.client.auth;
-
-import java.time.Instant;
+package com.syllabus.client.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,15 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LoginResponse {
+public class AccountResponse {
+
     @JsonProperty("user_id")
     private String userId;
     
     private String email;
     
     @JsonProperty("created_at")
-    private Instant createdAt;
+    private String createdAt;
     
     @JsonProperty("updated_at")
-    private Instant updatedAt;
+    private String updatedAt;
+    
 }
