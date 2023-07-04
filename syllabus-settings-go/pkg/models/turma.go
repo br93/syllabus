@@ -4,36 +4,31 @@ import (
 	"gorm.io/gorm"
 )
 
-type Turma struct {
+type Class struct {
 	gorm.Model
-	TurmaId      string        `gorm:"index:idx_turma_id,unique"`
-	Codigo       string        `gorm:"unique" json:"codigo"`
-	Turno        Turno         `json:"turno"`
-	Disciplina   Disciplina    `json:"disciplina"`
-	HorariosAula []HorarioAula `gorm:"foreignKey:TurmaID;references:ID" json:"horarios_aula"`
-	TurnoID      uint          `json:"turno_id"`
-	DisciplinaID uint          `json:"disciplina_id"`
+	ClassId    string      `gorm:"index:idx_class_id,unique"`
+	ClassCode  string      `gorm:"unique" json:"class_code"`
+	Course     Course      `json:"course"`
+	ClassHours []ClassHour `gorm:"foreignKey:ClassID;references:ID" json:"class_hours"`
+	CourseID   uint        `json:"course_id"`
 }
 
-type TurmaRequestModel struct {
-	Codigo     string `json:"codigo" binding:"required,min=3,max=10"`
-	Turno      string `json:"turno" binding:"required"`
-	Disciplina string `json:"disciplina" binding:"required,min=3,max=10"`
+type ClassRequestModel struct {
+	ClassCode string `json:"class_code" binding:"required,min=3,max=10"`
+	Course    string `json:"course" binding:"required,min=3,max=10"`
 }
 
-type TurmaResponseModel struct {
-	TurmaId string `json:"turma_id"`
-	Codigo  string `json:"codigo"`
-	Turno   string `json:"turno"`
+type ClassResponseModel struct {
+	ClassId   string `json:"class_id"`
+	ClassCode string `json:"class_code"`
 }
 
-type TurmaHorariosAulaResponseModel struct {
-	TurmaId      string                     `json:"turma_id"`
-	Disciplina   string                     `json:"disciplina"`
-	Turno        string                     `json:"turno"`
-	HorariosAula []HorarioAulaResponseModel `json:"horarios_aula"`
+type ClassHoursResponseModel struct {
+	ClassId    string                   `json:"class_id"`
+	Course     string                   `json:"course"`
+	ClassHours []ClassHourResponseModel `json:"class_hours"`
 }
 
-func (Turma) TableName() string {
-	return "tb_turma"
+func (Class) TableName() string {
+	return "tb_classes"
 }

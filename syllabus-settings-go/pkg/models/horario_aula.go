@@ -4,29 +4,29 @@ import (
 	"gorm.io/gorm"
 )
 
-type HorarioAula struct {
+type ClassSchedule struct {
 	gorm.Model
-	HorarioAulaId string  `gorm:"index:horario_aula_id,unique"`
-	Turma         Turma   `json:"turma"`
-	Dia           Dia     `json:"dia"`
-	Horario       Horario `json:"horario"`
-	TurmaID       uint    `json:"turma_id"`
-	DiaID         uint    `json:"dia_id"`
-	HorarioID     uint    `json:"horario_id"`
+	ClassScheduleId string   `gorm:"index:class_schedule_id,unique"`
+	Class           Class    `json:"class"`
+	Day             Day      `json:"day"`
+	Schedule        Schedule `json:"schedule"`
+	ClassID         uint     `json:"class_id"`
+	DayID           uint     `json:"day_id"`
+	ScheduleID      uint     `json:"schedule_id"`
 }
 
-type HorarioAulaRequestModel struct {
-	Turma   string `json:"codigo_turma" binding:"required,min=3,max=10"`
-	Dia     int16  `json:"dia_numero" binding:"required,gte=2,lte=7"`
-	Horario string `json:"horario_sigla" binding:"len=2"`
+type ClassScheduleRequestModel struct {
+	ClassCode    string `json:"class_code" binding:"required,min=3,max=10"`
+	DayNumber    int16  `json:"day_number" binding:"required,gte=2,lte=7"`
+	ScheduleCode string `json:"schedule_code" binding:"len=2"`
 }
 
-type HorarioAulaResponseModel struct {
-	HorarioAulaId string `json:"horario_aula_id"`
-	Turma         string `json:"codigo_turma"`
-	Horario       string `json:"horario"`
+type ClassScheduleResponseModel struct {
+	ClassScheduleId string `json:"class_schedule_id"`
+	ClassCode       string `json:"class_code"`
+	Schedule        string `json:"schedule"`
 }
 
-func (HorarioAula) TableName() string {
-	return "tb_horario_aula"
+func (ClassSchedule) TableName() string {
+	return "tb_class_schedules"
 }

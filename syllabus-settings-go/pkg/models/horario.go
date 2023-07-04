@@ -4,24 +4,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type Horario struct {
+type Schedule struct {
 	gorm.Model
-	HorarioId string `gorm:"index:horario_id,unique"`
-	Sigla     string `gorm:"unique" json:"sigla"`
-	Faixa     string `json:"faixa"`
+	ScheduleId   string `gorm:"index:schedule_id,unique"`
+	ScheduleCode string `gorm:"unique" json:"schedule_code"`
+	TimeRange    string `json:"time_range"`
 }
 
-type HorarioRequestModel struct {
-	Sigla string `json:"sigla" binding:"required,len=2"`
-	Faixa string `json:"faixa" binding:"required, len=20"`
+type ScheduleRequestModel struct {
+	ScheduleCode string `json:"schedule_code" binding:"required,len=2"`
+	TimeRange    string `json:"time_range" binding:"required, len=20"`
 }
 
-type HorarioResponseModel struct {
-	HorarioId string `json:"horario_id"`
-	Sigla     string `json:"sigla"`
-	Faixa     string `json:"faixa"`
+type ScheduleResponseModel struct {
+	ScheduleId   string `json:"schedule_id"`
+	ScheduleCode string `json:"schedule_code"`
+	TimeRange    string `json:"time_range"`
 }
 
-func (Horario) TableName() string {
-	return "tb_horario"
+func (Schedule) TableName() string {
+	return "tb_schedules"
 }

@@ -4,23 +4,23 @@ import (
 	"gorm.io/gorm"
 )
 
-type Tipo struct {
+type CourseType struct {
 	gorm.Model
-	TipoId    string `gorm:"index:idx_tipo_id,unique"`
-	TipoNome  string `gorm:"unique" json:"tipo_nome"`
-	TipoValor int16  `json:"tipo_valor"`
+	TypeId    string `gorm:"index:idx_type_id,unique"`
+	TypeName  string `gorm:"unique" json:"tipo_name"`
+	TypeValue int16  `json:"type_value"`
 }
 
-type TipoRequestModel struct {
-	TipoNome  string `json:"tipo_nome" binding:"required"`
-	TipoValor int16  `json:"tipo_valor" binding:"required,gte=1,lte=10"`
+type CourseTypeRequestModel struct {
+	TypeName  string `json:"type_name" binding:"required"`
+	TypeValue int16  `json:"type_value" binding:"required,gte=1,lte=10"`
 }
 
-type TipoResponseModel struct {
-	TipoId   string `json:"tipo_id"`
-	TipoNome string `json:"tipo_nome"`
+type CourseTypeResponseModel struct {
+	TypeId   string `json:"type_id"`
+	TypeName string `json:"type_name"`
 }
 
-func (Tipo) TableName() string {
-	return "tb_tipo"
+func (CourseType) TableName() string {
+	return "tb_course_types"
 }

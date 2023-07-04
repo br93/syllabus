@@ -4,35 +4,35 @@ import (
 	"gorm.io/gorm"
 )
 
-type Curso struct {
+type Program struct {
 	gorm.Model
-	CursoId     string            `gorm:"index:idx_curso_id, unique"`
-	Nome        string            `json:"nome"`
-	Codigo      string            `gorm:"unique" json:"codigo"`
-	Periodos    int16             `json:"periodos"`
-	Disciplinas []DisciplinaCurso `gorm:"foreignKey:CursoID;references:ID" json:"disciplinas"`
+	ProgramId   string          `gorm:"index:idx_program_id, unique"`
+	ProgramName string          `json:"program_name"`
+	ProgramCode string          `gorm:"unique" json:"program_code"`
+	Terms       int16           `json:"terms"`
+	Courses     []CourseProgram `gorm:"foreignKey:ProgramID;references:ID" json:"courses"`
 }
 
-type CursoRequestModel struct {
-	Nome     string `json:"nome" binding:"required,max=50"`
-	Codigo   string `json:"codigo" binding:"required,min=3,max=10"`
-	Periodos int16  `json:"periodos" binding:"required,gte=1,lte=10"`
+type ProgramRequestModel struct {
+	ProgramName string `json:"program_name" binding:"required,max=50"`
+	ProgramCode string `json:"program_code" binding:"required,min=3,max=10"`
+	Terms       int16  `json:"terms" binding:"required,gte=1,lte=10"`
 }
 
-type CursoResponseModel struct {
-	CursoId  string `json:"curso_id"`
-	Codigo   string `json:"codigo"`
-	Nome     string `json:"nome"`
-	Periodos int16  `json:"periodos"`
+type ProgramResponseModel struct {
+	ProgramId   string `json:"program_id"`
+	ProgramCode string `json:"program_code"`
+	ProgramName string `json:"program_name"`
+	Terms       int16  `json:"terms"`
 }
 
-type CursoDisciplinasResponseModel struct {
-	CursoId     string                         `json:"curso_id"`
-	Codigo      string                         `json:"codigo"`
-	Nome        string                         `json:"nome"`
-	Disciplinas []DisciplinaCursoResponseModel `json:"disciplinas"`
+type CourseProgramResponseModel struct {
+	ProgramId   string                       `json:"program_id"`
+	ProgramCode string                       `json:"program_code"`
+	ProgramName string                       `json:"program_name"`
+	Courses     []CourseProgramResponseModel `json:"courses"`
 }
 
-func (Curso) TableName() string {
-	return "tb_curso"
+func (Program) TableName() string {
+	return "tb_programs"
 }

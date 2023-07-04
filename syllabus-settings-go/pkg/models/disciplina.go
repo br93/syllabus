@@ -4,58 +4,58 @@ import (
 	"gorm.io/gorm"
 )
 
-type Disciplina struct {
+type Course struct {
 	gorm.Model
-	DisciplinaId  string            `gorm:"index:idx_disciplina_id, unique"`
-	Nome          string            `json:"nome"`
-	Codigo        string            `gorm:"unique" json:"codigo"`
-	CargaHoraria  int16             `json:"carga_horaria"`
-	Turmas        []Turma           `gorm:"foreignKey:DisciplinaID;references:ID" json:"turmas"`
-	Equivalentes  *[]Disciplina     `gorm:"many2many:disciplinas_equivalentes"`
-	PreRequisitos *[]Disciplina     `gorm:"many2many:disciplinas_prerequisitos"`
-	Cursos        []DisciplinaCurso `gorm:"foreignKey:DisciplinaID;references:ID" json:"cursos"`
+	CourseId            string          `gorm:"index:idx_course_id, unique"`
+	CourseNome          string          `json:"course_name"`
+	CouseCode           string          `gorm:"unique" json:"course_code"`
+	Workload            int16           `json:"workload"`
+	Classes             []Class         `gorm:"foreignKey:CourseID;references:ID" json:"classes"`
+	EquivalentCourses   *[]Course       `gorm:"many2many:tb_equivalent_courses"`
+	PreRequisiteCourses *[]Course       `gorm:"many2many:tb_pre_requisite_courses"`
+	CoursePrograms      []CourseProgram `gorm:"foreignKey:CourseID;references:ID" json:"course_programs"`
 }
 
 type DisciplinaRequestModel struct {
-	Nome         string `json:"nome" binding:"required"`
-	Codigo       string `json:"codigo" binding:"required,min=3,max=10"`
-	CargaHoraria int16  `json:"carga_horaria" binding:"required,gte=10,lte=200"`
+	CourseName string `json:"course_name" binding:"required"`
+	CourseCode string `json:"course_code" binding:"required,min=3,max=10"`
+	Workload   int16  `json:"workload" binding:"required,gte=10,lte=200"`
 }
 
-type DisciplinaResponseModel struct {
-	DisciplinaId string `json:"disciplina_id"`
-	Codigo       string `json:"codigo"`
-	Nome         string `json:"nome"`
-	CargaHoraria int16  `json:"carga_horaria"`
+type CourseResponseModel struct {
+	CourseId   string `json:"course_id"`
+	CourseCode string `json:"course_code"`
+	CourseName string `json:"course_name"`
+	Workload   int16  `json:"workload"`
 }
 
-type DisciplinaCodigoRequestModel struct {
-	Codigo string `json:"disciplina_codigo"`
+type CourseCodeRequestModel struct {
+	CourseCode string `json:"course_code"`
 }
 
-type DisciplinaEquivalentesResponseModel struct {
-	DisciplinaId string                    `json:"disciplina_id"`
-	Codigo       string                    `json:"codigo"`
-	Nome         string                    `json:"nome"`
-	CargaHoraria int16                     `json:"carga_horaria"`
-	Equivalentes []DisciplinaResponseModel `json:"disciplinas_equivalentes"`
+type EquivalentCoursesResponseModel struct {
+	CourseId          string                `json:"course_id"`
+	CourseCode        string                `json:"course_code"`
+	CourseName        string                `json:"course_name"`
+	Workload          int16                 `json:"workload"`
+	EquivalentCourses []CourseResponseModel `json:"equivalent_courses"`
 }
 
-type DisciplinaPreRequisitosResponseModel struct {
-	DisciplinaId  string                    `json:"disciplina_id"`
-	Codigo        string                    `json:"codigo"`
-	Nome          string                    `json:"nome"`
-	CargaHoraria  int16                     `json:"carga_horaria"`
-	PreRequisitos []DisciplinaResponseModel `json:"disciplinas_prerequisitos"`
+type PreRequisiteCoursesResponseModel struct {
+	CourseId            string                `json:"course_id"`
+	CourseCode          string                `json:"course_code"`
+	CourseName          string                `json:"course_name"`
+	Workload            int16                 `json:"workload"`
+	PreRequisiteCourses []CourseResponseModel `json:"equivalent_courses"`
 }
 
-type DisciplinaTurmasResponseModel struct {
-	DisciplinaId string               `json:"disciplina_id"`
-	Codigo       string               `json:"codigo"`
-	Nome         string               `json:"nome"`
-	Turmas       []TurmaResponseModel `json:"turmas"`
+type CourseClassesResponseModel struct {
+	CourseId   string               `json:"course_id"`
+	CourseCode string               `json:"course_code"`
+	CouseName  string               `json:"course_name"`
+	Classes    []ClassResponseModel `json:"classes"`
 }
 
-func (Disciplina) TableName() string {
-	return "tb_disciplina"
+func (Course) TableName() string {
+	return "tb_courses"
 }
