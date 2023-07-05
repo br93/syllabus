@@ -14,6 +14,7 @@ type Schedule struct {
 
 type ScheduleRequestModel struct {
 	ScheduleCode string `json:"schedule_code" binding:"required,len=2"`
+	TimeOfDay    string `json:"time_of_day" binding:"required,len=1"`
 	TimeRange    string `json:"time_range" binding:"required, len=20"`
 }
 

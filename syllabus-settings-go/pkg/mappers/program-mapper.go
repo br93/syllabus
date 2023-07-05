@@ -41,11 +41,11 @@ func ToProgramResponseArray(req *[]models.Program) *[]models.ProgramResponseMode
 	return &programs
 }
 
-func ToProgramCourses(program *models.Program) *models.ProgramCoursesResponseModel {
+func ToProgramCourses(program *models.Program) *models.CoursesResponseModel {
 	var disciplinas = program.Courses
 
 	var response = ToCourseProgramResponseArray(&disciplinas)
 
-	newResponse := models.ProgramCoursesResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, Courses: *response}
+	newResponse := models.CoursesResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, Courses: *response}
 	return &newResponse
 }

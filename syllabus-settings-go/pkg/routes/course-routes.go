@@ -8,7 +8,7 @@ import (
 var RegisterCourseRoutes = func(router *gin.Engine) {
 	router.POST("/api/v1/config/courses", controllers.CreateCourse)
 	router.GET("/api/v1/config/courses", controllers.GetCourses)
-	router.GET("/api/v1/config/courses/:course_id", controllers.GetCourseByIdOrCodigo)
+	router.GET("/api/v1/config/courses/:course_id", controllers.GetCourseByIdOrCode)
 	router.PUT("/api/v1/config/courses/:course_id", controllers.UpdateCourse)
 	router.DELETE("/api/v1/config/courses/:course_id", controllers.DeleteCourse)
 	router.PUT("/api/v1/config/courses/:course_id/pre/", controllers.AddPreRequisite)

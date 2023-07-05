@@ -6,12 +6,11 @@ import (
 
 var RegisterRoutes = func(router *gin.Engine) {
 	RegisterHealthRoutes(router)
-	RegisterTurnoRoutes(router)
-	RegisterDiaRoutes(router)
-	RegisterCursoRoutes(router)
-	RegisterDisciplinaRoutes(router)
-	RegisterHorarioRoutes(router)
-	RegisterTurmaRoutes(router)
-	RegisterHorarioAulaRoutes(router)
-	RegisterTipoRoutes(router)
+	RegisterDayRoutes(router)
+	RegisterProgramRoutes(router)
+	RegisterCourseRoutes(router)
+	RegisterScheduleRoutes(router)
+	RegisterClassRoutes(router)
+	RegisterClassScheduleRoutes(router)
+	RegisterCourseTypeRoutes(router)
 }

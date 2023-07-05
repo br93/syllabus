@@ -11,31 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewTipo models.Tipo
+var NewClassSchedule models.ClassSchedule
 
-func CreateTipo(ctx *gin.Context) {
-	body := models.TipoRequestModel{}
+func CreateClassSchedule(ctx *gin.Context) {
+	body := models.ClassScheduleRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	tipo := mappers.ToTipo(&body)
+	classSchedule := mappers.ToClassSchedule(&body)
 
-	if err := services.CreateTipo(tipo); err != nil {
+	if err := services.CreateClassSchedule(classSchedule); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToTipoResponse(tipo)
+	response := mappers.ToClassScheduleResponse(classSchedule)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTipoByIdOrNome(ctx *gin.Context) {
-	tipoId := ctx.Param("tipo_id")
-	tipo, err := services.GetTipoByIdOrNome(tipoId)
+func GetClassScheduleById(ctx *gin.Context) {
+	classScheduleId := ctx.Param("class_schedule_id")
+
+	classSchedule, err := services.GetClassScheduleById(classScheduleId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -45,15 +46,15 @@ func GetTipoByIdOrNome(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTipoResponse(tipo)
+	response := mappers.ToClassScheduleResponse(classSchedule)
 
 	ctx.JSON(http.StatusOK, response)
 
 }
 
-func GetTipos(ctx *gin.Context) {
+func GetClassSchedules(ctx *gin.Context) {
 
-	tipos, err := services.GetTipos()
+	classSchedules, err := services.GetClassSchedules()
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -63,22 +64,22 @@ func GetTipos(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTipoResponseArray(tipos)
+	response := mappers.ToClassScheduleResponseArray(classSchedules)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateTipo(ctx *gin.Context) {
-	tipoId := ctx.Param("tipo_id")
-	body := models.TipoRequestModel{}
+func UpdateClassSchedule(ctx *gin.Context) {
+	classScheduleId := ctx.Param("class_schedule_id")
+	body := models.ClassScheduleRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	tipo := mappers.ToTipo(&body)
-	update, err := services.UpdateTipo(tipoId, tipo)
+	classSchedule := mappers.ToClassSchedule(&body)
+	update, err := services.UpdateClassSchedule(classScheduleId, classSchedule)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -88,15 +89,15 @@ func UpdateTipo(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTipoResponse(update)
+	response := mappers.ToClassScheduleResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteTipo(ctx *gin.Context) {
-	tipoId := ctx.Param("tipo_id")
+func DeleteClassSchedule(ctx *gin.Context) {
+	classScheduleId := ctx.Param("class_schedule_id")
 
-	err := services.DeleteTipo(tipoId)
+	err := services.DeleteClassSchedule(classScheduleId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return

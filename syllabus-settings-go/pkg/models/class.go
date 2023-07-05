@@ -23,7 +23,7 @@ type ClassResponseModel struct {
 	ClassCode string `json:"class_code"`
 }
 
-type ClassHoursResponseModel struct {
+type ClassSchedulesResponseModel struct {
 	ClassId        string                       `json:"class_id"`
 	Course         string                       `json:"course"`
 	ClassSchedules []ClassScheduleResponseModel `json:"class_hours"`

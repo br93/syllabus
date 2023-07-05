@@ -11,10 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewDia models.Day
+var NewDay models.Day
 
 func CreateDay(ctx *gin.Context) {
-	body := models.DiaRequestModel{}
+	body := models.DayRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
@@ -36,7 +36,7 @@ func CreateDay(ctx *gin.Context) {
 func GetDayByIdOrNumber(ctx *gin.Context) {
 	dayId := ctx.Param("day_id")
 
-	day, err := services.GetDiaByIdOrNumber(dayId)
+	day, err := services.GetDayByIdOrNumber(dayId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -95,7 +95,7 @@ func UpdateDay(ctx *gin.Context) {
 func DeleteDay(ctx *gin.Context) {
 	dayId := ctx.Param("day_id")
 
-	err := services.DeleteDia(dayId)
+	err := services.DeleteDay(dayId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return

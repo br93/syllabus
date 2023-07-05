@@ -12,7 +12,7 @@ func FromCourseCode(req *[]models.CourseCodeRequestModel) *[]models.Course {
 	request := *req
 
 	for i := 0; i < size; i++ {
-		aux, _ := services.GetCourseByCode(request[i].Code)
+		aux, _ := services.GetCourseByCode(request[i].CourseCode)
 		courses[i] = *aux
 	}
 

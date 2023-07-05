@@ -17,16 +17,16 @@ type CourseProgram struct {
 }
 
 type CourseProgramRequestModel struct {
-	CourseCode      string `json:"course_code" binding:"required,min=3,max=10"`
-	ProgramCode     string `json:"program_code" binding:"required,min=3,max=10"`
-	CourseTypeValue string `json:"course_type_value" binding:"required,gte=1,lte=10"`
-	Term            int16  `json:"term" binding:"required,gte=1,lte=10"`
+	CourseCode  string `json:"course_code" binding:"required,min=3,max=10"`
+	ProgramCode string `json:"program_code" binding:"required,min=3,max=10"`
+	Type        string `json:"type" binding:"required,gte=1,lte=10"`
+	Term        int16  `json:"term" binding:"required,gte=1,lte=10"`
 }
 
 type CourseProgramResponseModel struct {
 	CourseProgramId string `json:"course_program_id"`
 	CourseCode      string `json:"course_code"`
-	CourseType      string `json:"course_type"`
+	Type            string `json:"course_type"`
 	Term            int16  `json:"term"`
 }
 

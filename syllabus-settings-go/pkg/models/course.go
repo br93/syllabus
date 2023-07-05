@@ -7,8 +7,8 @@ import (
 type Course struct {
 	gorm.Model
 	CourseId            string          `gorm:"index:idx_course_id, unique"`
-	CourseNome          string          `json:"course_name"`
-	CouseCode           string          `gorm:"unique" json:"course_code"`
+	CourseName          string          `json:"course_name"`
+	CourseCode          string          `gorm:"unique" json:"course_code"`
 	Workload            int16           `json:"workload"`
 	Classes             []Class         `gorm:"foreignKey:CourseID;references:ID" json:"classes"`
 	EquivalentCourses   *[]Course       `gorm:"many2many:tb_equivalent_courses"`
@@ -52,7 +52,7 @@ type PreRequisiteCoursesResponseModel struct {
 type CourseClassesResponseModel struct {
 	CourseId   string               `json:"course_id"`
 	CourseCode string               `json:"course_code"`
-	CouseName  string               `json:"course_name"`
+	CourseName string               `json:"course_name"`
 	Classes    []ClassResponseModel `json:"classes"`
 }
 

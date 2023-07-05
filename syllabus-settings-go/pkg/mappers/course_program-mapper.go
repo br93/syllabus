@@ -7,9 +7,9 @@ import (
 )
 
 func ToCourseProgram(req *models.CourseProgramRequestModel) *models.CourseProgram {
-	program, errProgram := services.GetProgramByCode(req.Program)
-	course, errCourse := services.GetCourseByCode(req.Course)
-	courseType, errCourseType := services.GetCourseTypeByName(req.CourseType)
+	program, errProgram := services.GetProgramByCode(req.ProgramCode)
+	course, errCourse := services.GetCourseByCode(req.CourseCode)
+	courseType, errCourseType := services.GetCourseTypeByName(req.Type)
 
 	if errProgram != nil || errCourse != nil || errCourseType != nil {
 		return &models.CourseProgram{}
@@ -32,7 +32,7 @@ func ToCourseProgramArray(req *[]models.CourseProgramRequestModel) *[]models.Cou
 
 func ToCourseProgramResponse(courseprogram *models.CourseProgram) *models.CourseProgramResponseModel {
 
-	newResponse := models.CourseProgramResponseModel{CourseProgramId: courseprogram.CourseProgramId, Course: courseprogram.Course.Code, CourseType: courseprogram.CourseType.CourseTypeName, Term: courseprogram.Term}
+	newResponse := models.CourseProgramResponseModel{CourseProgramId: courseprogram.CourseProgramId, CourseCode: courseprogram.Course.CourseCode, Type: courseprogram.CourseType.TypeName, Term: courseprogram.Term}
 	return &newResponse
 }
 

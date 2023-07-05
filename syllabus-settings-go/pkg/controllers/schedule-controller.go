@@ -11,50 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewHorarioAula models.HorarioAula
+var NewSchedule models.Schedule
 
-func CreateHorarioAula(ctx *gin.Context) {
-	body := models.HorarioAulaRequestModel{}
+func CreateSchedule(ctx *gin.Context) {
+	body := models.ScheduleRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	horarioaula := mappers.ToHorarioAula(&body)
+	schedule := mappers.ToSchedule(&body)
 
-	if err := services.CreateHorarioAula(horarioaula); err != nil {
+	if err := services.CreateSchedule(schedule); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToHorarioAulaResponse(horarioaula)
+	response := mappers.ToScheduleResponse(schedule)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetHorarioAulaById(ctx *gin.Context) {
-	horarioaulaId := ctx.Param("horarioaula_id")
+func GetScheduleByIdOrCode(ctx *gin.Context) {
+	scheduleId := ctx.Param("schedule_id")
 
-	horarioaula, err := services.GetHorarioAulaById(horarioaulaId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToHorarioAulaResponse(horarioaula)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetHorarioAulas(ctx *gin.Context) {
-
-	horarioaulas, err := services.GetHorarioAulas()
+	schedule, err := services.GetScheduleByIdOrCode(scheduleId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -64,22 +46,40 @@ func GetHorarioAulas(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToHorarioAulaResponseArray(horarioaulas)
+	response := mappers.ToScheduleResponse(schedule)
+
+	ctx.JSON(http.StatusOK, response)
+
+}
+
+func GetSchedules(ctx *gin.Context) {
+
+	schedules, err := services.GetSchedules()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToScheduleResponseArray(schedules)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateHorarioAula(ctx *gin.Context) {
-	horarioaulaId := ctx.Param("horarioaula_id")
-	body := models.HorarioAulaRequestModel{}
+func UpdateSchedule(ctx *gin.Context) {
+	scheduleId := ctx.Param("schedule_id")
+	body := models.ScheduleRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	horarioaula := mappers.ToHorarioAula(&body)
-	update, err := services.UpdateHorarioAula(horarioaulaId, horarioaula)
+	schedule := mappers.ToSchedule(&body)
+	update, err := services.UpdateSchedule(scheduleId, schedule)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -89,15 +89,15 @@ func UpdateHorarioAula(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToHorarioAulaResponse(update)
+	response := mappers.ToScheduleResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteHorarioAula(ctx *gin.Context) {
-	horarioaulaId := ctx.Param("horarioaula_id")
+func DeleteSchedule(ctx *gin.Context) {
+	scheduleId := ctx.Param("schedule_id")
 
-	err := services.DeleteHorarioAula(horarioaulaId)
+	err := services.DeleteSchedule(scheduleId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
