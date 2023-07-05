@@ -11,5 +11,5 @@ var RegisterProgramRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/config/programs/:program_id", controllers.GetProgramByIdOrCode)
 	router.PUT("/api/v1/config/programs/:program_id", controllers.UpdateProgram)
 	router.DELETE("/api/v1/config/programs/:program_id", controllers.DeleteProgram)
-	router.GET("/api/v1/config/programs/:program_id/disciplinas/", controllers.GetCoursesByProgram)
+	router.GET("/api/v1/config/programs/:program_id/courses/", controllers.GetCoursesByProgram)
 }

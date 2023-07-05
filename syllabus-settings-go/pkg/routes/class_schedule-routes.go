@@ -11,4 +11,5 @@ var RegisterClassScheduleRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/config/class-schedules/:class_schedule_id", controllers.GetClassScheduleById)
 	router.PUT("/api/v1/config/class-schedules/:class_schedule_id", controllers.UpdateClassSchedule)
 	router.DELETE("/api/v1/config/class-schedules/:class_schedule_id", controllers.DeleteClassSchedule)
+
 }

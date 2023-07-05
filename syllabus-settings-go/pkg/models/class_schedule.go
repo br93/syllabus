@@ -10,6 +10,7 @@ type ClassSchedule struct {
 	Class           Class    `json:"class"`
 	Day             Day      `json:"day"`
 	Schedule        Schedule `json:"schedule"`
+	ClassCode       string   `gorm:"index:idx_class_code" json:"class_code"`
 	TimeOfDay       string   `gorm:"index:idx_time_of_day" json:"time_of_day"`
 	ClassID         uint     `json:"class_id"`
 	DayID           uint     `json:"day_id"`

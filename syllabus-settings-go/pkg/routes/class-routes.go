@@ -11,5 +11,7 @@ var RegisterClassRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/config/classes/:class_id", controllers.GetClassByIdOrCode)
 	router.PUT("/api/v1/config/classes/:class_id", controllers.UpdateClass)
 	router.DELETE("/api/v1/config/classes/:class_id", controllers.DeleteClass)
-	router.GET("/api/v1/config/classes/:class_id/schedules/", controllers.GetClassSchedulesByClass)
+
+	router.GET("/api/v1/config/classes/:class_id/schedules", controllers.GetClassSchedulesByClass)
+
 }

@@ -42,6 +42,18 @@ func GetClassSchedules() (*[]models.ClassSchedule, error) {
 	return &classSchedules, nil
 }
 
+func GetClassScheduleByClassCode(classCode string) (*[]models.ClassSchedule, error) {
+	var classSchedules []models.ClassSchedule
+
+	result := models.DB.Preload(clause.Associations).Find(&classSchedules, "class_code", classCode)
+
+	if result.Error != nil {
+		return &classSchedules, result.Error
+	}
+
+	return &classSchedules, nil
+}
+
 func UpdateClassSchedule(classScheduleId string, req *models.ClassSchedule) (*models.ClassSchedule, error) {
 	response, err := GetClassScheduleById(classScheduleId)
 
@@ -52,6 +64,8 @@ func UpdateClassSchedule(classScheduleId string, req *models.ClassSchedule) (*mo
 	response.Class = req.Class
 	response.Day = req.Day
 	response.Schedule = req.Schedule
+	response.ClassCode = req.ClassCode
+	response.TimeOfDay = req.TimeOfDay
 
 	update := models.DB.Save(response)
 
