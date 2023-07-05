@@ -14,22 +14,20 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.syllabus.model.CursoModel;
-import com.syllabus.model.DiaModel;
-import com.syllabus.model.DisciplinaCursoModel;
-import com.syllabus.model.DisciplinaModel;
-import com.syllabus.model.HorarioAulaModel;
-import com.syllabus.model.HorarioModel;
-import com.syllabus.model.TipoModel;
-import com.syllabus.model.TurmaModel;
-import com.syllabus.model.TurnoModel;
-import com.syllabus.repository.CursoRepository;
-import com.syllabus.repository.DiaRepository;
-import com.syllabus.repository.DisciplinaRepository;
-import com.syllabus.repository.HorarioRepository;
-import com.syllabus.repository.TipoRepository;
-import com.syllabus.repository.TurmaRepository;
-import com.syllabus.repository.TurnoRepository;
+import com.syllabus.model.ClassModel;
+import com.syllabus.model.ClassScheduleModel;
+import com.syllabus.model.CourseModel;
+import com.syllabus.model.CourseProgramModel;
+import com.syllabus.model.CourseTypeModel;
+import com.syllabus.model.DayModel;
+import com.syllabus.model.ProgramModel;
+import com.syllabus.model.ScheduleModel;
+import com.syllabus.repository.ClassRepository;
+import com.syllabus.repository.CourseRepository;
+import com.syllabus.repository.CourseTypeRepository;
+import com.syllabus.repository.DayRepository;
+import com.syllabus.repository.ProgramRepository;
+import com.syllabus.repository.ScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,14 +35,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CSVHelper {
 
-	private final CursoRepository cursoRepository;
-	private final DisciplinaRepository disciplinaRepository;
-	private final TipoRepository tipoRepository;
-	private final TurmaRepository turmaRepository;
-	private final TurnoRepository turnoRepository;
-	private final DiaRepository diaRepository;
-	private final HorarioRepository horarioRepository;
-	
+	private final ProgramRepository programRepository;
+	private final CourseRepository courseRepository;
+	private final CourseTypeRepository courseTypeRepository;
+	private final ClassRepository classRepository;
+	private final DayRepository dayRepository;
+	private final ScheduleRepository scheduleRepository;
+
 	public static String TYPE = "text/csv";
 
 	public static boolean hasCSVFormat(MultipartFile file) {
@@ -55,156 +52,144 @@ public class CSVHelper {
 		return true;
 	}
 
-	public List<CursoModel> csvToCurso(InputStream inputStream) {
-		List<CursoModel> cursos = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<ProgramModel> csvToProgram(InputStream inputStream) {
+		List<ProgramModel> programs = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Nome", "Codigo", "Periodos" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			CursoModel curso = new CursoModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					record.get(headers[0]), record.get(headers[1]), Short.valueOf(record.get(headers[2])));
-			cursos.add(curso);
+			ProgramModel program = new ProgramModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(),
+					csvRecord.get(headers[0]), csvRecord.get(headers[1]), Short.valueOf(csvRecord.get(headers[2])));
+			programs.add(program);
 
 		}
 
-		return cursos;
+		return programs;
 	}
 
-	public List<DiaModel> csvToDia(InputStream inputStream) {
-		List<DiaModel> dias = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<DayModel> csvToDay(InputStream inputStream) {
+		List<DayModel> days = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Nome", "Numero" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			DiaModel dia = new DiaModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					record.get(headers[0]), Short.valueOf(record.get(headers[1])));
-			dias.add(dia);
+			DayModel day = new DayModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
+					csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
+			days.add(day);
 
 		}
 
-		return dias;
+		return days;
 	}
 
-	public List<DisciplinaModel> csvToDisciplina(InputStream inputStream) {
-		List<DisciplinaModel> disciplinas = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<CourseModel> csvToCourse(InputStream inputStream) {
+		List<CourseModel> courses = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Nome", "Codigo", "Carga Horaria" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			DisciplinaModel disciplina = new DisciplinaModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), record.get(headers[0]), record.get(headers[1]),
-					Short.valueOf(record.get(headers[2])), null, null);
+			CourseModel course = new CourseModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(), csvRecord.get(headers[0]), csvRecord.get(headers[1]),
+					Short.valueOf(csvRecord.get(headers[2])), null, null);
 
-			disciplinas.add(disciplina);
+			courses.add(course);
 
 		}
 
-		return disciplinas;
+		return courses;
 	}
 
-	public List<DisciplinaCursoModel> csvToDisciplinaCurso(InputStream inputStream) {
-		List<DisciplinaCursoModel> disciplinas = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<CourseProgramModel> csvToCourseProgram(InputStream inputStream) {
+		List<CourseProgramModel> coursePrograms = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Periodo", "Curso", "Disciplina", "Tipo" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			DisciplinaCursoModel disciplinaCurso = new DisciplinaCursoModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), Short.valueOf(record.get(headers[0])),
-					cursoRepository.findByCodigo(record.get(headers[1])),
-					disciplinaRepository.findByCodigo(record.get(headers[2])),
-					tipoRepository.findByTipoNome(record.get(headers[3])));
-			disciplinas.add(disciplinaCurso);
-
-		}
-
-		return disciplinas;
-	}
-
-	public List<HorarioModel> csvToHorario(InputStream inputStream) {
-		List<HorarioModel> horarios = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
-		String[] headers = { "Sigla", "Faixa" };
-
-		for (CSVRecord record : records) {
-
-			HorarioModel horario = new HorarioModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), record.get(headers[0]), record.get(headers[1]));
-			horarios.add(horario);
+			CourseProgramModel courseProgram = new CourseProgramModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(), Short.valueOf(csvRecord.get(headers[0])),
+					programRepository.findByProgramCode(csvRecord.get(headers[1])),
+					courseRepository.findByCourseCode(csvRecord.get(headers[2])),
+					courseTypeRepository.findByTypeName(csvRecord.get(headers[3])));
+			coursePrograms.add(courseProgram);
 
 		}
 
-		return horarios;
+		return coursePrograms;
 	}
 
-	public List<HorarioAulaModel> csvToHorarioAula(InputStream inputStream) {
-		List<HorarioAulaModel> horarios = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<ScheduleModel> csvToSchedule(InputStream inputStream) {
+		List<ScheduleModel> schedules = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
+		String[] headers = { "Sigla", "Periodo", "Faixa" };
+
+		for (CSVRecord csvRecord : csvRecords) {
+
+			ScheduleModel schedule = new ScheduleModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(), csvRecord.get(headers[0]), csvRecord.get(headers[1]),
+					csvRecord.get(headers[2]));
+			schedules.add(schedule);
+
+		}
+
+		return schedules;
+	}
+
+	public List<ClassScheduleModel> csvToClassSchedule(InputStream inputStream) {
+		List<ClassScheduleModel> classSchedules = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Turma", "Dia", "Horario" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			HorarioAulaModel horarioAula = new HorarioAulaModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), turmaRepository.findByCodigo(record.get(headers[0])),
-					diaRepository.findByDiaNumero(Short.valueOf(record.get(headers[1]))),
-					horarioRepository.findBySigla(record.get(headers[2])));
-			horarios.add(horarioAula);
+			ClassScheduleModel classSchedule = new ClassScheduleModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(), classRepository.findByClassCode(csvRecord.get(headers[0])),
+					dayRepository.findByDayNumber(Short.valueOf(csvRecord.get(headers[1]))),
+					scheduleRepository.findByScheduleCode(csvRecord.get(headers[2])));
+			classSchedules.add(classSchedule);
 
 		}
 
-		return horarios;
+		return classSchedules;
 	}
 
-	public List<TipoModel> csvToTipo(InputStream inputStream) {
-		List<TipoModel> tipos = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
+	public List<CourseTypeModel> csvToCourseType(InputStream inputStream) {
+		List<CourseTypeModel> courseTypes = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
 		String[] headers = { "Nome", "Valor" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			TipoModel tipo = new TipoModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					record.get(headers[0]), Short.valueOf(record.get(headers[1])));
-			tipos.add(tipo);
+			CourseTypeModel courseType = new CourseTypeModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(),
+					csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
+			courseTypes.add(courseType);
 
 		}
 
-		return tipos;
+		return courseTypes;
 	}
 
-	public List<TurmaModel> csvToTurma(InputStream inputStream) {
-		List<TurmaModel> turmas = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
-		String[] headers = { "Disciplina", "Codigo", "Turno" };
+	public List<ClassModel> csvToClass(InputStream inputStream) {
+		List<ClassModel> classes = new ArrayList<>();
+		Iterable<CSVRecord> csvRecords = readFile(inputStream);
+		String[] headers = { "Disciplina", "Codigo" };
 
-		for (CSVRecord record : records) {
+		for (CSVRecord csvRecord : csvRecords) {
 
-			TurmaModel turma = new TurmaModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					record.get(headers[0]), turnoRepository.findByTurnoSigla(record.get(headers[2])),
-					disciplinaRepository.findByCodigo(record.get(headers[0])));
-			turmas.add(turma);
-
-		}
-
-		return turmas;
-	}
-
-	public List<TurnoModel> csvToTurno(InputStream inputStream) {
-		List<TurnoModel> turnos = new ArrayList<>();
-		Iterable<CSVRecord> records = readFile(inputStream);
-		String[] headers = { "Nome", "Sigla" };
-
-		for (CSVRecord record : records) {
-
-			TurnoModel turno = new TurnoModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					record.get(headers[0]), record.get(headers[1]));
-			turnos.add(turno);
+			ClassModel classModel = new ClassModel(null, Instant.now(), Instant.now(), null,
+					UUID.randomUUID().toString(),
+					courseRepository.findByCourseCode(csvRecord.get(headers[0])),
+					csvRecord.get(headers[1]));
+			classes.add(classModel);
 
 		}
 
-		return turnos;
+		return classes;
 	}
 
 	private static Iterable<CSVRecord> readFile(InputStream inputStream) {
