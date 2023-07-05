@@ -18,7 +18,7 @@ func ToClassSchedule(req *models.ClassScheduleRequestModel) *models.ClassSchedul
 		return &models.ClassSchedule{}
 	}
 
-	new := models.ClassSchedule{ClassScheduleId: uuid.NewString(), Class: *class, Day: *day, Schedule: *schedule}
+	new := models.ClassSchedule{ClassScheduleId: uuid.NewString(), Class: *class, Day: *day, Schedule: *schedule, TimeOfDay: schedule.TimeOfDay}
 	return &new
 }
 
@@ -36,7 +36,7 @@ func ToClassScheduleArray(req *[]models.ClassScheduleRequestModel) *[]models.Cla
 
 func ToClassScheduleResponse(classSchedule *models.ClassSchedule) *models.ClassScheduleResponseModel {
 	var schedule = strconv.FormatInt(int64(classSchedule.Day.DayNumber), 10) + classSchedule.Schedule.ScheduleCode
-	newResponse := models.ClassScheduleResponseModel{ClassScheduleId: classSchedule.ClassScheduleId, ClassCode: classSchedule.Class.ClassCode, Schedule: schedule}
+	newResponse := models.ClassScheduleResponseModel{ClassScheduleId: classSchedule.ClassScheduleId, ClassCode: classSchedule.Class.ClassCode, Schedule: schedule, TimeOfDay: classSchedule.TimeOfDay}
 	return &newResponse
 }
 

@@ -71,6 +71,7 @@ func UpdateProgram(program string, req *models.Program) (*models.Program, error)
 
 	response.ProgramName = req.ProgramName
 	response.ProgramCode = req.ProgramCode
+	response.Terms = req.Terms
 
 	update := models.DB.Save(response)
 

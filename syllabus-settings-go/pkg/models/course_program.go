@@ -19,7 +19,7 @@ type CourseProgram struct {
 type CourseProgramRequestModel struct {
 	CourseCode  string `json:"course_code" binding:"required,min=3,max=10"`
 	ProgramCode string `json:"program_code" binding:"required,min=3,max=10"`
-	Type        string `json:"type" binding:"required,gte=1,lte=10"`
+	Type        string `json:"type" binding:"required"`
 	Term        int16  `json:"term" binding:"required,gte=1,lte=10"`
 }
 

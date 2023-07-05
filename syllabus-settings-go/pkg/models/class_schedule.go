@@ -26,7 +26,7 @@ type ClassScheduleResponseModel struct {
 	ClassScheduleId string `json:"class_schedule_id"`
 	ClassCode       string `json:"class_code"`
 	Schedule        string `json:"schedule"`
-	TimeOfDay       string `json:"time_of_day`
+	TimeOfDay       string `json:"time_of_day"`
 }
 
 func (ClassSchedule) TableName() string {

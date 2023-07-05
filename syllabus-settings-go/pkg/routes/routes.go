@@ -13,4 +13,5 @@ var RegisterRoutes = func(router *gin.Engine) {
 	RegisterClassRoutes(router)
 	RegisterClassScheduleRoutes(router)
 	RegisterCourseTypeRoutes(router)
+	RegisterCourseProgramRoutes(router)
 }

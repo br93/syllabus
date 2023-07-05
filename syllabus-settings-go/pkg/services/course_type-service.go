@@ -20,7 +20,7 @@ func CreateCourseType(req *models.CourseType) error {
 func GetCourseTypeById(courseTypeId string) (*models.CourseType, error) {
 	var courseType models.CourseType
 
-	models.DB.First(&courseType, "course_type_id", courseTypeId)
+	models.DB.First(&courseType, "type_id", courseTypeId)
 
 	if courseType.ID == 0 {
 		return &courseType, errors.New("course type not found")
@@ -32,7 +32,7 @@ func GetCourseTypeById(courseTypeId string) (*models.CourseType, error) {
 func GetCourseTypeByName(courseTypeName string) (*models.CourseType, error) {
 	var courseType models.CourseType
 
-	models.DB.First(&courseType, "course_type_name", courseTypeName)
+	models.DB.First(&courseType, "type_name", courseTypeName)
 
 	if courseType.ID == 0 {
 		return &courseType, errors.New("course type not found")
