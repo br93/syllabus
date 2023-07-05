@@ -30,6 +30,6 @@ type CourseProgramResponseModel struct {
 	Term            int16  `json:"term"`
 }
 
-func (CourseProgram) TableNome() string {
+func (CourseProgram) TableName() string {
 	return "tb_course_programs"
 }
