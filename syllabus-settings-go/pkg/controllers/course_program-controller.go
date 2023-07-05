@@ -11,50 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewCurso models.Curso
+var NewCourseProgram models.CourseProgram
 
-func CreateCurso(ctx *gin.Context) {
-	body := models.CursoRequestModel{}
+func CreateCourseProgram(ctx *gin.Context) {
+	body := models.CourseProgramRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	curso := mappers.ToCurso(&body)
+	courseprogram := mappers.ToCourseProgram(&body)
 
-	if err := services.CreateCurso(curso); err != nil {
+	if err := services.CreateCourseProgram(courseprogram); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToCursoResponse(curso)
+	response := mappers.ToCourseProgramResponse(courseprogram)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetCursoByIdOrCodigo(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
+func GetCourseProgramById(ctx *gin.Context) {
+	courseprogramId := ctx.Param("course_program_id")
 
-	curso, err := services.GetCursoByIdOrCodigo(cursoId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToCursoResponse(curso)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetCursos(ctx *gin.Context) {
-
-	cursos, err := services.GetCursos()
+	courseprogram, err := services.GetCourseProgramById(courseprogramId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -64,22 +46,40 @@ func GetCursos(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToCursoResponseArray(cursos)
+	response := mappers.ToCourseProgramResponse(courseprogram)
+
+	ctx.JSON(http.StatusOK, response)
+
+}
+
+func GetCoursePrograms(ctx *gin.Context) {
+
+	courseprograms, err := services.GetCoursePrograms()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToCourseProgramResponseArray(courseprograms)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateCurso(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
-	body := models.CursoRequestModel{}
+func UpdateCourseProgram(ctx *gin.Context) {
+	courseprogramId := ctx.Param("course_program_id")
+	body := models.CourseProgramRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	curso := mappers.ToCurso(&body)
-	update, err := services.UpdateCurso(cursoId, curso)
+	courseprogram := mappers.ToCourseProgram(&body)
+	update, err := services.UpdateCourseProgram(courseprogramId, courseprogram)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -89,15 +89,15 @@ func UpdateCurso(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToCursoResponse(update)
+	response := mappers.ToCourseProgramResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteCurso(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
+func DeleteCourseProgram(ctx *gin.Context) {
+	courseprogramId := ctx.Param("course_program_id")
 
-	err := services.DeleteCurso(cursoId)
+	err := services.DeleteCourseProgram(courseprogramId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
@@ -107,22 +107,4 @@ func DeleteCurso(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, nil)
-}
-
-func GetDisciplinasByCurso(ctx *gin.Context) {
-	cursoId := ctx.Param("curso_id")
-
-	curso, err := services.GetCursoByIdOrCodigo(cursoId, "Disciplinas", "Disciplinas.Disciplina", "Disciplinas.Tipo")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToCursoDisciplinas(curso)
-
-	ctx.JSON(http.StatusOK, response)
 }

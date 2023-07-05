@@ -6,11 +6,11 @@ import (
 
 type Class struct {
 	gorm.Model
-	ClassId    string      `gorm:"index:idx_class_id,unique"`
-	ClassCode  string      `gorm:"unique" json:"class_code"`
-	Course     Course      `json:"course"`
-	ClassHours []ClassHour `gorm:"foreignKey:ClassID;references:ID" json:"class_hours"`
-	CourseID   uint        `json:"course_id"`
+	ClassId        string          `gorm:"index:idx_class_id,unique"`
+	ClassCode      string          `gorm:"unique" json:"class_code"`
+	Course         Course          `json:"course"`
+	ClassSchedules []ClassSchedule `gorm:"foreignKey:ClassID;references:ID" json:"class_hours"`
+	CourseID       uint            `json:"course_id"`
 }
 
 type ClassRequestModel struct {
@@ -24,9 +24,9 @@ type ClassResponseModel struct {
 }
 
 type ClassHoursResponseModel struct {
-	ClassId    string                   `json:"class_id"`
-	Course     string                   `json:"course"`
-	ClassHours []ClassHourResponseModel `json:"class_hours"`
+	ClassId        string                       `json:"class_id"`
+	Course         string                       `json:"course"`
+	ClassSchedules []ClassScheduleResponseModel `json:"class_hours"`
 }
 
 func (Class) TableName() string {

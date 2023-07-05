@@ -6,8 +6,9 @@ import (
 
 type Schedule struct {
 	gorm.Model
-	ScheduleId   string `gorm:"index:schedule_id,unique"`
+	ScheduleId   string `gorm:"index:idx_schedule_id,unique"`
 	ScheduleCode string `gorm:"unique" json:"schedule_code"`
+	TimeOfDay    string `json:"time_of_day"`
 	TimeRange    string `json:"time_range"`
 }
 
@@ -19,6 +20,7 @@ type ScheduleRequestModel struct {
 type ScheduleResponseModel struct {
 	ScheduleId   string `json:"schedule_id"`
 	ScheduleCode string `json:"schedule_code"`
+	TimeOfDay    string `json:"time_of_day"`
 	TimeRange    string `json:"time_range"`
 }
 

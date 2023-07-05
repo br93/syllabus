@@ -16,7 +16,7 @@ type Course struct {
 	CoursePrograms      []CourseProgram `gorm:"foreignKey:CourseID;references:ID" json:"course_programs"`
 }
 
-type DisciplinaRequestModel struct {
+type CourseRequestModel struct {
 	CourseName string `json:"course_name" binding:"required"`
 	CourseCode string `json:"course_code" binding:"required,min=3,max=10"`
 	Workload   int16  `json:"workload" binding:"required,gte=10,lte=200"`

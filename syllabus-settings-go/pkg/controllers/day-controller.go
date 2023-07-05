@@ -11,31 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewTurno models.Turno
+var NewDia models.Day
 
-func CreateTurno(ctx *gin.Context) {
-	body := models.TurnoRequestModel{}
+func CreateDay(ctx *gin.Context) {
+	body := models.DiaRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	turno := mappers.ToTurno(&body)
+	day := mappers.ToDay(&body)
 
-	if err := services.CreateTurno(turno); err != nil {
+	if err := services.CreateDay(day); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToTurnoResponse(turno)
+	response := mappers.ToDayResponse(day)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetTurnoByIdOrSigla(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
-	turno, err := services.GetTurnoByIdOrSigla(turnoId)
+func GetDayByIdOrNumber(ctx *gin.Context) {
+	dayId := ctx.Param("day_id")
+
+	day, err := services.GetDiaByIdOrNumber(dayId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -45,15 +46,13 @@ func GetTurnoByIdOrSigla(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurnoResponse(turno)
+	response := mappers.ToDayResponse(day)
 
 	ctx.JSON(http.StatusOK, response)
-
 }
 
-func GetTurnos(ctx *gin.Context) {
-
-	turnos, err := services.GetTurnos()
+func GetDays(ctx *gin.Context) {
+	days, err := services.GetDays()
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -63,22 +62,22 @@ func GetTurnos(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurnoResponseArray(turnos)
+	response := mappers.ToDayResponseArray(days)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateTurno(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
-	body := models.TurnoRequestModel{}
+func UpdateDay(ctx *gin.Context) {
+	dayId := ctx.Param("day_id")
+	body := models.DayRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	turno := mappers.ToTurno(&body)
-	update, err := services.UpdateTurno(turnoId, turno)
+	day := mappers.ToDay(&body)
+	update, err := services.UpdateDay(dayId, day)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -88,15 +87,15 @@ func UpdateTurno(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToTurnoResponse(update)
+	response := mappers.ToDayResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteTurno(ctx *gin.Context) {
-	turnoId := ctx.Param("turno_id")
+func DeleteDay(ctx *gin.Context) {
+	dayId := ctx.Param("day_id")
 
-	err := services.DeleteTurno(turnoId)
+	err := services.DeleteDia(dayId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return

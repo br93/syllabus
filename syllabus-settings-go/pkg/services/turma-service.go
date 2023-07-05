@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func CreateTurma(req *models.Turma) error {
+func CreateCourseType(req *models.CourseType) error {
 
 	if req.Disciplina.ID == 0 || req.Turno.ID == 0 {
 		return errors.New("failed to create turma")
@@ -23,8 +23,8 @@ func CreateTurma(req *models.Turma) error {
 	return nil
 }
 
-func GetTurmaById(turmaId string, preload ...string) (*models.Turma, error) {
-	var turma models.Turma
+func GetCourseTypeById(turmaId string, preload ...string) (*models.CourseType, error) {
+	var turma models.CourseType
 
 	models.DBConfig(models.DB.Preload(clause.Associations), preload).First(&turma, "turma_id", turmaId)
 
@@ -35,8 +35,8 @@ func GetTurmaById(turmaId string, preload ...string) (*models.Turma, error) {
 	return &turma, nil
 }
 
-func GetTurmaByCodigo(codigo string, preload ...string) (*models.Turma, error) {
-	var turma models.Turma
+func GetCourseTypeByCodigo(codigo string, preload ...string) (*models.CourseType, error) {
+	var turma models.CourseType
 
 	models.DBConfig(models.DB.Preload(clause.Associations), preload).First(&turma, "codigo", codigo)
 
@@ -47,18 +47,18 @@ func GetTurmaByCodigo(codigo string, preload ...string) (*models.Turma, error) {
 	return &turma, nil
 }
 
-func GetTurmaByIdOrCodigo(turma string, preload ...string) (*models.Turma, error) {
+func GetCourseTypeByIdOrCodigo(turma string, preload ...string) (*models.CourseType, error) {
 
 	if utils.IsValidUUID(turma) {
-		return GetTurmaById(turma, preload...)
+		return GetCourseTypeById(turma, preload...)
 	}
 
-	return GetTurmaByCodigo(turma)
+	return GetCourseTypeByCodigo(turma)
 }
 
-func GetTurmas() (*[]models.Turma, error) {
+func GetCourseTypes() (*[]models.CourseType, error) {
 
-	var turmas []models.Turma
+	var turmas []models.CourseType
 
 	result := models.DB.Preload(clause.Associations).Find(&turmas)
 
@@ -69,8 +69,8 @@ func GetTurmas() (*[]models.Turma, error) {
 	return &turmas, nil
 }
 
-func GetTurmasByDisciplinaId(disciplinaId uint) (*[]models.Turma, error) {
-	var turmas []models.Turma
+func GetCourseTypesByDisciplinaId(disciplinaId uint) (*[]models.CourseType, error) {
+	var turmas []models.CourseType
 
 	result := models.DB.Preload(clause.Associations).Find(&turmas, "disciplina_id", disciplinaId)
 
@@ -81,13 +81,13 @@ func GetTurmasByDisciplinaId(disciplinaId uint) (*[]models.Turma, error) {
 	return &turmas, nil
 }
 
-func UpdateTurma(turma string, req *models.Turma) (*models.Turma, error) {
+func UpdateCourseType(turma string, req *models.CourseType) (*models.CourseType, error) {
 
 	if req.Disciplina.ID == 0 || req.Turno.ID == 0 {
-		return &models.Turma{}, errors.New("failed to update turma")
+		return &models.CourseType{}, errors.New("failed to update turma")
 	}
 
-	response, err := GetTurmaByIdOrCodigo(turma)
+	response, err := GetCourseTypeByIdOrCodigo(turma)
 
 	if err != nil {
 		return req, err
@@ -107,8 +107,8 @@ func UpdateTurma(turma string, req *models.Turma) (*models.Turma, error) {
 
 }
 
-func DeleteTurma(turma string) error {
-	get, err := GetTurmaByIdOrCodigo(turma)
+func DeleteCourseType(turma string) error {
+	get, err := GetCourseTypeByIdOrCodigo(turma)
 
 	if err != nil {
 		return err

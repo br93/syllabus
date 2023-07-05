@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func CreateHorarioAula(req *models.HorarioAula) error {
+func CreateClassSchedule(req *models.ClassSchedule) error {
 	create := models.DB.Create(req)
 
 	if create.Error != nil {
@@ -17,8 +17,8 @@ func CreateHorarioAula(req *models.HorarioAula) error {
 	return nil
 }
 
-func GetHorarioAulaById(horarioaulaId string) (*models.HorarioAula, error) {
-	var horarioaula models.HorarioAula
+func GetClassScheduleById(horarioaulaId string) (*models.ClassSchedule, error) {
+	var horarioaula models.ClassSchedule
 
 	models.DB.Preload(clause.Associations).First(&horarioaula, "horarioaula_id", horarioaulaId)
 
@@ -29,9 +29,9 @@ func GetHorarioAulaById(horarioaulaId string) (*models.HorarioAula, error) {
 	return &horarioaula, nil
 }
 
-func GetHorarioAulas() (*[]models.HorarioAula, error) {
+func GetClassSchedules() (*[]models.ClassSchedule, error) {
 
-	var horarioaulas []models.HorarioAula
+	var horarioaulas []models.ClassSchedule
 
 	result := models.DB.Preload(clause.Associations).Find(&horarioaulas)
 
@@ -42,8 +42,8 @@ func GetHorarioAulas() (*[]models.HorarioAula, error) {
 	return &horarioaulas, nil
 }
 
-func UpdateHorarioAula(horarioaulaId string, req *models.HorarioAula) (*models.HorarioAula, error) {
-	response, err := GetHorarioAulaById(horarioaulaId)
+func UpdateClassSchedule(horarioaulaId string, req *models.ClassSchedule) (*models.ClassSchedule, error) {
+	response, err := GetClassScheduleById(horarioaulaId)
 
 	if err != nil {
 		return req, err
@@ -63,8 +63,8 @@ func UpdateHorarioAula(horarioaulaId string, req *models.HorarioAula) (*models.H
 
 }
 
-func DeleteHorarioAula(horarioaulaId string) error {
-	get, err := GetHorarioAulaById(horarioaulaId)
+func DeleteClassSchedule(horarioaulaId string) error {
+	get, err := GetClassScheduleById(horarioaulaId)
 
 	if err != nil {
 		return err

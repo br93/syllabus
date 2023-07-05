@@ -7,7 +7,7 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
-func CreateTipo(req *models.Tipo) error {
+func CreateCourseType(req *models.CourseType) error {
 	create := models.DB.Create(req)
 
 	if create.Error != nil {
@@ -17,8 +17,8 @@ func CreateTipo(req *models.Tipo) error {
 	return nil
 }
 
-func GetTipoById(tipoId string) (*models.Tipo, error) {
-	var tipo models.Tipo
+func GetCourseTypeById(tipoId string) (*models.CourseType, error) {
+	var tipo models.CourseType
 
 	models.DB.First(&tipo, "tipo_id", tipoId)
 
@@ -29,8 +29,8 @@ func GetTipoById(tipoId string) (*models.Tipo, error) {
 	return &tipo, nil
 }
 
-func GetTipoByNome(tipoNome string) (*models.Tipo, error) {
-	var tipo models.Tipo
+func GetCourseTypeByNome(tipoNome string) (*models.CourseType, error) {
+	var tipo models.CourseType
 
 	models.DB.First(&tipo, "tipo_nome", tipoNome)
 
@@ -41,18 +41,18 @@ func GetTipoByNome(tipoNome string) (*models.Tipo, error) {
 	return &tipo, nil
 }
 
-func GetTipoByIdOrNome(tipoId string) (*models.Tipo, error) {
+func GetCourseTypeByIdOrNome(tipoId string) (*models.CourseType, error) {
 	if utils.IsValidUUID(tipoId) {
-		return GetTipoById(tipoId)
+		return GetCourseTypeById(tipoId)
 	}
 
 	tipoNome := tipoId
-	return GetTipoByNome(tipoNome)
+	return GetCourseTypeByNome(tipoNome)
 }
 
-func GetTipos() (*[]models.Tipo, error) {
+func GetCourseTypes() (*[]models.CourseType, error) {
 
-	var tipos []models.Tipo
+	var tipos []models.CourseType
 
 	result := models.DB.Find(&tipos)
 
@@ -63,15 +63,15 @@ func GetTipos() (*[]models.Tipo, error) {
 	return &tipos, nil
 }
 
-func UpdateTipo(tipo string, req *models.Tipo) (*models.Tipo, error) {
-	response, err := GetTipoByIdOrNome(tipo)
+func UpdateCourseType(tipo string, req *models.CourseType) (*models.CourseType, error) {
+	response, err := GetCourseTypeByIdOrNome(tipo)
 
 	if err != nil {
 		return req, err
 	}
 
-	response.TipoNome = req.TipoNome
-	response.TipoValor = req.TipoValor
+	response.CourseTypeNome = req.CourseTypeNome
+	response.CourseTypeValor = req.CourseTypeValor
 
 	update := models.DB.Save(response)
 
@@ -83,8 +83,8 @@ func UpdateTipo(tipo string, req *models.Tipo) (*models.Tipo, error) {
 
 }
 
-func DeleteTipo(tipo string) error {
-	get, err := GetTipoByIdOrNome(tipo)
+func DeleteCourseType(tipo string) error {
+	get, err := GetCourseTypeByIdOrNome(tipo)
 
 	if err != nil {
 		return err

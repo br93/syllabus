@@ -6,11 +6,11 @@ import (
 
 type ClassSchedule struct {
 	gorm.Model
-	ClassScheduleId string   `gorm:"index:class_schedule_id,unique"`
+	ClassScheduleId string   `gorm:"index:idx_class_schedule_id,unique"`
 	Class           Class    `json:"class"`
 	Day             Day      `json:"day"`
 	Schedule        Schedule `json:"schedule"`
-	ScheduleCode    string   `json:"schedule_code"`
+	TimeOfDay       string   `gorm:"index:idx_time_of_day" json:"time_of_day"`
 	ClassID         uint     `json:"class_id"`
 	DayID           uint     `json:"day_id"`
 	ScheduleID      uint     `json:"schedule_id"`
@@ -26,6 +26,7 @@ type ClassScheduleResponseModel struct {
 	ClassScheduleId string `json:"class_schedule_id"`
 	ClassCode       string `json:"class_code"`
 	Schedule        string `json:"schedule"`
+	TimeOfDay       string `json:"time_of_day`
 }
 
 func (ClassSchedule) TableName() string {

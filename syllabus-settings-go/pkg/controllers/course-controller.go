@@ -11,50 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewDisciplina models.Disciplina
+var NewCourse models.Course
 
-func CreateDisciplina(ctx *gin.Context) {
-	body := models.DisciplinaRequestModel{}
+func CreateCourse(ctx *gin.Context) {
+	body := models.CourseRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	disciplina := mappers.ToDisciplina(&body)
+	course := mappers.ToCourse(&body)
 
-	if err := services.CreateDisciplina(disciplina); err != nil {
+	if err := services.CreateCourse(course); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToDisciplinaResponse(disciplina)
+	response := mappers.ToCourseResponse(course)
 
 	ctx.JSON(http.StatusCreated, response)
 }
 
-func GetDisciplinaByIdOrCodigo(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
+func GetCourseByIdOrCode(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
 
-	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToDisciplinaResponse(disciplina)
-
-	ctx.JSON(http.StatusOK, response)
-
-}
-
-func GetDisciplinas(ctx *gin.Context) {
-
-	disciplinas, err := services.GetDisciplinas()
+	course, err := services.GetCourseByIdOrCode(courseId)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -64,22 +46,40 @@ func GetDisciplinas(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToDisciplinaResponseArray(disciplinas)
+	response := mappers.ToCourseResponse(course)
+
+	ctx.JSON(http.StatusOK, response)
+
+}
+
+func GetCourses(ctx *gin.Context) {
+
+	courses, err := services.GetCourses()
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToCourseResponseArray(courses)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func UpdateDisciplina(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
-	body := models.DisciplinaRequestModel{}
+func UpdateCourse(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
+	body := models.CourseRequestModel{}
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		utils.ErrorHandling(ctx, err)
 		return
 	}
 
-	disciplina := mappers.ToDisciplina(&body)
-	update, err := services.UpdateDisciplina(disciplinaId, disciplina)
+	course := mappers.ToCourse(&body)
+	update, err := services.UpdateCourse(courseId, course)
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -89,15 +89,15 @@ func UpdateDisciplina(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToDisciplinaResponse(update)
+	response := mappers.ToCourseResponse(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func DeleteDisciplina(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
+func DeleteCourse(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
 
-	err := services.DeleteDisciplina(disciplinaId)
+	err := services.DeleteCourse(courseId)
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
@@ -109,55 +109,55 @@ func DeleteDisciplina(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func AddPreRequisito(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
-	body := []models.DisciplinaCodigoRequestModel{}
+func AddPreRequisite(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
+	body := []models.CourseCodeRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	prerequisitos := mappers.FromDisciplinaCodigo(&body)
-	update, err := services.CreatePreRequisito(disciplinaId, prerequisitos)
+	prerequisites := mappers.FromCourseCode(&body)
+	update, err := services.CreatePreRequisite(courseId, prerequisites)
 
 	if err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToDisciplinaPreRequisito(update)
+	response := mappers.ToCoursePreRequisite(update)
 
 	ctx.JSON(http.StatusOK, response)
 }
 
-func AddEquivalente(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
-	body := []models.DisciplinaCodigoRequestModel{}
+func AddEquivalent(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
+	body := []models.CourseCodeRequestModel{}
 
 	if err := ctx.BindJSON(&body); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	equivalentes := mappers.FromDisciplinaCodigo(&body)
-	update, err := services.CreateEquivalente(disciplinaId, equivalentes)
+	equivalents := mappers.FromCourseCode(&body)
+	update, err := services.CreateEquivalent(courseId, equivalents)
 
 	if err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	response := mappers.ToDisciplinaEquivalente(update)
+	response := mappers.ToCourseEquivalent(update)
 
 	ctx.JSON(http.StatusOK, response)
 
 }
 
-func GetDisciplinaEquivalentes(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
+func GetCourseEquivalents(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
 
-	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "Equivalentes")
+	course, err := services.GetCourseByIdOrCode(courseId, "EquivalentCourses")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -167,17 +167,17 @@ func GetDisciplinaEquivalentes(ctx *gin.Context) {
 		return
 	}
 
-	equivalentes := disciplina.Equivalentes
-	response := mappers.ToDisciplinaResponseArray(equivalentes)
+	equivalents := course.EquivalentCourses
+	response := mappers.ToCourseResponseArray(equivalents)
 
 	ctx.JSON(http.StatusOK, response)
 
 }
 
-func GetDisciplinaPreRequisitos(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
+func GetCoursePreRequisites(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
 
-	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "PreRequisitos")
+	course, err := services.GetCourseByIdOrCode(courseId, "PreRequisiteCourses")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -187,17 +187,17 @@ func GetDisciplinaPreRequisitos(ctx *gin.Context) {
 		return
 	}
 
-	preRequisitos := disciplina.PreRequisitos
-	response := mappers.ToDisciplinaResponseArray(preRequisitos)
+	preRequisites := course.PreRequisiteCourses
+	response := mappers.ToCourseResponseArray(preRequisites)
 
 	ctx.JSON(http.StatusOK, response)
 
 }
 
-func GetTurmasByDisciplina(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina_id")
+func GetClassesByCourse(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
 
-	disciplina, err := services.GetDisciplinaByIdOrCodigo(disciplinaId, "Turmas", "Turmas.Turno")
+	course, err := services.GetCourseByIdOrCode(courseId, "Classes")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -207,7 +207,7 @@ func GetTurmasByDisciplina(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToDisciplinaTurmas(disciplina)
+	response := mappers.ToCourseClasses(course)
 
 	ctx.JSON(http.StatusOK, response)
 }

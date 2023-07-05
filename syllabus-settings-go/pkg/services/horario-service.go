@@ -7,7 +7,7 @@ import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 )
 
-func CreateHorario(req *models.Horario) error {
+func CreateSchedule(req *models.Schedule) error {
 	create := models.DB.Create(req)
 
 	if create.Error != nil {
@@ -17,8 +17,8 @@ func CreateHorario(req *models.Horario) error {
 	return nil
 }
 
-func GetHorarioById(horarioId string) (*models.Horario, error) {
-	var horario models.Horario
+func GetScheduleById(horarioId string) (*models.Schedule, error) {
+	var horario models.Schedule
 
 	models.DB.First(&horario, "horario_id", horarioId)
 
@@ -29,8 +29,8 @@ func GetHorarioById(horarioId string) (*models.Horario, error) {
 	return &horario, nil
 }
 
-func GetHorarioBySigla(sigla string) (*models.Horario, error) {
-	var horario models.Horario
+func GetScheduleBySigla(sigla string) (*models.Schedule, error) {
+	var horario models.Schedule
 
 	models.DB.First(&horario, "sigla", sigla)
 
@@ -41,17 +41,17 @@ func GetHorarioBySigla(sigla string) (*models.Horario, error) {
 	return &horario, nil
 }
 
-func GetHorarioByIdOrSigla(horario string) (*models.Horario, error) {
+func GetScheduleByIdOrSigla(horario string) (*models.Schedule, error) {
 	if utils.IsValidUUID(horario) {
-		return GetHorarioById(horario)
+		return GetScheduleById(horario)
 	}
 
-	return GetHorarioBySigla(horario)
+	return GetScheduleBySigla(horario)
 }
 
-func GetHorarios() (*[]models.Horario, error) {
+func GetSchedules() (*[]models.Schedule, error) {
 
-	var horarios []models.Horario
+	var horarios []models.Schedule
 
 	result := models.DB.Find(&horarios)
 
@@ -62,8 +62,8 @@ func GetHorarios() (*[]models.Horario, error) {
 	return &horarios, nil
 }
 
-func UpdateHorario(horario string, req *models.Horario) (*models.Horario, error) {
-	response, err := GetHorarioByIdOrSigla(horario)
+func UpdateSchedule(horario string, req *models.Schedule) (*models.Schedule, error) {
+	response, err := GetScheduleByIdOrSigla(horario)
 
 	if err != nil {
 		return req, err
@@ -82,8 +82,8 @@ func UpdateHorario(horario string, req *models.Horario) (*models.Horario, error)
 
 }
 
-func DeleteHorario(horario string) error {
-	get, err := GetHorarioByIdOrSigla(horario)
+func DeleteSchedule(horario string) error {
+	get, err := GetScheduleByIdOrSigla(horario)
 
 	if err != nil {
 		return err
