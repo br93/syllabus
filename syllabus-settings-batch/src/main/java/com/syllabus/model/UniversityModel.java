@@ -8,20 +8,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_programs")
+@Table(name = "tb_universities")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ProgramModel {
+public class UniversityModel {
 
-	@Id
+    @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -34,12 +33,9 @@ public class ProgramModel {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Instant deletedAt;
 	
-	private String programId;
-	private String programName;
-	private String programCode;
-	private Short terms;
-
-	@ManyToOne
-	private UniversityModel university;
+	private String universityId;
+	private String universityName;
+	private String universityCode;
 	
+    
 }

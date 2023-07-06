@@ -28,6 +28,7 @@ import com.syllabus.repository.CourseTypeRepository;
 import com.syllabus.repository.DayRepository;
 import com.syllabus.repository.ProgramRepository;
 import com.syllabus.repository.ScheduleRepository;
+import com.syllabus.repository.UniversityRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +42,7 @@ public class CSVHelper {
 	private final ClassRepository classRepository;
 	private final DayRepository dayRepository;
 	private final ScheduleRepository scheduleRepository;
+	private final UniversityRepository universityRepository;
 
 	public static String TYPE = "text/csv";
 
@@ -55,13 +57,15 @@ public class CSVHelper {
 	public List<ProgramModel> csvToProgram(InputStream inputStream) {
 		List<ProgramModel> programs = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Name", "Code", "Terms" };
+		String[] headers = { "Name", "Code", "Terms", "University" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
 			ProgramModel program = new ProgramModel(null, Instant.now(), Instant.now(), null,
 					UUID.randomUUID().toString(),
-					csvRecord.get(headers[0]), csvRecord.get(headers[1]), Short.valueOf(csvRecord.get(headers[2])));
+					csvRecord.get(headers[0]), csvRecord.get(headers[1]), 
+					Short.valueOf(csvRecord.get(headers[2])), 
+					universityRepository.findByUniversityCode(csvRecord.get(headers[3])));
 			programs.add(program);
 
 		}
@@ -76,8 +80,9 @@ public class CSVHelper {
 
 		for (CSVRecord csvRecord : csvRecords) {
 
-			DayModel day = new DayModel(null, Instant.now(), Instant.now(), null, UUID.randomUUID().toString(),
-					csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
+			DayModel day = new DayModel(null, Instant.now(), Instant.now(), null, 
+				UUID.randomUUID().toString(),
+				csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
 			days.add(day);
 
 		}
@@ -111,7 +116,8 @@ public class CSVHelper {
 		for (CSVRecord csvRecord : csvRecords) {
 
 			CourseProgramModel courseProgram = new CourseProgramModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), Short.valueOf(csvRecord.get(headers[0])),
+					UUID.randomUUID().toString(), 
+					Short.valueOf(csvRecord.get(headers[0])),
 					programRepository.findByProgramCode(csvRecord.get(headers[1])),
 					courseRepository.findByCourseCode(csvRecord.get(headers[2])),
 					courseTypeRepository.findByTypeName(csvRecord.get(headers[3])));
@@ -130,7 +136,9 @@ public class CSVHelper {
 		for (CSVRecord csvRecord : csvRecords) {
 
 			ScheduleModel schedule = new ScheduleModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), csvRecord.get(headers[0]), csvRecord.get(headers[1]),
+					UUID.randomUUID().toString(), 
+					csvRecord.get(headers[0]), 
+					csvRecord.get(headers[1]),
 					csvRecord.get(headers[2]));
 			schedules.add(schedule);
 
@@ -147,7 +155,8 @@ public class CSVHelper {
 		for (CSVRecord csvRecord : csvRecords) {
 
 			ClassScheduleModel classSchedule = new ClassScheduleModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(), classRepository.findByClassCode(csvRecord.get(headers[0])),
+					UUID.randomUUID().toString(), 
+					classRepository.findByClassCode(csvRecord.get(headers[0])),
 					dayRepository.findByDayNumber(Short.valueOf(csvRecord.get(headers[1]))),
 					scheduleRepository.findByScheduleCode(csvRecord.get(headers[2])));
 			classSchedules.add(classSchedule);
@@ -166,7 +175,8 @@ public class CSVHelper {
 
 			CourseTypeModel courseType = new CourseTypeModel(null, Instant.now(), Instant.now(), null,
 					UUID.randomUUID().toString(),
-					csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
+					csvRecord.get(headers[0]), 
+					Short.valueOf(csvRecord.get(headers[1])));
 			courseTypes.add(courseType);
 
 		}
