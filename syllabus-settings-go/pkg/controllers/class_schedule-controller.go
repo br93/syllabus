@@ -69,24 +69,6 @@ func GetClassSchedules(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func GetClassSchedulesByClass(ctx *gin.Context) {
-	classCode := ctx.Param("class_id")
-
-	classSchedules, err := services.GetClassScheduleByClassCode(classCode)
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToClassScheduleResponseArray(classSchedules)
-
-	ctx.JSON(http.StatusOK, response)
-}
-
 func UpdateClassSchedule(ctx *gin.Context) {
 	classScheduleId := ctx.Param("class_schedule_id")
 	body := models.ClassScheduleRequestModel{}
