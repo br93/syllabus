@@ -2,12 +2,19 @@ package mappers
 
 import (
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
 	"github.com/google/uuid"
 )
 
 func ToProgram(req *models.ProgramRequestModel) *models.Program {
 
-	new := models.Program{ProgramId: uuid.NewString(), ProgramName: req.ProgramName, ProgramCode: req.ProgramCode, Terms: req.Terms}
+	university, errUniversity := services.GetUniversityByCode(req.UniversityCode)
+
+	if errUniversity != nil {
+		return &models.Program{}
+	}
+
+	new := models.Program{ProgramId: uuid.NewString(), ProgramName: req.ProgramName, ProgramCode: req.ProgramCode, University: *university, Terms: req.Terms}
 	return &new
 }
 
@@ -25,7 +32,7 @@ func ToProgramArray(req *[]models.ProgramRequestModel) *[]models.Program {
 
 func ToProgramResponse(program *models.Program) *models.ProgramResponseModel {
 
-	newResponse := models.ProgramResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, Terms: program.Terms}
+	newResponse := models.ProgramResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, UniversityCode: program.University.UniversityCode, Terms: program.Terms}
 	return &newResponse
 }
 
@@ -46,6 +53,6 @@ func ToProgramCourses(program *models.Program) *models.CoursesResponseModel {
 
 	var response = ToCourseProgramResponseArray(&disciplinas)
 
-	newResponse := models.CoursesResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, Courses: *response}
+	newResponse := models.CoursesResponseModel{ProgramId: program.ProgramId, ProgramCode: program.ProgramCode, ProgramName: program.ProgramName, UniversityCode: program.University.UniversityCode, Courses: *response}
 	return &newResponse
 }
