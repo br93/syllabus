@@ -108,24 +108,6 @@ func DeleteClass(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func GetProgramsByUniversity(ctx *gin.Context) {
-	universityId := ctx.Param("university_id")
-
-	university, err := services.GetUniversityByIdOrCode(universityId, "Programs", "Programs.University")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToUniversityPrograms(university)
-
-	ctx.JSON(http.StatusOK, response)
-}
-
 func GetClassSchedulesByClass(ctx *gin.Context) {
 	classId := ctx.Param("class_id")
 

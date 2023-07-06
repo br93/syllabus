@@ -29,11 +29,11 @@ func GetCourseProgramById(courseprogramId string) (*models.CourseProgram, error)
 	return &courseprogram, nil
 }
 
-func GetCoursePrograms() (*[]models.CourseProgram, error) {
+func GetCoursePrograms(preload ...string) (*[]models.CourseProgram, error) {
 
 	var courseprograms []models.CourseProgram
 
-	result := models.DB.Find(&courseprograms)
+	result := models.DBConfig(models.DB.Preload(clause.Associations), preload).Find(&courseprograms)
 
 	if result.Error != nil {
 		return &courseprograms, result.Error

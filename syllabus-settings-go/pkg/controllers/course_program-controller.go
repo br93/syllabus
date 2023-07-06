@@ -54,7 +54,7 @@ func GetCourseProgramById(ctx *gin.Context) {
 
 func GetCoursePrograms(ctx *gin.Context) {
 
-	courseprograms, err := services.GetCoursePrograms()
+	courseprograms, err := services.GetCoursePrograms("Course", "CourseType")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
