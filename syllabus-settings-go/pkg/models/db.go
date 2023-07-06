@@ -10,7 +10,7 @@ var DB *gorm.DB
 func init() {
 	config.Connect()
 	DB = config.GetDB()
-	DB.AutoMigrate(Dia{}, Horario{}, Turno{}, Tipo{}, Curso{}, Disciplina{}, HorarioAula{}, Turma{}, DisciplinaCurso{})
+	DB.AutoMigrate(Day{}, Schedule{}, CourseType{}, Program{}, Course{}, ClassSchedule{}, Class{}, CourseProgram{})
 }
 
 func DBConfig(db *gorm.DB, preload []string) *gorm.DB {
