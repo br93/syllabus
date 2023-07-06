@@ -55,7 +55,7 @@ public class CSVHelper {
 	public List<ProgramModel> csvToProgram(InputStream inputStream) {
 		List<ProgramModel> programs = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Nome", "Codigo", "Periodos" };
+		String[] headers = { "Name", "Code", "Terms" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -72,7 +72,7 @@ public class CSVHelper {
 	public List<DayModel> csvToDay(InputStream inputStream) {
 		List<DayModel> days = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Nome", "Numero" };
+		String[] headers = { "Name", "Number" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -88,7 +88,7 @@ public class CSVHelper {
 	public List<CourseModel> csvToCourse(InputStream inputStream) {
 		List<CourseModel> courses = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Nome", "Codigo", "Carga Horaria" };
+		String[] headers = { "Name", "Code", "Workload" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -106,7 +106,7 @@ public class CSVHelper {
 	public List<CourseProgramModel> csvToCourseProgram(InputStream inputStream) {
 		List<CourseProgramModel> coursePrograms = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Periodo", "Curso", "Disciplina", "Tipo" };
+		String[] headers = { "Term", "Program", "Course", "Type" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -125,7 +125,7 @@ public class CSVHelper {
 	public List<ScheduleModel> csvToSchedule(InputStream inputStream) {
 		List<ScheduleModel> schedules = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Sigla", "Periodo", "Faixa" };
+		String[] headers = { "Code", "TimeOfDay", "Range" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -142,7 +142,7 @@ public class CSVHelper {
 	public List<ClassScheduleModel> csvToClassSchedule(InputStream inputStream) {
 		List<ClassScheduleModel> classSchedules = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Turma", "Dia", "Horario" };
+		String[] headers = { "Class", "Day", "Schedule" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -160,7 +160,7 @@ public class CSVHelper {
 	public List<CourseTypeModel> csvToCourseType(InputStream inputStream) {
 		List<CourseTypeModel> courseTypes = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Nome", "Valor" };
+		String[] headers = { "Name", "Value" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
@@ -177,7 +177,7 @@ public class CSVHelper {
 	public List<ClassModel> csvToClass(InputStream inputStream) {
 		List<ClassModel> classes = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Disciplina", "Codigo" };
+		String[] headers = { "Course", "Code" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 

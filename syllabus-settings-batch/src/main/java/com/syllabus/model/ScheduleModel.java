@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_horario")
+@Table(name = "tb_schedules")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
