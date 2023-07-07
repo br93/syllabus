@@ -1,4 +1,4 @@
-package com.syllabus.client.config;
+package com.syllabus.client.settings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

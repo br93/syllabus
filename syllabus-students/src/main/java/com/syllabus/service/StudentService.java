@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.syllabus.client.account.AccountClient;
 import com.syllabus.client.account.AccountResponse;
-import com.syllabus.client.config.ConfigClient;
-import com.syllabus.client.config.CourseResponse;
-import com.syllabus.client.config.UniversityCoursesResponse;
+import com.syllabus.client.settings.CourseResponse;
+import com.syllabus.client.settings.SettingsClient;
+import com.syllabus.client.settings.UniversityCoursesResponse;
+import com.syllabus.client.settings.UniversityResponse;
 import com.syllabus.data.model.StudentModel;
 import com.syllabus.exception.CourseNotFoundException;
+import com.syllabus.exception.ProgramNotFoundException;
+import com.syllabus.exception.UniversityInfoInvalidException;
 import com.syllabus.repository.StudentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,11 +27,14 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final AccountClient accountClient;
-    private final ConfigClient configClient;
+    private final SettingsClient configClient;
 
     public StudentModel createStudent(StudentModel student) {
 
-        if(!validCourses(student.getCourseCodes(), student.getUniversityCode()))
+        validateUniversityInfo(student.getUniversityCode(), Short.valueOf(student.getTerm().toString()),
+                student.getProgramCode().toString());
+
+        if (!validCourses(student.getCourseCodes(), student.getUniversityCode()))
             throw new CourseNotFoundException("course not found");
 
         this.updateInstantStudent(student, Instant.now(), false);
@@ -79,6 +85,34 @@ public class StudentService {
         List<String> list = coursesList.stream().map(x -> x.getCourseCode()).collect(Collectors.toList());
         return list.containsAll(courses);
 
+    }
+
+    private void validateUniversityInfo(String universityCode, Short term, String programCode) {
+        if (!validUniversityCode(universityCode))
+            throw new UniversityInfoInvalidException("university code invalid");
+
+        try {
+            Short programTerms = configClient.getProgramByIdOrCode(programCode).getTerms();
+                if (!validTerm(term, programTerms))
+                    throw new UniversityInfoInvalidException("term invalid");
+        } catch (Exception ex) {
+            throw new ProgramNotFoundException("program not found");
+        }
+
+    }
+
+    private boolean validUniversityCode(String universityCode) {
+        UniversityResponse university = configClient.getUniversityByIdOrCode(universityCode);
+        System.out.println(university != null);
+
+        return (university != null);
+    }
+
+    private boolean validTerm(Short term, Short programTerm) {
+        System.out.println("term :" + term);
+        System.out.println("program term: " + programTerm);
+
+        return (term > 1 && term <= programTerm);
     }
 
 }
