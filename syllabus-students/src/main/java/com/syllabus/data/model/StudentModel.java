@@ -19,25 +19,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Document(collection = "alunos")
-public class AlunoModel implements Serializable{
+@Document(collection = "students")
+public class StudentModel implements Serializable{
 
     @MongoId(FieldType.OBJECT_ID)
-    private String alunoId;
+    private String studentId;
 
     @Indexed(unique = true)
     private String email;
 
-    private Integer periodo;
+    private Integer term;
 
-    @Field(name = "faculdade")
-    private String siglaFaculdade;
+    @Field(name = "university_code")
+    private String universityCode;
 
-    @Field(name = "curso")
-    private Integer codigoCurso;
+    @Field(name = "program_code")
+    private Integer programCode;
 
-    @Field(name = "disciplinasCursadas")
-    private Set<String> codigoDisciplinas = new HashSet<>();
+    @Field(name = "course_codes")
+    private Set<String> courseCodes = new HashSet<>();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Instant createdAt;

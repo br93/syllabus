@@ -30,6 +30,12 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CourseNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleCourseNotFoundException(CourseNotFoundException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
     private Map<String, List<String>> getErrorsMap(List<String> errors) {
         Map<String, List<String>> errorResponse = new HashMap<>();
         errorResponse.put("errors", errors);
