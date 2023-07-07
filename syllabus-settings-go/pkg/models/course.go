@@ -14,19 +14,23 @@ type Course struct {
 	EquivalentCourses   *[]Course       `gorm:"many2many:tb_equivalent_courses"`
 	PreRequisiteCourses *[]Course       `gorm:"many2many:tb_pre_requisite_courses"`
 	CoursePrograms      []CourseProgram `gorm:"foreignKey:CourseID;references:ID" json:"course_programs"`
+	University          University      `json:"university"`
+	UniversityID        uint            `json:"university_id"`
 }
 
 type CourseRequestModel struct {
-	CourseName string `json:"course_name" binding:"required"`
-	CourseCode string `json:"course_code" binding:"required,min=3,max=10"`
-	Workload   int16  `json:"workload" binding:"required,gte=10,lte=200"`
+	CourseName     string `json:"course_name" binding:"required"`
+	CourseCode     string `json:"course_code" binding:"required,min=3,max=10"`
+	Workload       int16  `json:"workload" binding:"required,gte=10,lte=200"`
+	UniversityCode string `json:"university_code" binding:"required"`
 }
 
 type CourseResponseModel struct {
-	CourseId   string `json:"course_id"`
-	CourseCode string `json:"course_code"`
-	CourseName string `json:"course_name"`
-	Workload   int16  `json:"workload"`
+	CourseId       string `json:"course_id"`
+	CourseCode     string `json:"course_code"`
+	CourseName     string `json:"course_name"`
+	Workload       int16  `json:"workload"`
+	UniversityCode string `json:"university_code" binding:"required"`
 }
 
 type CourseCodeRequestModel struct {

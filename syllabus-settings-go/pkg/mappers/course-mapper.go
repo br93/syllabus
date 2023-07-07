@@ -21,7 +21,13 @@ func FromCourseCode(req *[]models.CourseCodeRequestModel) *[]models.Course {
 
 func ToCourse(req *models.CourseRequestModel) *models.Course {
 
-	new := models.Course{CourseId: uuid.NewString(), CourseName: req.CourseName, CourseCode: req.CourseCode, Workload: req.Workload}
+	university, errUniversity := services.GetUniversityByCode(req.UniversityCode)
+
+	if errUniversity != nil {
+		return &models.Course{}
+	}
+
+	new := models.Course{CourseId: uuid.NewString(), CourseName: req.CourseName, CourseCode: req.CourseCode, Workload: req.Workload, University: *university}
 	return &new
 }
 
@@ -39,7 +45,7 @@ func ToCourseArray(req *[]models.CourseRequestModel) *[]models.Course {
 
 func ToCourseResponse(course *models.Course) *models.CourseResponseModel {
 
-	newResponse := models.CourseResponseModel{CourseId: course.CourseId, CourseCode: course.CourseCode, CourseName: course.CourseName, Workload: course.Workload}
+	newResponse := models.CourseResponseModel{CourseId: course.CourseId, CourseCode: course.CourseCode, CourseName: course.CourseName, Workload: course.Workload, UniversityCode: course.University.UniversityCode}
 	return &newResponse
 }
 

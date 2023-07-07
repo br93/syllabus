@@ -126,3 +126,21 @@ func GetProgramsByUniversity(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func GetCoursesByUniversity(ctx *gin.Context) {
+	universityId := ctx.Param("university_id")
+
+	university, err := services.GetUniversityByIdOrCode(universityId, "Courses", "Courses.University")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToUniversityCourses(university)
+
+	ctx.JSON(http.StatusOK, response)
+}

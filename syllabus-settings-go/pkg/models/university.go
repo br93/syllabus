@@ -10,6 +10,7 @@ type University struct {
 	UniversityName string    `json:"university_name"`
 	UniversityCode string    `gorm:"unique" json:"university_code"`
 	Programs       []Program `gorm:"foreignKey:UniversityID;references:ID" json:"programs"`
+	Courses        []Course  `gorm:"foreignKey:UniversityID;references:ID" json:"courses"`
 }
 
 type UniversityRequestModel struct {
@@ -23,11 +24,18 @@ type UniversityResponseModel struct {
 	UniversityCode string `json:"university_code"`
 }
 
-type ProgramsResponseModel struct {
+type UniversityProgramsResponseModel struct {
 	UniversityId   string                 `json:"university_id"`
 	UniversityName string                 `json:"university_name"`
 	UniversityCode string                 `json:"university_code"`
 	Programs       []ProgramResponseModel `json:"programs"`
+}
+
+type UniversityCoursesResponseModel struct {
+	UniversityId   string                `json:"university_id"`
+	UniversityName string                `json:"university_name"`
+	UniversityCode string                `json:"university_code"`
+	Courses        []CourseResponseModel `json:"courses"`
 }
 
 func (University) TableName() string {

@@ -41,11 +41,20 @@ func ToUniversityResponseArray(req *[]models.University) *[]models.UniversityRes
 	return &universitys
 }
 
-func ToUniversityPrograms(university *models.University) *models.ProgramsResponseModel {
+func ToUniversityPrograms(university *models.University) *models.UniversityProgramsResponseModel {
 	var programs = university.Programs
 
 	var response = ToProgramResponseArray(&programs)
 
-	newResponse := models.ProgramsResponseModel{UniversityId: university.UniversityId, UniversityCode: university.UniversityCode, UniversityName: university.UniversityName, Programs: *response}
+	newResponse := models.UniversityProgramsResponseModel{UniversityId: university.UniversityId, UniversityCode: university.UniversityCode, UniversityName: university.UniversityName, Programs: *response}
+	return &newResponse
+}
+
+func ToUniversityCourses(university *models.University) *models.UniversityCoursesResponseModel {
+	var courses = university.Courses
+
+	var response = ToCourseResponseArray(&courses)
+
+	newResponse := models.UniversityCoursesResponseModel{UniversityId: university.UniversityId, UniversityCode: university.UniversityCode, UniversityName: university.UniversityName, Courses: *response}
 	return &newResponse
 }

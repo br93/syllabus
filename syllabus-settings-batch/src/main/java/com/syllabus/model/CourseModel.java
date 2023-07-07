@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,5 +50,8 @@ public class CourseModel {
 	@ManyToMany
 	@JoinTable(name = "tb_pre_requisite_courses", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "pre_requisite_id"))
 	private Set<CourseModel> prerequisiteCourses;
+
+	@ManyToOne
+	private UniversityModel university;
 
 }

@@ -93,14 +93,15 @@ public class CSVHelper {
 	public List<CourseModel> csvToCourse(InputStream inputStream) {
 		List<CourseModel> courses = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = readFile(inputStream);
-		String[] headers = { "Name", "Code", "Workload" };
+		String[] headers = { "Name", "Code", "Workload", "University" };
 
 		for (CSVRecord csvRecord : csvRecords) {
 
 			CourseModel course = new CourseModel(null, Instant.now(), Instant.now(), null,
 					UUID.randomUUID().toString(), csvRecord.get(headers[0]), csvRecord.get(headers[1]),
-					Short.valueOf(csvRecord.get(headers[2])), null, null);
-
+					Short.valueOf(csvRecord.get(headers[2])), null, null,
+					universityRepository.findByUniversityCode(csvRecord.get(headers[3])));
+			
 			courses.add(course);
 
 		}

@@ -11,5 +11,7 @@ var RegisterUniversityRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/config/universities/:university_id", controllers.GetUniversityByIdOrCode)
 	router.PUT("/api/v1/config/universities/:university_id", controllers.UpdateUniversity)
 	router.DELETE("/api/v1/config/universities/:university_id", controllers.DeleteUniversity)
+
 	router.GET("/api/v1/config/universities/:university_id/programs/", controllers.GetProgramsByUniversity)
+	router.GET("/api/v1/config/universities/:university_id/courses/", controllers.GetCoursesByUniversity)
 }
