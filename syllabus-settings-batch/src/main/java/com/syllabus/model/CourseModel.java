@@ -44,11 +44,11 @@ public class CourseModel {
 	private Short workload;
 
 	@ManyToMany
-	@JoinTable(name = "tb_equivalent_courses", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "equivalent_id"))
+	@JoinTable(name = "tb_equivalent_courses", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "equivalent_course_id"))
 	private Set<CourseModel> equivalentCourses;
 
 	@ManyToMany
-	@JoinTable(name = "tb_pre_requisite_courses", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "pre_requisite_id"))
+	@JoinTable(name = "tb_pre_requisite_courses", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "pre_requisite_course_id"))
 	private Set<CourseModel> prerequisiteCourses;
 
 	@ManyToOne

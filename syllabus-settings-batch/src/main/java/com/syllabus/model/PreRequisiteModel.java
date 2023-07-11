@@ -1,14 +1,16 @@
 package com.syllabus.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @IdClass(PreRequisiteIdClass.class)
+@Table(name = "tb_pre_requisite_courses")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -16,11 +18,11 @@ import lombok.NoArgsConstructor;
 public class PreRequisiteModel {
 
     @Id
-    @Column(name = "course_id")
+    @ManyToOne
     private CourseModel course;
     
     @Id
-    @Column(name = "pre_requisite_course_id")
+    @ManyToOne
     private CourseModel preRequisiteCourse;
     
 }
