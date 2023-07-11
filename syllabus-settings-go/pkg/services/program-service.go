@@ -53,7 +53,7 @@ func GetProgramByIdOrCode(program string, preload ...string) (*models.Program, e
 func GetPrograms() (*[]models.Program, error) {
 	var programs []models.Program
 
-	result := models.DB.Find(&programs)
+	result := models.DB.Preload(clause.Associations).Find(&programs)
 
 	if result.Error != nil {
 		return &programs, result.Error
