@@ -1,10 +1,12 @@
 package com.syllabus.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.syllabus.model.DayModel;
 
 public interface DayRepository extends JpaRepository<DayModel, Long> {
 
-	DayModel findByDayNumber(Short number);
+	Optional<DayModel> findByDayNumber(Short number);
 }
