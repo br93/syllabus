@@ -49,11 +49,11 @@ func GetCourseByIdOrCode(course string, preload ...string) (*models.Course, erro
 	return GetCourseByCode(course, preload...)
 }
 
-func GetCourses() (*[]models.Course, error) {
+func GetCourses(preload ...string) (*[]models.Course, error) {
 
 	var courses []models.Course
 
-	result := models.DB.Find(&courses)
+	result := models.DBConfig(models.DB, preload).Find(&courses)
 
 	if result.Error != nil {
 		return &courses, result.Error

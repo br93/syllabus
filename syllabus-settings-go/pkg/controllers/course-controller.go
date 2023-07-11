@@ -36,7 +36,7 @@ func CreateCourse(ctx *gin.Context) {
 func GetCourseByIdOrCode(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course, err := services.GetCourseByIdOrCode(courseId)
+	course, err := services.GetCourseByIdOrCode(courseId, "University")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -54,7 +54,7 @@ func GetCourseByIdOrCode(ctx *gin.Context) {
 
 func GetCourses(ctx *gin.Context) {
 
-	courses, err := services.GetCourses()
+	courses, err := services.GetCourses("University")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
