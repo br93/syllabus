@@ -28,7 +28,7 @@ public class CourseProgramService {
 	private final CourseService courseService;
 	private final CourseTypeService courseTypeService;
 
-	 public List<CourseProgramModel> csvToCourseProgram(InputStream inputStream) {
+	public List<CourseProgramModel> csvToCourseProgram(InputStream inputStream) {
 		List<CourseProgramModel> coursePrograms = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
 		String[] headers = { "Term", "Program", "Course", "Type" };
@@ -51,17 +51,9 @@ public class CourseProgramService {
 	public void save(MultipartFile file) {
 		try {
 			List<CourseProgramModel> coursePrograms = this.csvToCourseProgram(file.getInputStream());
-			saveFromList(coursePrograms);
+			courseProgramRepository.saveAll(coursePrograms);
 		} catch (IOException ex) {
 			throw new CsvException("fail to store csv data: " + ex.getMessage());
-		}
-	}
-
-	private void saveFromList(List<CourseProgramModel> list) {
-		Integer size = list.size();
-
-		for (int i = 0; i < size; i++) {
-			courseProgramRepository.save(list.get(i));
 		}
 	}
 
