@@ -1,0 +1,38 @@
+package com.syllabus.converter.impl;
+
+import java.io.InputStream;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
+
+import com.syllabus.converter.CsvConverter;
+import com.syllabus.helper.CsvHelper;
+import com.syllabus.model.ScheduleModel;
+
+@Component
+public class ScheduleCsvConverter implements CsvConverter<ScheduleModel> {
+
+    public List<ScheduleModel> csvToModel(InputStream inputStream) {
+        List<ScheduleModel> schedules = new ArrayList<>();
+        Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
+        String[] headers = { "Code", "TimeOfDay", "Range" };
+
+        for (CSVRecord csvRecord : csvRecords) {
+
+            ScheduleModel schedule = new ScheduleModel(null, Instant.now(), Instant.now(), null,
+                    UUID.randomUUID().toString(),
+                    csvRecord.get(headers[0]),
+                    csvRecord.get(headers[1]),
+                    csvRecord.get(headers[2]));
+            schedules.add(schedule);
+
+        }
+
+        return schedules;
+    }
+
+}

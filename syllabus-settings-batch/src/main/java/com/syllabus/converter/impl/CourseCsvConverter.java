@@ -1,6 +1,5 @@
-package com.syllabus.service;
+package com.syllabus.converter.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,25 +7,22 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Component;
 
-import com.syllabus.exception.CsvException;
-import com.syllabus.exception.EntityNotFoundException;
+import com.syllabus.converter.CsvConverter;
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.model.CourseModel;
-import com.syllabus.repository.CourseRepository;
+import com.syllabus.service.impl.UniversityService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class CourseService {
+public class CourseCsvConverter implements CsvConverter<CourseModel>{
 
-	private final CourseRepository courseRepository;
 	private final UniversityService universityService;
 
-	public List<CourseModel> csvToCourse(InputStream inputStream) {
+    public List<CourseModel> csvToModel(InputStream inputStream) {
 		List<CourseModel> courses = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
 		String[] headers = { "Name", "Code", "Workload", "University" };
@@ -44,18 +40,5 @@ public class CourseService {
 
 		return courses;
 	}
-
-	public void save(MultipartFile file) {
-		try {
-			List<CourseModel> courses = this.csvToCourse(file.getInputStream());
-			courseRepository.saveAll(courses);
-		} catch (IOException ex) {
-			throw new CsvException("fail to store csv data: " + ex.getMessage());
-		}
-	}
-
-	public CourseModel findByCourseCode(String code) {
-		return courseRepository.findByCourseCode(code)
-				.orElseThrow(() -> new EntityNotFoundException("course " + code + " not found"));
-	}
+    
 }

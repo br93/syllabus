@@ -1,6 +1,5 @@
-package com.syllabus.service;
+package com.syllabus.converter.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,27 +7,26 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Component;
 
-import com.syllabus.exception.CsvException;
-import com.syllabus.exception.EntityNotFoundException;
+import com.syllabus.converter.CsvConverter;
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.model.CourseProgramModel;
-import com.syllabus.repository.CourseProgramRepository;
+import com.syllabus.service.impl.CourseService;
+import com.syllabus.service.impl.CourseTypeService;
+import com.syllabus.service.impl.ProgramService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class CourseProgramService {
+public class CourseProgramCsvConverter implements CsvConverter<CourseProgramModel>{
 
-	private final CourseProgramRepository courseProgramRepository;
-	private final ProgramService programService;
+    private final ProgramService programService;
 	private final CourseService courseService;
 	private final CourseTypeService courseTypeService;
 
-	public List<CourseProgramModel> csvToCourseProgram(InputStream inputStream) {
+    public List<CourseProgramModel> csvToModel(InputStream inputStream) {
 		List<CourseProgramModel> coursePrograms = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
 		String[] headers = { "Term", "Program", "Course", "Type" };
@@ -47,18 +45,5 @@ public class CourseProgramService {
 
 		return coursePrograms;
 	}
-
-	public void save(MultipartFile file) {
-		try {
-			List<CourseProgramModel> coursePrograms = this.csvToCourseProgram(file.getInputStream());
-			courseProgramRepository.saveAll(coursePrograms);
-		} catch (IOException ex) {
-			throw new CsvException("fail to store csv data: " + ex.getMessage());
-		}
-	}
-
-	public CourseProgramModel findByCourseProgramId(String id) {
-		return courseProgramRepository.findByCourseProgramId(id)
-				.orElseThrow(() -> new EntityNotFoundException("course program not found"));
-	}
+    
 }

@@ -1,6 +1,5 @@
-package com.syllabus.service;
+package com.syllabus.converter.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,27 +7,26 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Component;
 
-import com.syllabus.exception.CsvException;
-import com.syllabus.exception.EntityNotFoundException;
+import com.syllabus.converter.CsvConverter;
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.model.ClassScheduleModel;
-import com.syllabus.repository.ClassScheduleRepository;
+import com.syllabus.service.impl.ClassService;
+import com.syllabus.service.impl.DayService;
+import com.syllabus.service.impl.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class ClassScheduleService {
+public class ClassScheduleCsvConverter implements CsvConverter<ClassScheduleModel>{
 
-	private final ClassScheduleRepository classScheduleRepository;
-	private final ClassService classService;
+    private final ClassService classService;
 	private final DayService dayService;
 	private final ScheduleService scheduleService;
 
-	public List<ClassScheduleModel> csvToClassSchedule(InputStream inputStream) {
+    public List<ClassScheduleModel> csvToModel(InputStream inputStream) {
 		List<ClassScheduleModel> classSchedules = new ArrayList<>();
 		Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
 		String[] headers = { "Class", "Day", "Schedule" };
@@ -46,18 +44,6 @@ public class ClassScheduleService {
 
 		return classSchedules;
 	}
-
-	public void save(MultipartFile file) {
-		try {
-			List<ClassScheduleModel> classSchedules = this.csvToClassSchedule(file.getInputStream());
-			classScheduleRepository.saveAll(classSchedules);
-		} catch (IOException ex) {
-			throw new CsvException("fail to store csv data: " + ex.getMessage());
-		}
-	}
-
-	public ClassScheduleModel findByClassScheduleId(String id) {
-		return classScheduleRepository.findByClassScheduleId(id)
-				.orElseThrow(() -> new EntityNotFoundException("class schedule not found"));
-	}
+    
+    
 }

@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.message.ResponseMessage;
-import com.syllabus.service.PreRequisiteService;
+import com.syllabus.service.impl.PreRequisiteService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,50 +1,30 @@
-package com.syllabus.service;
+package com.syllabus.service.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.syllabus.converter.impl.DayCsvConverter;
 import com.syllabus.exception.CsvException;
 import com.syllabus.exception.EntityNotFoundException;
-import com.syllabus.helper.CsvHelper;
 import com.syllabus.model.DayModel;
 import com.syllabus.repository.DayRepository;
+import com.syllabus.service.MultipartFilePersistenceService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DayService {
+public class DayService implements MultipartFilePersistenceService{
 
 	private final DayRepository dayRepository;
-
-	public List<DayModel> csvToDay(InputStream inputStream) {
-		List<DayModel> days = new ArrayList<>();
-		Iterable<CSVRecord> csvRecords = CsvHelper.readFile(inputStream);
-		String[] headers = { "Name", "Number" };
-
-		for (CSVRecord csvRecord : csvRecords) {
-
-			DayModel day = new DayModel(null, Instant.now(), Instant.now(), null,
-					UUID.randomUUID().toString(),
-					csvRecord.get(headers[0]), Short.valueOf(csvRecord.get(headers[1])));
-			days.add(day);
-
-		}
-
-		return days;
-	}
+	private final DayCsvConverter csvConverter;
 
 	public void save(MultipartFile file) {
 		try {
-			List<DayModel> days = this.csvToDay(file.getInputStream());
+			List<DayModel> days = csvConverter.csvToModel(file.getInputStream());
 			dayRepository.saveAll(days);
 		} catch (IOException ex) {
 			throw new CsvException("fail to store csv data: " + ex.getMessage());
