@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 
 import com.syllabus.converter.CsvConverter;
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.model.UniversityModel;
 
+@Component
 public class UniversityCsvConverter implements CsvConverter<UniversityModel> {
 
     @Override
