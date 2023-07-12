@@ -32,7 +32,7 @@ public class ClassCsvConverter implements CsvConverter<ClassModel>{
 			ClassModel classModel = new ClassModel(null, Instant.now(), Instant.now(), null,
 					UUID.randomUUID().toString(),
 					courseService.findByCourseCode(csvRecord.get(headers[0])),
-					csvRecord.get(headers[1]));
+					csvRecord.get(headers[0]).concat("-").concat(csvRecord.get(headers[1])));
 			classes.add(classModel);
 
 		}
