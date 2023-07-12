@@ -38,7 +38,7 @@ public class ClassScheduleModel {
 	private String classScheduleId;
 	
 	@ManyToOne
-	@JoinColumn(name = "class")
+	@JoinColumn(name = "class_id")
 	private ClassModel classModel;
 
 	@ManyToOne
@@ -46,5 +46,9 @@ public class ClassScheduleModel {
 	
 	@ManyToOne
 	private ScheduleModel schedule;
+
+	private String classCode;
+
+	private String timeOfDay;
 
 }
