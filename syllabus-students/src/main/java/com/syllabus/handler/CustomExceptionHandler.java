@@ -1,4 +1,4 @@
-package com.syllabus.exception;
+package com.syllabus.handler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +13,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.syllabus.exception.CourseNotFoundException;
+import com.syllabus.exception.ProgramNotFoundException;
+import com.syllabus.exception.StudentNotFoundException;
+import com.syllabus.exception.UniversityInfoInvalidException;
+import com.syllabus.exception.UserUnauthorizedException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -47,6 +53,12 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, List<String>>> handleProgramNotFoundException(ProgramNotFoundException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserUnauthorizedException.class)
+    public ResponseEntity<Map<String, List<String>>> handleUserUnauthorizedException(UserUnauthorizedException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
     private Map<String, List<String>> getErrorsMap(List<String> errors) {
