@@ -1,4 +1,4 @@
-package com.syllabus.client.account;
+package com.syllabus.client.account.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

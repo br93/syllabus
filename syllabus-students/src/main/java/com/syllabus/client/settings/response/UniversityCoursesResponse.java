@@ -1,4 +1,6 @@
-package com.syllabus.client.settings;
+package com.syllabus.client.settings.response;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,15 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UniversityResponse {
+public class UniversityCoursesResponse {
 
     @JsonProperty("university_id")
     private String universityId;
 
-    @JsonProperty("university_name")
-    private String universityName;
-
     @JsonProperty("university_code")
     private String universityCode;
 
+    @JsonProperty("courses")
+    private List<CourseResponse> courses;
+    
 }
