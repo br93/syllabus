@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SyllabusEnrichmentApplication {
+public class SyllabusCoreApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SyllabusEnrichmentApplication.class, args);
+		SpringApplication.run(SyllabusCoreApplication.class, args);
 	}
 
 }
