@@ -42,6 +42,19 @@ func GetCoursePrograms(preload ...string) (*[]models.CourseProgram, error) {
 	return &courseprograms, nil
 }
 
+func GetCourseProgramsByCourseCodeIn(codes []string, preload ...string) (*[]models.CourseProgram, error) {
+
+	var courseprograms []models.CourseProgram
+
+	result := models.DBConfig(models.DB.Preload(clause.Associations), preload).Joins("JOIN tb_courses ON tb_courses.id = tb_course_programs.course_id").Where("tb_courses.course_code IN ?", codes).Find(&courseprograms)
+
+	if result.Error != nil {
+		return &courseprograms, result.Error
+	}
+
+	return &courseprograms, nil
+}
+
 func GetCourseProgramsByProgramAndCourseType(programCode string, courseType string, preload ...string) (*[]models.CourseProgram, error) {
 	var courseprograms []models.CourseProgram
 

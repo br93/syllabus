@@ -69,6 +69,25 @@ func GetCoursePrograms(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+func GetCourseProgramsByCourseCodeIn(ctx *gin.Context) {
+
+	codes, _ := ctx.GetQueryArray("a")
+
+	courseprograms, err := services.GetCourseProgramsByCourseCodeIn(codes, "Course", "CourseType")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToCourseProgramResponseArray(courseprograms)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
 func GetCourseProgramsByProgramAndCourseType(ctx *gin.Context) {
 
 	programCode := ctx.Param("program_code")
