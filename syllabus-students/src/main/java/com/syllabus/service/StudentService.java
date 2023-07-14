@@ -38,18 +38,27 @@ public class StudentService {
 
     public StudentModel getStudent(String id) {
 
-        if (!userValidation.isAuthorizedById(id))
+        var student = studentRepository.findByStudentIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new StudentNotFoundException("student not found"));
+
+        if (!userValidation.isAuthorizedById(student.getUserId()))
             throw new UserUnauthorizedException("user unauthorized");
 
-        return studentRepository.findByStudentIdAndDeletedAtIsNull(id)
+        return student;
+
+    }
+
+    public StudentModel getStudentByUserId(String userId) {
+
+        if (!userValidation.isAuthorizedById(userId))
+            throw new UserUnauthorizedException("user unauthorized");
+
+        return studentRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new StudentNotFoundException("student not found"));
 
     }
 
     public StudentModel updateStudent(String id, StudentModel novoStudent) {
-
-        if (!userValidation.isAuthorizedById(id))
-            throw new UserUnauthorizedException("user unauthorized");
 
         StudentModel student = this.getStudent(id);
         novoStudent.setStudentId(student.getStudentId());

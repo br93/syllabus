@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.StudentRequest;
@@ -20,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/student")
-public class StudentController{
+@RequestMapping("api/v1/students")
+public class StudentController {
 
     private final StudentService studentService;
     private final StudentMapper studentMapper;
