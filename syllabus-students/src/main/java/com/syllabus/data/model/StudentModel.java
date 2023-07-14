@@ -26,7 +26,7 @@ public class StudentModel implements Serializable{
     private String studentId;
 
     @Indexed(unique = true)
-    private String email;
+    private String userId;
 
     private Integer term;
 

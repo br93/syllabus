@@ -22,8 +22,4 @@ public class UserValidation {
 
     }
 
-    public boolean isAuthorizedByEmail(String email) {
-        return this.getUser().getEmail().equals(email);
-    }
-
 }

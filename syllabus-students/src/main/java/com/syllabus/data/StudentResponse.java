@@ -17,8 +17,6 @@ public class StudentResponse {
     @JsonProperty("student_id")
     private String studentId;
 
-    private String email;
-    
     private Integer term;
     
     @JsonProperty("university_code")

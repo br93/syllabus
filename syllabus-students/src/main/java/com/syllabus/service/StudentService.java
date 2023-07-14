@@ -31,28 +31,17 @@ public class StudentService {
             throw new CourseNotFoundException("course not found");
 
         this.updateInstantStudent(student, Instant.now(), false);
-        student.setEmail(userValidation.getUser().getEmail());
+        student.setUserId(userValidation.getUser().getUserId());
 
         return studentRepository.save(student);
     }
 
     public StudentModel getStudent(String id) {
 
-        var student = studentRepository.findByStudentIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new StudentNotFoundException("student not found"));
-
-        if (!userValidation.isAuthorizedByEmail(student.getEmail()))
+        if (!userValidation.isAuthorizedById(id))
             throw new UserUnauthorizedException("user unauthorized");
 
-        return student;
-
-    }
-
-    public StudentModel getStudentByEmail(String email) {
-        if (!userValidation.isAuthorizedByEmail(email))
-            throw new UserUnauthorizedException("user unauthorized");
-
-        return studentRepository.findByEmailAndDeletedAtIsNull(email)
+        return studentRepository.findByStudentIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new StudentNotFoundException("student not found"));
 
     }
