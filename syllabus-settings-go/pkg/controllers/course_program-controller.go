@@ -71,7 +71,7 @@ func GetCoursePrograms(ctx *gin.Context) {
 
 func GetCourseProgramsByCourseCodeIn(ctx *gin.Context) {
 
-	codes, _ := ctx.GetQueryArray("a")
+	codes, _ := ctx.GetQueryArray("code")
 
 	courseprograms, err := services.GetCourseProgramsByCourseCodeIn(codes, "Course", "CourseType")
 
