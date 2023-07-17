@@ -49,4 +49,20 @@ public class CoreController {
                 coursePrograms.stream().map(coreMapper::toCoreResponse).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @GetMapping("students/{id}/elective-courses")
+    public ResponseEntity<List<CoreResponseModel>> getAllElectiveCourses(@PathVariable(name = "id") String userId) {
+        var coursePrograms = coreService.getAllElectiveCourses(userId);
+
+        return new ResponseEntity<>(
+                coursePrograms.stream().map(coreMapper::toCoreResponse).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("students/{id}/elective-courses/missing")
+    public ResponseEntity<List<CoreResponseModel>> getMissingElectiveCourses(@PathVariable(name = "id") String userId) {
+        var coursePrograms = coreService.getMissingElectiveCourses(userId);
+
+        return new ResponseEntity<>(
+                coursePrograms.stream().map(coreMapper::toCoreResponse).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
 }

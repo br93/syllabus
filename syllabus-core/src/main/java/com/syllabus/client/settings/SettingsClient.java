@@ -15,6 +15,10 @@ public interface SettingsClient {
     public List<CourseProgramResponse> getCourseProgramsByCourseCodeIn(@RequestParam("code") Set<String> courseCodes);
 
     @GetMapping(value = "${course.programs.path}/programs/{program_code}/type/{type_name}")
-    public List<CourseProgramResponse> getCourseProgramsByProgramAndCourseType(@PathVariable("program_code") String programCode, @PathVariable("type_name") String typeName);
+    public List<CourseProgramResponse> getCourseProgramsByProgramAndCourseType(
+            @PathVariable("program_code") String programCode, @PathVariable("type_name") String typeName);
 
+    @GetMapping(value = "${course.programs.path}/programs/{program_code}/not-type/{type_name}")
+    public List<CourseProgramResponse> getCourseProgramsByProgramAndNotCourseType(
+            @PathVariable("program_code") String programCode, @PathVariable("type_name") String typeName);
 }

@@ -11,8 +11,11 @@ public class ConstantUtil {
 
     private final Environment environment;
 
-    public String getRequiredType(){
+    public String getRequiredType() {
         return environment.getProperty("required.course");
     }
-    
+
+    public String getSecondLayer() {
+        return environment.getProperty("second.layer.course");
+    }
 }
