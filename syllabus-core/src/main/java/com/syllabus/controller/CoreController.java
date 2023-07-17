@@ -33,4 +33,20 @@ public class CoreController {
 
     }
 
+    @GetMapping("students/{id}/required-courses")
+    public ResponseEntity<List<CoreResponseModel>> getAllRequiredCourses(@PathVariable(name = "id") String userId) {
+        var coursePrograms = coreService.getAllRequiredCourses(userId);
+
+        return new ResponseEntity<>(
+                coursePrograms.stream().map(coreMapper::toCoreResponse).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("students/{id}/required-courses/missing")
+    public ResponseEntity<List<CoreResponseModel>> getMissingRequiredCourses(@PathVariable(name = "id") String userId) {
+        var coursePrograms = coreService.getMissingRequiredCourses(userId);
+
+        return new ResponseEntity<>(
+                coursePrograms.stream().map(coreMapper::toCoreResponse).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
 }
