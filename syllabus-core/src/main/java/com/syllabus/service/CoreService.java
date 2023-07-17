@@ -38,8 +38,6 @@ public class CoreService {
             requiredCourses.addAll(this.getAllSecondLayerCourses(program));
         }
 
-        System.out.println(requiredCourses.size());
-
         return requiredCourses;
     }
 
@@ -73,9 +71,7 @@ public class CoreService {
     }
 
     private List<CourseProgramResponse> getAllSecondLayerCourses(String program) {
-        var list = settingsClient.getCourseProgramsByProgramAndCourseType(program, constantUtil.getSecondLayer());
-        System.out.println(list.size());
-        return list;
+        return settingsClient.getCourseProgramsByProgramAndCourseType(program, constantUtil.getSecondLayer());
     }
 
 }
