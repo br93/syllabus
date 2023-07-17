@@ -67,6 +67,18 @@ func GetCourseProgramsByProgramAndCourseType(programCode string, courseType stri
 	return &courseprograms, nil
 }
 
+func GetCourseProgramsByProgramAndNotCourseType(programCode string, courseType string, preload ...string) (*[]models.CourseProgram, error) {
+	var courseprograms []models.CourseProgram
+
+	result := models.DBConfig(models.DB.Preload(clause.Associations), preload).Joins("JOIN tb_programs on tb_programs.id = tb_course_programs.program_id").Joins("JOIN tb_course_types ON tb_course_types.id = tb_course_programs.course_type_id").Where("tb_programs.program_code=? AND NOT tb_course_types.type_name=?", programCode, courseType).Find(&courseprograms)
+
+	if result.Error != nil {
+		return &courseprograms, result.Error
+	}
+
+	return &courseprograms, nil
+}
+
 func UpdateCourseProgram(courseprogramId string, req *models.CourseProgram) (*models.CourseProgram, error) {
 	response, err := GetCourseProgramById(courseprogramId)
 

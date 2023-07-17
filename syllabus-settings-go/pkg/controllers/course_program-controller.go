@@ -54,7 +54,7 @@ func GetCourseProgramById(ctx *gin.Context) {
 
 func GetCoursePrograms(ctx *gin.Context) {
 
-	courseprograms, err := services.GetCoursePrograms("Course", "CourseType")
+	courseprograms, err := services.GetCoursePrograms("Course", "CourseType", "Program")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -73,7 +73,7 @@ func GetCourseProgramsByCourseCodeIn(ctx *gin.Context) {
 
 	codes, _ := ctx.GetQueryArray("code")
 
-	courseprograms, err := services.GetCourseProgramsByCourseCodeIn(codes, "Course", "CourseType")
+	courseprograms, err := services.GetCourseProgramsByCourseCodeIn(codes, "Course", "CourseType", "Program")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -93,7 +93,27 @@ func GetCourseProgramsByProgramAndCourseType(ctx *gin.Context) {
 	programCode := ctx.Param("program_code")
 	typeName := ctx.Param("type_name")
 
-	courseprograms, err := services.GetCourseProgramsByProgramAndCourseType(programCode, typeName, "Course", "CourseType")
+	courseprograms, err := services.GetCourseProgramsByProgramAndCourseType(programCode, typeName, "Course", "CourseType", "Program")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	response := mappers.ToCourseProgramResponseArray(courseprograms)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func GetCourseProgramsByProgramAndNotCourseType(ctx *gin.Context) {
+
+	programCode := ctx.Param("program_code")
+	typeName := ctx.Param("type_name")
+
+	courseprograms, err := services.GetCourseProgramsByProgramAndNotCourseType(programCode, typeName, "Course", "CourseType", "Program")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)

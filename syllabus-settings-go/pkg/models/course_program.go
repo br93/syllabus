@@ -27,6 +27,7 @@ type CourseProgramResponseModel struct {
 	CourseProgramId string `json:"course_program_id"`
 	CourseCode      string `json:"course_code"`
 	CourseName      string `json:"course_name"`
+	ProgramCode     string `json:"program_code"`
 	Type            string `json:"course_type"`
 	Term            int16  `json:"term"`
 }

@@ -32,7 +32,7 @@ func ToCourseProgramArray(req *[]models.CourseProgramRequestModel) *[]models.Cou
 
 func ToCourseProgramResponse(courseprogram *models.CourseProgram) *models.CourseProgramResponseModel {
 
-	newResponse := models.CourseProgramResponseModel{CourseProgramId: courseprogram.CourseProgramId, CourseCode: courseprogram.Course.CourseCode, CourseName: courseprogram.Course.CourseName, Type: courseprogram.CourseType.TypeName, Term: courseprogram.Term}
+	newResponse := models.CourseProgramResponseModel{CourseProgramId: courseprogram.CourseProgramId, CourseCode: courseprogram.Course.CourseCode, CourseName: courseprogram.Course.CourseName, ProgramCode: courseprogram.Program.ProgramCode, Type: courseprogram.CourseType.TypeName, Term: courseprogram.Term}
 	return &newResponse
 }
 

@@ -9,6 +9,7 @@ var RegisterCourseProgramRoutes = func(router *gin.Engine) {
 	router.POST("/api/v1/config/course-programs", controllers.CreateCourseProgram)
 	router.GET("/api/v1/config/course-programs", controllers.GetCoursePrograms)
 	router.GET("/api/v1/config/course-programs/programs/:program_code/type/:type_name", controllers.GetCourseProgramsByProgramAndCourseType)
+	router.GET("/api/v1/config/course-programs/programs/:program_code/not-type/:type_name", controllers.GetCourseProgramsByProgramAndNotCourseType)
 	router.GET("/api/v1/config/course-programs/courses/", controllers.GetCourseProgramsByCourseCodeIn)
 	router.GET("/api/v1/config/course-programs/:course_program_id", controllers.GetCourseProgramById)
 	router.PUT("/api/v1/config/course-programs/:course_program_id", controllers.UpdateCourseProgram)
