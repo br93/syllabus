@@ -24,7 +24,7 @@ public class CoreController {
     private final CoreService coreService;
     private final CoreMapper coreMapper;
 
-    @GetMapping("{id}/courses-taken")
+    @GetMapping("students/{id}/courses-taken")
     public ResponseEntity<List<CoreResponseModel>> getCoursesTaken(@PathVariable(name = "id") String userId) {
         var coursePrograms = coreService.getCoursesTaken(userId);
 
