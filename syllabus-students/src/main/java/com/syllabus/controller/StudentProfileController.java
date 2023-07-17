@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/account/user")
+@RequestMapping("api/v1/users")
 public class StudentProfileController {
 
     private final StudentService studentService;
