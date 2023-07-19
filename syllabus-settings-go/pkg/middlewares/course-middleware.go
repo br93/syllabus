@@ -1,20 +1,19 @@
 package middlewares
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func CacheCourses(ctx *gin.Context) {
-	courses := cache.GetCourses()
+	courses := cache.Get("all-courses")
 
-	if courses != nil {
-		response := mappers.ToCourseResponseArray(&courses)
-		fmt.Println(response)
+	if courses != "nil" {
+		response := mappers.ToCourseResponseArray(utils.UnmarshalCourses(courses))
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -25,10 +24,10 @@ func CacheCourses(ctx *gin.Context) {
 func CacheCourse(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course := cache.GetCourse("course" + courseId)
+	course := cache.Get("course" + courseId)
 
-	if course != nil {
-		response := mappers.ToCourseResponse(course)
+	if course != "nil" {
+		response := mappers.ToCourseResponse(utils.UnmarshalCourse(course))
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -36,13 +35,13 @@ func CacheCourse(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func CachePreRequisiteOrEquivalent(ctx *gin.Context) {
+func CachePreRequisite(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course := cache.GetCourse("course" + courseId)
+	course := cache.Get("course" + courseId)
 
-	if course != nil {
-		courses := course.PreRequisiteCourses
+	if course != "nil" {
+		courses := utils.UnmarshalCourse(course).PreRequisiteCourses
 		response := mappers.ToCourseResponseArray(courses)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
@@ -54,10 +53,10 @@ func CachePreRequisiteOrEquivalent(ctx *gin.Context) {
 func CacheClassesByCourse(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course := cache.GetCourse("course" + courseId)
+	course := cache.Get("course" + courseId)
 
-	if course != nil {
-		response := mappers.ToCourseClasses(course)
+	if course != "nil" {
+		response := mappers.ToCourseClasses(utils.UnmarshalCourse(course))
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}

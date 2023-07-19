@@ -27,7 +27,5 @@ func UnmarshalCourse(value string) *models.Course {
 		panic(err)
 	}
 
-	course.CourseName = course.CourseName + " CACHED"
-
 	return &course
 }
