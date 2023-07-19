@@ -34,3 +34,17 @@ func CacheClassSchedule(ctx *gin.Context) {
 
 	ctx.Next()
 }
+
+func CacheClassSchedulesByClass(ctx *gin.Context) {
+	classId := ctx.Param("class_id")
+
+	classSchedules := cache.Get("class-schedule" + classId)
+
+	if classSchedules != "nil" {
+		response := mappers.ToClassScheduleResponseArray(utils.UnmarshalClassSchedules(classSchedules))
+		ctx.JSON(http.StatusOK, response)
+		ctx.Abort()
+	}
+
+	ctx.Next()
+}

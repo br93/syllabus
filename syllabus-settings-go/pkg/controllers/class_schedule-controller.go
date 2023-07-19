@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateClassSchedule(ctx *gin.Context) {
 
 	response := mappers.ToClassScheduleResponse(classSchedule)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -46,10 +48,30 @@ func GetClassScheduleById(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("class-schedule", classScheduleId, classSchedule)
 	response := mappers.ToClassScheduleResponse(classSchedule)
 
 	ctx.JSON(http.StatusOK, response)
 
+}
+
+func GetClassSchedulesByClass(ctx *gin.Context) {
+	classId := ctx.Param("class_id")
+
+	classSchedules, err := services.GetClassScheduleByClassCode(classId, "Class", "Day", "Schedule")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	cache.Set("class-schedule", classId, classSchedules)
+	response := mappers.ToClassScheduleResponseArray(classSchedules)
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 func GetClassSchedules(ctx *gin.Context) {
@@ -64,6 +86,7 @@ func GetClassSchedules(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-class-schedules", classSchedules)
 	response := mappers.ToClassScheduleResponseArray(classSchedules)
 
 	ctx.JSON(http.StatusOK, response)
@@ -91,6 +114,7 @@ func UpdateClassSchedule(ctx *gin.Context) {
 
 	response := mappers.ToClassScheduleResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -106,5 +130,6 @@ func DeleteClassSchedule(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }

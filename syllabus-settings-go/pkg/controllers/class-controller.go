@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateClass(ctx *gin.Context) {
 
 	response := mappers.ToClassResponse(class)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -45,6 +47,7 @@ func GetClassByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("class", classId, class)
 	response := mappers.ToClassResponse(class)
 
 	ctx.JSON(http.StatusOK, response)
@@ -63,6 +66,7 @@ func GetClasses(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-classes", classes)
 	response := mappers.ToClassResponseArray(classes)
 
 	ctx.JSON(http.StatusOK, response)
@@ -90,6 +94,7 @@ func UpdateClass(ctx *gin.Context) {
 
 	response := mappers.ToClassResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -105,5 +110,6 @@ func DeleteClass(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }
