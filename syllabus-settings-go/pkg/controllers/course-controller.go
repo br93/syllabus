@@ -30,8 +30,8 @@ func CreateCourse(ctx *gin.Context) {
 	}
 
 	response := mappers.ToCourseResponse(course)
-	cache.Flush()
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 

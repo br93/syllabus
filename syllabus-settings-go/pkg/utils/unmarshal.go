@@ -27,5 +27,31 @@ func UnmarshalCourse(value string) *models.Course {
 		panic(err)
 	}
 
+	course.CourseName = course.CourseName + " CACHED"
+
 	return &course
+}
+
+func UnmarshalClassSchedules(value string) *[]models.ClassSchedule {
+
+	var classSchedules []models.ClassSchedule
+
+	err := json.Unmarshal([]byte(value), &classSchedules)
+	if err != nil {
+		panic(err)
+	}
+
+	return &classSchedules
+}
+
+func UnmarshalClassSchedule(value string) *models.ClassSchedule {
+
+	var classSchedule models.ClassSchedule
+
+	err := json.Unmarshal([]byte(value), &classSchedule)
+	if err != nil {
+		panic(err)
+	}
+
+	return &classSchedule
 }

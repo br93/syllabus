@@ -17,7 +17,7 @@ func SetAll(key string, value interface{}) {
 		panic(err)
 	}
 
-	cache.Set(context.Background(), key, json, 60*time.Second)
+	cache.Set(context.Background(), key, json, 10*time.Minute)
 }
 
 func Set(key string, id string, value interface{}) {
@@ -27,7 +27,7 @@ func Set(key string, id string, value interface{}) {
 		panic(err)
 	}
 
-	cache.Set(context.Background(), key+id, json, 60*time.Second)
+	cache.Set(context.Background(), key+id, json, 10*time.Minute)
 }
 
 func Get(key string) string {
@@ -38,4 +38,8 @@ func Get(key string) string {
 	}
 
 	return value
+}
+
+func Flush() {
+	cache.FlushAll(context.Background())
 }
