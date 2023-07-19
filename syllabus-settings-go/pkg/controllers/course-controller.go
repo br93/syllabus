@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -36,18 +37,25 @@ func CreateCourse(ctx *gin.Context) {
 func GetCourseByIdOrCode(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course, err := services.GetCourseByIdOrCode(courseId, "University")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+	course := cache.GetCourse(courseId)
+	if course != nil {
+		response := mappers.ToCourseResponse(course)
+		ctx.JSON(http.StatusOK, response)
 		return
 	}
 
-	response := mappers.ToCourseResponse(course)
+	course, err := services.GetCourseByIdOrCode(courseId, "University")
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": "404 not found", "message": err.Error()})
+		return
+	} else if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": "500 bad request", "message": err.Error()})
+		return
+	}
 
+	cache.SetCourse(courseId, course)
+
+	response := mappers.ToCourseResponse(course)
 	ctx.JSON(http.StatusOK, response)
 
 }
