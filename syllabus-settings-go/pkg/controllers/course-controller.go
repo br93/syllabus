@@ -30,6 +30,7 @@ func CreateCourse(ctx *gin.Context) {
 	}
 
 	response := mappers.ToCourseResponse(course)
+	cache.Flush()
 
 	ctx.JSON(http.StatusCreated, response)
 }
@@ -64,6 +65,7 @@ func GetCourses(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetCourses(*courses)
 	response := mappers.ToCourseResponseArray(courses)
 
 	ctx.JSON(http.StatusOK, response)
@@ -91,6 +93,7 @@ func UpdateCourse(ctx *gin.Context) {
 
 	response := mappers.ToCourseResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -106,6 +109,7 @@ func DeleteCourse(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
@@ -128,6 +132,7 @@ func AddPreRequisite(ctx *gin.Context) {
 
 	response := mappers.ToCoursePreRequisite(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -150,6 +155,7 @@ func AddEquivalent(ctx *gin.Context) {
 
 	response := mappers.ToCourseEquivalent(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 
 }
