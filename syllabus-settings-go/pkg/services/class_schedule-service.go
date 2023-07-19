@@ -42,10 +42,10 @@ func GetClassSchedules() (*[]models.ClassSchedule, error) {
 	return &classSchedules, nil
 }
 
-func GetClassScheduleByClassCode(classCode string) (*[]models.ClassSchedule, error) {
+func GetClassScheduleByClassCode(classCode string, preload ...string) (*[]models.ClassSchedule, error) {
 	var classSchedules []models.ClassSchedule
 
-	result := models.DB.Preload(clause.Associations).Find(&classSchedules, "class_code", classCode)
+	result := models.DBConfig(models.DB.Preload(clause.Associations), preload).Find(&classSchedules, "class_code", classCode)
 
 	if result.Error != nil {
 		return &classSchedules, result.Error
