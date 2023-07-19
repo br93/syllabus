@@ -37,13 +37,6 @@ func CreateCourse(ctx *gin.Context) {
 func GetCourseByIdOrCode(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course := cache.GetCourse(courseId)
-	if course != nil {
-		response := mappers.ToCourseResponse(course)
-		ctx.JSON(http.StatusOK, response)
-		return
-	}
-
 	course, err := services.GetCourseByIdOrCode(courseId, "University")
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": "404 not found", "message": err.Error()})
@@ -54,7 +47,6 @@ func GetCourseByIdOrCode(ctx *gin.Context) {
 	}
 
 	cache.SetCourse(courseId, course)
-
 	response := mappers.ToCourseResponse(course)
 	ctx.JSON(http.StatusOK, response)
 
@@ -165,7 +157,7 @@ func AddEquivalent(ctx *gin.Context) {
 func GetCourseEquivalents(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course, err := services.GetCourseByIdOrCode(courseId, "EquivalentCourses")
+	course, err := services.GetCourseByIdOrCode(courseId, "EquivalentCourses", "EquivalenteCourses.University")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -175,6 +167,7 @@ func GetCourseEquivalents(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetCourse(courseId, course)
 	equivalents := course.EquivalentCourses
 	response := mappers.ToCourseResponseArray(equivalents)
 
@@ -185,7 +178,7 @@ func GetCourseEquivalents(ctx *gin.Context) {
 func GetCoursePreRequisites(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course, err := services.GetCourseByIdOrCode(courseId, "PreRequisiteCourses")
+	course, err := services.GetCourseByIdOrCode(courseId, "PreRequisiteCourses", "PreRequisiteCourses.University")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -195,6 +188,7 @@ func GetCoursePreRequisites(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetCourse(courseId, course)
 	preRequisites := course.PreRequisiteCourses
 	response := mappers.ToCourseResponseArray(preRequisites)
 
@@ -215,6 +209,7 @@ func GetClassesByCourse(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetCourse(courseId, course)
 	response := mappers.ToCourseClasses(course)
 
 	ctx.JSON(http.StatusOK, response)

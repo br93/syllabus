@@ -18,7 +18,7 @@ func SetCourse(key string, value *models.Course) {
 		panic(err)
 	}
 
-	cache.Set(context.Background(), key, json, 10*time.Second)
+	cache.Set(context.Background(), "course"+key, json, 10*time.Second)
 }
 
 func GetCourse(key string) *models.Course {

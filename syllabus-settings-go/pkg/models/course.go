@@ -30,7 +30,7 @@ type CourseResponseModel struct {
 	CourseCode     string `json:"course_code"`
 	CourseName     string `json:"course_name"`
 	Workload       int16  `json:"workload"`
-	UniversityCode string `json:"university_code" binding:"required"`
+	UniversityCode string `json:"university_code,omitempty" binding:"required"`
 }
 
 type CourseCodeRequestModel struct {

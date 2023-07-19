@@ -50,6 +50,11 @@ func ToCourseResponse(course *models.Course) *models.CourseResponseModel {
 }
 
 func ToCourseResponseArray(req *[]models.Course) *[]models.CourseResponseModel {
+
+	if req == nil {
+		return nil
+	}
+
 	size := len((*req))
 	var courses = make([]models.CourseResponseModel, size)
 	request := *req
