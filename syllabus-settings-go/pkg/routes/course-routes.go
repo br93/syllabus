@@ -17,5 +17,6 @@ var RegisterCourseRoutes = func(router *gin.Engine) {
 	router.GET("/api/v1/config/courses/:course_id/prerequisites/count", controllers.GetPreRequisiteCountByCode)
 	router.PUT("/api/v1/config/courses/:course_id/equivalents/", controllers.AddEquivalent)
 	router.GET("/api/v1/config/courses/:course_id/equivalents/", controllers.GetCourseEquivalents)
-	router.GET("/api/v1/config/courses/:course_id/classes/", controllers.GetClassesByCourse)
+
+	router.GET("/api/v1/config/courses/:course_id/classes/", middlewares.CacheClassesByCourse, controllers.GetClassesByCourse)
 }
