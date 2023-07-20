@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateProgram(ctx *gin.Context) {
 
 	response := mappers.ToProgramResponse(program)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -46,6 +48,7 @@ func GetProgramByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("program", programId, program)
 	response := mappers.ToProgramResponse(program)
 
 	ctx.JSON(http.StatusOK, response)
@@ -64,6 +67,7 @@ func GetPrograms(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-programs", programs)
 	response := mappers.ToProgramResponseArray(programs)
 
 	ctx.JSON(http.StatusOK, response)
@@ -91,6 +95,7 @@ func UpdateProgram(ctx *gin.Context) {
 
 	response := mappers.ToProgramResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -106,13 +111,14 @@ func DeleteProgram(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func GetCoursesByProgram(ctx *gin.Context) {
-	programId := ctx.Param("program_id")
+func GetProgramsByUniversity(ctx *gin.Context) {
+	universityId := ctx.Param("university_id")
 
-	program, err := services.GetProgramByIdOrCode(programId, "Courses", "Courses.Course", "Courses.CourseType")
+	university, err := services.GetUniversityByIdOrCode(universityId, "Programs", "Programs.University")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -122,7 +128,8 @@ func GetCoursesByProgram(ctx *gin.Context) {
 		return
 	}
 
-	response := mappers.ToProgramCourses(program)
+	cache.Set("programs", universityId, university)
+	response := mappers.ToUniversityPrograms(university)
 
 	ctx.JSON(http.StatusOK, response)
 }

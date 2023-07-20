@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateCourseType(ctx *gin.Context) {
 
 	response := mappers.ToCourseTypeResponse(courseType)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -45,6 +47,7 @@ func GetCourseTypeByIdOrName(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("course-type", courseTypeId, courseType)
 	response := mappers.ToCourseTypeResponse(courseType)
 
 	ctx.JSON(http.StatusOK, response)
@@ -63,6 +66,7 @@ func GetCourseTypes(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-course-types", courseTypes)
 	response := mappers.ToCourseTypeResponseArray(courseTypes)
 
 	ctx.JSON(http.StatusOK, response)
@@ -90,6 +94,7 @@ func UpdateCourseType(ctx *gin.Context) {
 
 	response := mappers.ToCourseTypeResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -105,5 +110,6 @@ func DeleteCourseType(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }

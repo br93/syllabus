@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateUniversity(ctx *gin.Context) {
 
 	response := mappers.ToUniversityResponse(university)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -46,6 +48,7 @@ func GetUniversityByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("university", universityId, university)
 	response := mappers.ToUniversityResponse(university)
 
 	ctx.JSON(http.StatusOK, response)
@@ -64,6 +67,7 @@ func GetUniversities(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-universities", universities)
 	response := mappers.ToUniversityResponseArray(universities)
 
 	ctx.JSON(http.StatusOK, response)
@@ -91,6 +95,7 @@ func UpdateUniversity(ctx *gin.Context) {
 
 	response := mappers.ToUniversityResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -106,41 +111,6 @@ func DeleteUniversity(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
-}
-
-func GetProgramsByUniversity(ctx *gin.Context) {
-	universityId := ctx.Param("university_id")
-
-	university, err := services.GetUniversityByIdOrCode(universityId, "Programs", "Programs.University")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToUniversityPrograms(university)
-
-	ctx.JSON(http.StatusOK, response)
-}
-
-func GetCoursesByUniversity(ctx *gin.Context) {
-	universityId := ctx.Param("university_id")
-
-	university, err := services.GetUniversityByIdOrCode(universityId, "Courses", "Courses.University")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	response := mappers.ToUniversityCourses(university)
-
-	ctx.JSON(http.StatusOK, response)
 }

@@ -34,3 +34,17 @@ func CacheClass(ctx *gin.Context) {
 
 	ctx.Next()
 }
+
+func CacheClassesByCourse(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
+
+	course := cache.Get("classes" + courseId)
+
+	if course != "nil" {
+		response := mappers.ToCourseClasses(utils.UnmarshalCourse(course))
+		ctx.JSON(http.StatusOK, response)
+		ctx.Abort()
+	}
+
+	ctx.Next()
+}

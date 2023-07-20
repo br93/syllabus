@@ -55,25 +55,6 @@ func GetClassScheduleById(ctx *gin.Context) {
 
 }
 
-func GetClassSchedulesByClass(ctx *gin.Context) {
-	classId := ctx.Param("class_id")
-
-	classSchedules, err := services.GetClassScheduleByClassCode(classId, "Class", "Day", "Schedule")
-
-	if err != nil && strings.Contains(err.Error(), "not found") {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	cache.Set("class-schedule", classId, classSchedules)
-	response := mappers.ToClassScheduleResponseArray(classSchedules)
-
-	ctx.JSON(http.StatusOK, response)
-}
-
 func GetClassSchedules(ctx *gin.Context) {
 
 	classSchedules, err := services.GetClassSchedules()
@@ -132,4 +113,23 @@ func DeleteClassSchedule(ctx *gin.Context) {
 
 	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
+}
+
+func GetClassSchedulesByClass(ctx *gin.Context) {
+	classId := ctx.Param("class_id")
+
+	classSchedules, err := services.GetClassScheduleByClassCode(classId, "Class", "Day", "Schedule")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	cache.Set("class-schedules", classId, classSchedules)
+	response := mappers.ToClassScheduleResponseArray(classSchedules)
+
+	ctx.JSON(http.StatusOK, response)
 }

@@ -204,10 +204,10 @@ func GetCoursePreRequisites(ctx *gin.Context) {
 
 }
 
-func GetClassesByCourse(ctx *gin.Context) {
-	courseId := ctx.Param("course_id")
+func GetCoursesByProgram(ctx *gin.Context) {
+	programId := ctx.Param("program_id")
 
-	course, err := services.GetCourseByIdOrCode(courseId, "Classes")
+	program, err := services.GetProgramByIdOrCode(programId, "Courses", "Courses.Course", "Courses.CourseType")
 
 	if err != nil && strings.Contains(err.Error(), "not found") {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -217,8 +217,27 @@ func GetClassesByCourse(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course", courseId, course)
-	response := mappers.ToCourseClasses(course)
+	cache.Set("courses", programId, program)
+	response := mappers.ToProgramCourses(program)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func GetCoursesByUniversity(ctx *gin.Context) {
+	universityId := ctx.Param("university_id")
+
+	university, err := services.GetUniversityByIdOrCode(universityId, "Courses", "Courses.University")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	cache.Set("courses", universityId, university)
+	response := mappers.ToUniversityCourses(university)
 
 	ctx.JSON(http.StatusOK, response)
 }

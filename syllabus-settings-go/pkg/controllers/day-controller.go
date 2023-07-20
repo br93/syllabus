@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateDay(ctx *gin.Context) {
 
 	response := mappers.ToDayResponse(day)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -46,6 +48,7 @@ func GetDayByIdOrNumber(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("day", dayId, day)
 	response := mappers.ToDayResponse(day)
 
 	ctx.JSON(http.StatusOK, response)
@@ -62,6 +65,7 @@ func GetDays(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-days", days)
 	response := mappers.ToDayResponseArray(days)
 
 	ctx.JSON(http.StatusOK, response)
@@ -89,6 +93,7 @@ func UpdateDay(ctx *gin.Context) {
 
 	response := mappers.ToDayResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -104,5 +109,6 @@ func DeleteDay(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }

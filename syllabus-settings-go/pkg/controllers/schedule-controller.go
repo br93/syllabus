@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/models"
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/services"
@@ -30,6 +31,7 @@ func CreateSchedule(ctx *gin.Context) {
 
 	response := mappers.ToScheduleResponse(schedule)
 
+	cache.Flush()
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -46,6 +48,7 @@ func GetScheduleByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
+	cache.Set("schedule", scheduleId, schedule)
 	response := mappers.ToScheduleResponse(schedule)
 
 	ctx.JSON(http.StatusOK, response)
@@ -64,6 +67,7 @@ func GetSchedules(ctx *gin.Context) {
 		return
 	}
 
+	cache.SetAll("all-schedules", schedules)
 	response := mappers.ToScheduleResponseArray(schedules)
 
 	ctx.JSON(http.StatusOK, response)
@@ -91,6 +95,7 @@ func UpdateSchedule(ctx *gin.Context) {
 
 	response := mappers.ToScheduleResponse(update)
 
+	cache.Flush()
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -106,5 +111,6 @@ func DeleteSchedule(ctx *gin.Context) {
 		return
 	}
 
+	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }

@@ -38,7 +38,7 @@ func CacheClassSchedule(ctx *gin.Context) {
 func CacheClassSchedulesByClass(ctx *gin.Context) {
 	classId := ctx.Param("class_id")
 
-	classSchedules := cache.Get("class-schedule" + classId)
+	classSchedules := cache.Get("class-schedules" + classId)
 
 	if classSchedules != "nil" {
 		response := mappers.ToClassScheduleResponseArray(utils.UnmarshalClassSchedules(classSchedules))

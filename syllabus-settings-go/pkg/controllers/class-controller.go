@@ -113,3 +113,22 @@ func DeleteClass(ctx *gin.Context) {
 	cache.Flush()
 	ctx.JSON(http.StatusNoContent, nil)
 }
+
+func GetClassesByCourse(ctx *gin.Context) {
+	courseId := ctx.Param("course_id")
+
+	course, err := services.GetCourseByIdOrCode(courseId, "Classes")
+
+	if err != nil && strings.Contains(err.Error(), "not found") {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	cache.Set("classes", courseId, course)
+	response := mappers.ToCourseClasses(course)
+
+	ctx.JSON(http.StatusOK, response)
+}
