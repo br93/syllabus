@@ -41,5 +41,5 @@ func Get(key string) string {
 }
 
 func Flush() {
-	cache.FlushAll(context.Background())
+	cache.FlushDB(context.Background())
 }
