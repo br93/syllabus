@@ -1,5 +1,7 @@
 package com.syllabus.client.settings;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CourseProgramResponse {
+public class CourseProgramResponse implements Serializable{
 
     @JsonProperty("course_program_id")
     private String courseProgramId;

@@ -3,11 +3,14 @@ package com.syllabus.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.syllabus.client.settings.CourseProgramResponse;
 import com.syllabus.client.settings.SettingsClient;
 import com.syllabus.client.students.StudentsClient;
+import com.syllabus.config.RedisEntity;
+import com.syllabus.util.CacheUtil;
 import com.syllabus.util.ConstantUtil;
 import com.syllabus.util.Validation;
 
@@ -21,13 +24,26 @@ public class CoreService {
     private final SettingsClient settingsClient;
 
     private final ConstantUtil constantUtil;
+    private final CacheUtil cacheUtil;
 
+    // @Cacheable(value = "courses-taken" )
     public List<CourseProgramResponse> getCoursesTaken(String userId) {
-        var student = studentsClient.getStudentByUserId(userId);
 
-        return settingsClient.getCourseProgramsByCourseCodeIn(student.getCourseCodes());
+        var cacheId = cacheUtil.generateCacheId("coursen-taken", userId);
+        var cache = cacheUtil.getCachedData(cacheId);
+
+        if (cache != null)
+            return cache.getResponse();
+        
+        var student = studentsClient.getStudentByUserId(userId);
+        var coursePrograms = settingsClient.getCourseProgramsByCourseCodeIn(student.getCourseCodes());
+
+        cacheUtil.cacheData(cacheId, new RedisEntity(coursePrograms));
+
+        return coursePrograms;
     }
 
+    // @Cacheable(value = "all-required-courses", key = "#userId")
     public List<CourseProgramResponse> getAllRequiredCourses(String userId) {
         var student = studentsClient.getStudentByUserId(userId);
         var program = student.getProgramCode().toString();
@@ -41,6 +57,7 @@ public class CoreService {
         return requiredCourses;
     }
 
+    // @Cacheable(value = "missing-required-courses", key = "#userId")
     public List<CourseProgramResponse> getMissingRequiredCourses(String userId) {
         var coursesTaken = this.getCoursesTaken(userId).stream()
                 .filter(x -> x.getType().equals(constantUtil.getRequiredType())).collect(Collectors.toList());
@@ -51,6 +68,7 @@ public class CoreService {
         return allRequiredCourses;
     }
 
+    // @Cacheable(value = "all-elective-courses", key = "#userId")
     public List<CourseProgramResponse> getAllElectiveCourses(String userId) {
         var student = studentsClient.getStudentByUserId(userId);
         var program = student.getProgramCode().toString();
@@ -59,6 +77,7 @@ public class CoreService {
 
     }
 
+    // @Cacheable(value = "missing-elective-courses", key = "#userId")
     public List<CourseProgramResponse> getMissingElectiveCourses(String userId) {
         var coursesTaken = this.getCoursesTaken(userId).stream()
                 .filter(x -> !x.getType().equals(constantUtil.getRequiredType())).collect(Collectors.toList());
