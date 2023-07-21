@@ -27,7 +27,7 @@ func Set(key string, id string, value interface{}) {
 		panic(err)
 	}
 
-	cache.Set(context.Background(), key+id, json, 10*time.Minute)
+	cache.Set(context.Background(), key+id, json, 30*time.Minute)
 }
 
 func Get(key string) string {
