@@ -18,4 +18,8 @@ public class ConstantUtil {
     public String getSecondLayer() {
         return environment.getProperty("second.layer.course");
     }
+
+    public String getServiceUnavailableMessage(){
+        return environment.getProperty("message.service.unavailable");
+    }
 }
