@@ -48,8 +48,8 @@ func GetCourseProgramById(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course-program", courseprogramId, courseprogram)
 	response := mappers.ToCourseProgramResponse(courseprogram)
+	cache.Set("course-program", courseprogramId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -67,8 +67,8 @@ func GetCoursePrograms(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-course-programs", courseprograms)
 	response := mappers.ToCourseProgramResponseArray(courseprograms)
+	cache.SetAll("all-course-programs", response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -129,8 +129,8 @@ func GetCourseProgramsByCourseCodeIn(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course-programs", strings.Join(codes, "-"), courseprograms)
 	response := mappers.ToCourseProgramResponseArray(courseprograms)
+	cache.Set("course-programs", strings.Join(codes, "-"), response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -150,8 +150,8 @@ func GetCourseProgramsByProgramAndCourseType(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course-programs", programCode+typeName, courseprograms)
 	response := mappers.ToCourseProgramResponseArray(courseprograms)
+	cache.Set("course-programs", programCode+typeName, response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -171,8 +171,8 @@ func GetCourseProgramsByProgramAndNotCourseType(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course-programs", programCode+"!"+typeName, courseprograms)
 	response := mappers.ToCourseProgramResponseArray(courseprograms)
+	cache.Set("course-programs", programCode+"!"+typeName, response)
 
 	ctx.JSON(http.StatusOK, response)
 }

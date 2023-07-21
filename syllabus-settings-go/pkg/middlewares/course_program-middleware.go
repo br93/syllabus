@@ -5,8 +5,7 @@ import (
 	"strings"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,7 +13,7 @@ func CacheCoursePrograms(ctx *gin.Context) {
 	coursePrograms := cache.Get("all-course-programs")
 
 	if coursePrograms != "nil" {
-		response := mappers.ToCourseProgramResponseArray(utils.UnmarshalCoursePrograms(coursePrograms))
+		response := unmarshal.UnmarshalCourseProgramResponseArray(coursePrograms)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -28,7 +27,7 @@ func CacheCourseProgram(ctx *gin.Context) {
 	courseProgram := cache.Get("course-program" + courseProgramId)
 
 	if courseProgram != "nil" {
-		response := mappers.ToCourseProgramResponse(utils.UnmarshalCourseProgram(courseProgram))
+		response := unmarshal.UnmarshalCourseProgramResponse(courseProgram)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -42,7 +41,7 @@ func CacheCourseProgramsByCourseCodeIn(ctx *gin.Context) {
 	coursePrograms := cache.Get("course-programs" + strings.Join(codes, "-"))
 
 	if coursePrograms != "nil" {
-		response := mappers.ToCourseProgramResponseArray(utils.UnmarshalCoursePrograms(coursePrograms))
+		response := unmarshal.UnmarshalCourseProgramResponseArray(coursePrograms)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -58,7 +57,7 @@ func CacheCourseProgramsByProgramAndCourseType(ctx *gin.Context) {
 	coursePrograms := cache.Get("course-programs" + id)
 
 	if coursePrograms != "nil" {
-		response := mappers.ToCourseProgramResponseArray(utils.UnmarshalCoursePrograms(coursePrograms))
+		response := unmarshal.UnmarshalCourseProgramResponseArray(coursePrograms)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -74,7 +73,7 @@ func CacheCourseProgramsByProgramAndNotCourseType(ctx *gin.Context) {
 	coursePrograms := cache.Get("course-programs" + id)
 
 	if coursePrograms != "nil" {
-		response := mappers.ToCourseProgramResponseArray(utils.UnmarshalCoursePrograms(coursePrograms))
+		response := unmarshal.UnmarshalCourseProgramResponseArray(coursePrograms)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
