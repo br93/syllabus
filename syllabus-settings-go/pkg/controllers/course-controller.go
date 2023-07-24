@@ -47,8 +47,9 @@ func GetCourseByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course", courseId, course)
 	response := mappers.ToCourseResponse(course)
+	cache.Set("course", courseId, response)
+
 	ctx.JSON(http.StatusOK, response)
 
 }
@@ -65,10 +66,8 @@ func GetCourses(ctx *gin.Context) {
 		return
 	}
 
-	var courseInterface interface{} = &courses
-
-	cache.SetAll("all-courses", courseInterface)
 	response := mappers.ToCourseResponseArray(courses)
+	cache.SetAll("all-courses", response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -175,9 +174,9 @@ func GetCourseEquivalents(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course", courseId, course)
 	equivalents := course.EquivalentCourses
 	response := mappers.ToCourseResponseArray(equivalents)
+	cache.Set("equivalents", courseId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -196,9 +195,8 @@ func GetCoursePreRequisites(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course", courseId, course)
-	preRequisites := course.PreRequisiteCourses
-	response := mappers.ToCourseResponseArray(preRequisites)
+	response := mappers.ToCoursePreRequisite(course)
+	cache.Set("pre-requisites", courseId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -217,8 +215,8 @@ func GetCoursesByProgram(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("courses", programId, program)
 	response := mappers.ToProgramCourses(program)
+	cache.Set("courses", programId, response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -236,8 +234,8 @@ func GetCoursesByUniversity(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("courses", universityId, university)
 	response := mappers.ToUniversityCourses(university)
+	cache.Set("courses", universityId, response)
 
 	ctx.JSON(http.StatusOK, response)
 }

@@ -47,8 +47,8 @@ func GetClassByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("class", classId, class)
 	response := mappers.ToClassResponse(class)
+	cache.Set("class", classId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -66,8 +66,8 @@ func GetClasses(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-classes", classes)
 	response := mappers.ToClassResponseArray(classes)
+	cache.SetAll("all-classes", response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -127,8 +127,8 @@ func GetClassesByCourse(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("classes", courseId, course)
 	response := mappers.ToCourseClasses(course)
+	cache.Set("classes", courseId, response)
 
 	ctx.JSON(http.StatusOK, response)
 }

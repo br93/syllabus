@@ -48,8 +48,8 @@ func GetClassScheduleById(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("class-schedule", classScheduleId, classSchedule)
 	response := mappers.ToClassScheduleResponse(classSchedule)
+	cache.Set("class-schedule", classScheduleId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -67,8 +67,8 @@ func GetClassSchedules(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-class-schedules", classSchedules)
 	response := mappers.ToClassScheduleResponseArray(classSchedules)
+	cache.SetAll("all-class-schedules", response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -128,8 +128,8 @@ func GetClassSchedulesByClass(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("class-schedules", classId, classSchedules)
 	response := mappers.ToClassScheduleResponseArray(classSchedules)
+	cache.Set("class-schedules", classId, response)
 
 	ctx.JSON(http.StatusOK, response)
 }

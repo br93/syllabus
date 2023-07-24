@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CacheDays(ctx *gin.Context) {
 	days := cache.Get("all-days")
 
 	if days != "nil" {
-		response := mappers.ToDayResponseArray(utils.UnmarshalDays(days))
+		response := unmarshal.UnmarshalDays(days)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheDay(ctx *gin.Context) {
 	day := cache.Get("day" + dayId)
 
 	if day != "nil" {
-		response := mappers.ToDayResponse(utils.UnmarshalDay(day))
+		response := unmarshal.UnmarshalDay(day)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}

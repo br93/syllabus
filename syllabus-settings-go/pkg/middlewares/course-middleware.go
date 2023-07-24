@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CacheCourses(ctx *gin.Context) {
 	courses := cache.Get("all-courses")
 
 	if courses != "nil" {
-		response := mappers.ToCourseResponseArray(utils.UnmarshalCourses(courses))
+		response := unmarshal.UnmarshalCourses(courses)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheCourse(ctx *gin.Context) {
 	course := cache.Get("course" + courseId)
 
 	if course != "nil" {
-		response := mappers.ToCourseResponse(utils.UnmarshalCourse(course))
+		response := unmarshal.UnmarshalCourse(course)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -35,14 +34,13 @@ func CacheCourse(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func CachePreRequisite(ctx *gin.Context) {
+func CachePreRequisites(ctx *gin.Context) {
 	courseId := ctx.Param("course_id")
 
-	course := cache.Get("course" + courseId)
+	course := cache.Get("pre-requisites" + courseId)
 
 	if course != "nil" {
-		courses := utils.UnmarshalCourse(course).PreRequisiteCourses
-		response := mappers.ToCourseResponseArray(courses)
+		response := unmarshal.UnmarshalPreRequisiteCourses(course)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -56,7 +54,7 @@ func CacheCoursesByProgram(ctx *gin.Context) {
 	program := cache.Get("courses" + programId)
 
 	if program != "nil" {
-		response := mappers.ToProgramCourses(utils.UnmarshalProgram(program))
+		response := unmarshal.UnmarshalProgramCourses(program)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -70,7 +68,7 @@ func CacheCoursesByUniversity(ctx *gin.Context) {
 	university := cache.Get("courses" + universityId)
 
 	if university != "nil" {
-		response := mappers.ToUniversityCourses(utils.UnmarshalUniversity(university))
+		response := unmarshal.UnmarshalUniversityCourses(university)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -85,7 +83,7 @@ func CachePreRequisiteCountByCode(ctx *gin.Context) {
 	preRequisiteCount := cache.Get("pre-requisite-count" + courseId)
 
 	if preRequisiteCount != "nil" {
-		ctx.JSON(http.StatusOK, utils.UnmarshalPreRequisiteCount(preRequisiteCount))
+		ctx.JSON(http.StatusOK, unmarshal.UnmarshalPreRequisiteCount(preRequisiteCount))
 		ctx.Abort()
 	}
 

@@ -48,8 +48,8 @@ func GetUniversityByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("university", universityId, university)
 	response := mappers.ToUniversityResponse(university)
+	cache.Set("university", universityId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -67,8 +67,8 @@ func GetUniversities(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-universities", universities)
 	response := mappers.ToUniversityResponseArray(universities)
+	cache.SetAll("all-universities", response)
 
 	ctx.JSON(http.StatusOK, response)
 }

@@ -47,8 +47,8 @@ func GetCourseTypeByIdOrName(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("course-type", courseTypeId, courseType)
 	response := mappers.ToCourseTypeResponse(courseType)
+	cache.Set("course-type", courseTypeId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -66,8 +66,8 @@ func GetCourseTypes(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-course-types", courseTypes)
 	response := mappers.ToCourseTypeResponseArray(courseTypes)
+	cache.SetAll("all-course-types", response)
 
 	ctx.JSON(http.StatusOK, response)
 }

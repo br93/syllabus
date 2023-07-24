@@ -50,7 +50,7 @@ type PreRequisiteCoursesResponseModel struct {
 	CourseCode          string                `json:"course_code"`
 	CourseName          string                `json:"course_name"`
 	Workload            int16                 `json:"workload"`
-	PreRequisiteCourses []CourseResponseModel `json:"equivalent_courses"`
+	PreRequisiteCourses []CourseResponseModel `json:"pre_requisite_courses"`
 }
 
 type CourseClassesResponseModel struct {

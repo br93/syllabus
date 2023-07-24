@@ -48,8 +48,8 @@ func GetDayByIdOrNumber(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("day", dayId, day)
 	response := mappers.ToDayResponse(day)
+	cache.Set("day", dayId, response)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -65,8 +65,8 @@ func GetDays(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-days", days)
 	response := mappers.ToDayResponseArray(days)
+	cache.SetAll("all-days", response)
 
 	ctx.JSON(http.StatusOK, response)
 }

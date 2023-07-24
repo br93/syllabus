@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CacheUniversities(ctx *gin.Context) {
 	universities := cache.Get("all-universities")
 
 	if universities != "nil" {
-		response := mappers.ToUniversityResponseArray(utils.UnmarshalUniversities(universities))
+		response := unmarshal.UnmarshalUniversities(universities)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheUniversity(ctx *gin.Context) {
 	university := cache.Get("university" + universityId)
 
 	if university != "nil" {
-		response := mappers.ToUniversityResponse(utils.UnmarshalUniversity(university))
+		response := unmarshal.UnmarshalUniversity(university)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}

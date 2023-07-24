@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CacheClassSchedules(ctx *gin.Context) {
 	classSchedules := cache.Get("all-class-schedules")
 
 	if classSchedules != "nil" {
-		response := mappers.ToClassScheduleResponseArray(utils.UnmarshalClassSchedules(classSchedules))
+		response := unmarshal.UnmarshalClassSchedules(classSchedules)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheClassSchedule(ctx *gin.Context) {
 	classSchedule := cache.Get("class-schedule" + classScheduleId)
 
 	if classSchedule != "nil" {
-		response := mappers.ToClassScheduleResponse(utils.UnmarshalClassSchedule(classSchedule))
+		response := unmarshal.UnmarshalClassSchedule(classSchedule)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -41,7 +40,7 @@ func CacheClassSchedulesByClass(ctx *gin.Context) {
 	classSchedules := cache.Get("class-schedules" + classId)
 
 	if classSchedules != "nil" {
-		response := mappers.ToClassScheduleResponseArray(utils.UnmarshalClassSchedules(classSchedules))
+		response := unmarshal.UnmarshalClassSchedules(classSchedules)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}

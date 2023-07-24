@@ -48,8 +48,8 @@ func GetScheduleByIdOrCode(ctx *gin.Context) {
 		return
 	}
 
-	cache.Set("schedule", scheduleId, schedule)
 	response := mappers.ToScheduleResponse(schedule)
+	cache.Set("schedule", scheduleId, response)
 
 	ctx.JSON(http.StatusOK, response)
 
@@ -67,8 +67,8 @@ func GetSchedules(ctx *gin.Context) {
 		return
 	}
 
-	cache.SetAll("all-schedules", schedules)
 	response := mappers.ToScheduleResponseArray(schedules)
+	cache.SetAll("all-schedules", response)
 
 	ctx.JSON(http.StatusOK, response)
 }

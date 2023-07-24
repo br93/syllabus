@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CachePrograms(ctx *gin.Context) {
 	programs := cache.Get("all-programs")
 
 	if programs != "nil" {
-		response := mappers.ToProgramResponseArray(utils.UnmarshalPrograms(programs))
+		response := unmarshal.UnmarshalPrograms(programs)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheProgram(ctx *gin.Context) {
 	program := cache.Get("program" + programId)
 
 	if program != "nil" {
-		response := mappers.ToProgramResponse(utils.UnmarshalProgram(program))
+		response := unmarshal.UnmarshalProgram(program)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -41,7 +40,7 @@ func CacheProgramsByUniversity(ctx *gin.Context) {
 	university := cache.Get("programs" + universityId)
 
 	if university != "nil" {
-		response := mappers.ToUniversityPrograms(utils.UnmarshalUniversity(university))
+		response := unmarshal.UnmarshalUniversityPrograms(university)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}

@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/br93/syllabus/syllabus-settings-go/pkg/cache"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/mappers"
-	"github.com/br93/syllabus/syllabus-settings-go/pkg/utils"
+	"github.com/br93/syllabus/syllabus-settings-go/pkg/unmarshal"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,7 @@ func CacheClasses(ctx *gin.Context) {
 	classes := cache.Get("all-classes")
 
 	if classes != "nil" {
-		response := mappers.ToClassResponseArray(utils.UnmarshalClasses(classes))
+		response := unmarshal.UnmarshalClasses(classes)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -27,7 +26,7 @@ func CacheClass(ctx *gin.Context) {
 	class := cache.Get("class" + classId)
 
 	if class != "nil" {
-		response := mappers.ToClassResponse(utils.UnmarshalClass(class))
+		response := unmarshal.UnmarshalClass(class)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
@@ -41,7 +40,7 @@ func CacheClassesByCourse(ctx *gin.Context) {
 	course := cache.Get("classes" + courseId)
 
 	if course != "nil" {
-		response := mappers.ToCourseClasses(utils.UnmarshalCourse(course))
+		response := unmarshal.UnmarshalCourseClasses(course)
 		ctx.JSON(http.StatusOK, response)
 		ctx.Abort()
 	}
