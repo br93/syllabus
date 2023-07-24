@@ -1,8 +1,10 @@
 package com.syllabus.client.students;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StudentResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StudentResponse implements Serializable{
 
     @JsonProperty("student_id")
     private String studentId;

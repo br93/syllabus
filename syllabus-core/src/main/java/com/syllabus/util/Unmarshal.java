@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syllabus.client.settings.CourseProgramResponse;
+import com.syllabus.client.students.StudentResponse;
 
 public class Unmarshal {
 
@@ -21,6 +22,11 @@ public class Unmarshal {
 
     public static List<CourseProgramResponse> toList(Object object) {
         return new ArrayList<>(Arrays.asList(toArray(object)));
+    }
+
+    public static StudentResponse toStudentResponse(Object object) {
+        return new ObjectMapper().convertValue(object, new TypeReference<StudentResponse>() {
+        });
     }
 
 }

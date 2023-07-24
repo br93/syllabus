@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -19,17 +18,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new JsonRedisSerializer());
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+		RedisTemplate<String, Object> template = new RedisTemplate<>();
+		template.setConnectionFactory(connectionFactory);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new JsonRedisSerializer());
 
-        return template;
-    }
+		return template;
+	}
 
-    static class JsonRedisSerializer implements RedisSerializer<Object> {
+	static class JsonRedisSerializer implements RedisSerializer<Object> {
 
 		private final ObjectMapper objectMapper;
 
@@ -48,16 +47,16 @@ public class RedisConfig {
 
 		@Override
 		public Object deserialize(@Nullable byte[] bytes) throws SerializationException {
-			
-			if(bytes == null){
+
+			if (bytes == null) {
 				return null;
 			}
-			
+
 			try {
 				return objectMapper.readValue(bytes, Object.class);
 			} catch (Exception ex) {
 				throw new SerializationException(ex.getMessage(), ex);
 			}
 		}
-}
+	}
 }

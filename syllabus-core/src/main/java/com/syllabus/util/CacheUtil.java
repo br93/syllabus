@@ -25,8 +25,8 @@ public class CacheUtil {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public boolean isValidCache(Object cache){
-        return cache != null;
+    public Boolean isValidCache(String key){
+        return redisTemplate.hasKey(key);
     }
 
 }
