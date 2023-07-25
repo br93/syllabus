@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 
-//@RestControllerAdvice
+@RestControllerAdvice
 public class CoreExceptionHandler {
 
     @ExceptionHandler(CallNotPermittedException.class)
