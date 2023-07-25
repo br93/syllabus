@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.syllabus.cache.CacheService;
 import com.syllabus.helper.CsvHelper;
 import com.syllabus.message.ResponseMessage;
 import com.syllabus.service.impl.ClassScheduleService;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ClassScheduleController {
 	
 	private final ClassScheduleService classScheduleService;
+	private final CacheService cacheService;
 	
 	@PostMapping("class-schedules")
 	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file){
@@ -29,6 +31,7 @@ public class ClassScheduleController {
 			try {
 				classScheduleService.save(file);
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
+				cacheService.flush();
 				return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(message));
 			} catch (Exception ex) {
 				message = "Could not upload the file: " + file.getOriginalFilename();
