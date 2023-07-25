@@ -9,7 +9,7 @@ import com.syllabus.client.settings.response.UniversityCoursesResponse;
 import com.syllabus.client.settings.response.UniversityResponse;
 
 @FeignClient(name = "${settings.name}")
-public interface SettingsClient {
+public interface SettingsClient{
 
     @GetMapping(value = "${universities.path}/{university_code}/courses")
     public UniversityCoursesResponse getCoursesByUniversity(@PathVariable("university_code") String universityCode);
@@ -18,7 +18,5 @@ public interface SettingsClient {
     public UniversityResponse getUniversityByIdOrCode(@PathVariable("university_code") String universityCode);
 
     @GetMapping(value = "${programs.path}/{program_code}")
-    public ProgramResponse getProgramByIdOrCode(@PathVariable("program_code") String programCode);
-
-    
+    public ProgramResponse getProgramByIdOrCode(@PathVariable("program_code") String programCode);   
 }

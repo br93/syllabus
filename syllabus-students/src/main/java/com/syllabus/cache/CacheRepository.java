@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.syllabus.exception.CacheException;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -12,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class CacheRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    
+   
     public String generateCacheId(String key, String id) {
         return key + id;
     }
@@ -25,8 +27,19 @@ public class CacheRepository {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public Boolean isValidCache(String key){
+    public Boolean isValidCache(String key) {
         return redisTemplate.hasKey(key);
     }
-    
+
+    public void flushCache() {
+
+        var connectionFactory = redisTemplate.getConnectionFactory();
+
+        if (connectionFactory == null) {
+            throw new CacheException("connection failed with cache");
+        }
+
+        connectionFactory.getConnection().serverCommands().flushDb();
+
+    }
 }

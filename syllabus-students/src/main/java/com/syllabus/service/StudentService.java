@@ -22,6 +22,8 @@ public class StudentService {
     private final UserValidation userValidation;
     private final Validator validator;
 
+    private final CacheService cacheService;
+
     public StudentModel createStudent(StudentModel student) {
 
         validator.validateUniversityInfo(student.getUniversityCode(), Short.valueOf(student.getTerm().toString()),
@@ -33,6 +35,7 @@ public class StudentService {
         this.updateInstantStudent(student, Instant.now(), false);
         student.setUserId(userValidation.getUser().getUserId());
 
+        cacheService.flush();
         return studentRepository.save(student);
     }
 
