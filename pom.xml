@@ -54,11 +54,11 @@
 		<module>syllabus-discovery-service</module>
 		<module>syllabus-api-gateway</module>
 		<module>syllabus-settings</module>
-		<module>syllabus-elective</module>
 		<module>syllabus-account-management</module>
 		<module>syllabus-auth</module>
 		<module>syllabus-settings-batch</module>
 		<module>syllabus-students</module>
 		<module>syllabus-core</module>
+		<module>syllabus-recommendations</module>
 	</modules>
 </project>

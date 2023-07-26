@@ -1,13 +1,13 @@
-package com.syllabus;
+package java.com.syllabus;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SyllabusElectiveApplication {
+public class SyllabusRecommendationsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SyllabusElectiveApplication.class, args);
+		SpringApplication.run(SyllabusRecommendationsApplication.class, args);
 	}
 
 }
