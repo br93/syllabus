@@ -1,10 +1,9 @@
 package com.syllabus.service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.syllabus.client.core.CoreClient;
-import com.syllabus.client.core.CoreResponse;
+import com.syllabus.client.settings.SettingsClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class RecommendationService {
     
     private final CoreClient coreClient;
+    private final SettingsClient settingsClient;
 
-    public Page<CoreResponse> testCoreClient(String userId){
-        return coreClient.getCoursesTaken(userId);
-    }
 }
