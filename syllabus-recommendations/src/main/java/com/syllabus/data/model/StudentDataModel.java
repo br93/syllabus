@@ -27,13 +27,16 @@ public class StudentDataModel {
     private String userId;
 
     @Field(name = "courses_taken")
-    private Short coursesTaken;
+    private Long coursesTaken;
+
+    @Field(name = "term")
+    private Short studentTerm;
     
     @Field(name = "required_courses")
-    private Map<String, Short> requiredCourses;
+    private Map<String, Double> requiredCourses;
     
     @Field(name = "elective_courses")
-    private Map<String, Short> electiveCourses;
+    private Map<String, Double> electiveCourses;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Instant createdAt;

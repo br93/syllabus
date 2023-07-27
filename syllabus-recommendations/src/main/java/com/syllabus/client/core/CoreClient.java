@@ -13,5 +13,8 @@ public interface CoreClient {
    
     @GetMapping(value = "${core.ms.students.path}/{id}/elective-courses/missing")
     public Page<CoreResponse> getMissingElectiveCourses(@PathVariable(name = "id") String userId);
+
+    @GetMapping(value = "${core.ms.students.path}/{id}/courses-taken")
+    public Page<CoreResponse> getCoursesTaken(@PathVariable(name = "id") String userId);
     
 }
