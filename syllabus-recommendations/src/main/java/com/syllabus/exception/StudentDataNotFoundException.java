@@ -1,16 +1,16 @@
 package com.syllabus.exception;
 
-public class StudentNotFoundException extends RuntimeException {
+public class StudentDataNotFoundException extends RuntimeException {
 
-    public StudentNotFoundException(String message){
+    public StudentDataNotFoundException(String message){
         super(message);
     }
 
-    public StudentNotFoundException(Throwable cause){
+    public StudentDataNotFoundException(Throwable cause){
         super(cause);
     }
 
-    public StudentNotFoundException(String message, Throwable cause){
+    public StudentDataNotFoundException(String message, Throwable cause){
         super(message, cause);
     }
     
