@@ -1,19 +1,18 @@
 package com.syllabus.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.syllabus.client.core.CoreClient;
-import com.syllabus.client.core.CoreResponse;
-import com.syllabus.client.settings.SettingsClient;
-import com.syllabus.client.settings.response.ClassScheduleResponse;
-import com.syllabus.client.settings.response.CourseClassesResponse;
-import com.syllabus.client.settings.response.PreRequisiteCountResponse;
-import com.syllabus.client.settings.response.PreRequisiteCoursesResponse;
+import com.syllabus.data.model.RecommendationModel;
+import com.syllabus.service.RecommendationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,37 +20,19 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("api/v1/recommendations")
 public class RecommendationController {
-    
-    private final CoreClient coreClient;
-    private final SettingsClient settingsClient;
 
-    @GetMapping(value = "{id}/required-courses/missing")
-    public List<CoreResponse> getMissingRequiredCourses(@PathVariable(name = "id") String userId){
-        return coreClient.getMissingRequiredCourses(userId).toList();
-    }
-   
-    @GetMapping(value = "{id}/elective-courses/missing")
-    public List<CoreResponse> getMissingElectiveCourses(@PathVariable(name = "id") String userId){
-        return coreClient.getMissingElectiveCourses(userId).toList();
-    }
+    private final RecommendationService recommendationService;
 
-    @GetMapping(value = "{course_code}/prerequisites/count")
-    public PreRequisiteCountResponse getAsPreRequisiteCount(@PathVariable("course_code") String courseCode){
-        return settingsClient.getAsPreRequisiteCount(courseCode);
-    }
+    @PostMapping("{id}")
+    public ResponseEntity<RecommendationModel> createRecommendation(@PathVariable(name = "id") String userId,
+            @RequestParam(name = "required", defaultValue = "true") Boolean isRequired,
+            @RequestParam(name = "morning", defaultValue = "false") Boolean morning,
+            @RequestParam(name = "afternoon", defaultValue = "false") Boolean afternoon,
+            @RequestParam(name = "night", defaultValue = "false") Boolean night,
+            @RequestParam(name = "workload") Integer workload) {
+        List<Boolean> schedules = Arrays.asList(morning, afternoon, night);
 
-    @GetMapping(value = "{course_code}/prerequisites")
-    public PreRequisiteCoursesResponse getPreRequisites(@PathVariable("course_code") String courseCode){
-        return settingsClient.getPreRequisites(courseCode);
-    }
-
-    @GetMapping(value = "{course_code}/classes")
-    public CourseClassesResponse getClassesByCourse(@PathVariable("course_code") String courseCode){
-        return settingsClient.getClassesByCourse(courseCode);
-    }
-
-    @GetMapping(value = "{class_code}/schedules")
-    public List<ClassScheduleResponse> getClassSchedulesByClassCode(@PathVariable("class_code") String courseCode){
-        return settingsClient.getClassSchedulesByClassCode(courseCode);
+        return new ResponseEntity<>(recommendationService.createRecommendation(userId, isRequired, schedules, workload),
+                HttpStatus.OK);
     }
 }

@@ -53,13 +53,18 @@ public class StudentDataService {
 
     }
 
-    public StudentDataModel getStudentDataModelById(String id) {
+    public StudentDataModel getStudentDataById(String id) {
         return studentDataRepository.findByStudentDataIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
     }
 
-    public StudentDataModel getStudentDataModelByUserIdAndCoursesTaken(String id, Long coursesTaken) {
+    public StudentDataModel getStudentDataByUserIdAndCoursesTaken(String id, Long coursesTaken) {
         return studentDataRepository.findByUserIdAndCoursesTakenAndDeletedAtIsNull(id, coursesTaken)
+                .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+    }
+
+    public StudentDataModel getRecentStudentDataByUserId(String id) {
+        return studentDataRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(id)
                 .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
     }
 

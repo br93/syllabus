@@ -1,6 +1,6 @@
 package com.syllabus.client.settings.response;
 
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,6 +23,6 @@ public class CourseClassesResponse {
     private String courseName;
 
     @JsonProperty("classes")
-    private List<ClassResponse> classes;
+    private Set<ClassResponse> classes;
     
 }

@@ -1,9 +1,8 @@
 package com.syllabus.data.model;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -18,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Document(collection = "recommendations")
-@CompoundIndex(name = "recommendations_required", def = "{'recommendation' : 1, 'is_required': 1}", unique = true)
 public class RecommendationModel {
 
     @MongoId(FieldType.OBJECT_ID)
@@ -26,8 +24,16 @@ public class RecommendationModel {
 
     private String userId;
     
-    private Set<String> recommendation;
-    
+    private List<String> recommendation;
+
+    private Integer workload;
+
+    private Boolean morning;
+
+    private Boolean afternoon;
+
+    private Boolean night;
+
     @Field("is_required")
     private Boolean recommendingRequired;
 

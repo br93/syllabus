@@ -10,5 +10,7 @@ public interface StudentDataRepository extends MongoRepository<StudentDataModel,
 
     Optional<StudentDataModel> findByStudentDataIdAndDeletedAtIsNull(String studentDataId);
     Optional<StudentDataModel> findByUserIdAndCoursesTakenAndDeletedAtIsNull(String userId, Long coursesTaken);
+
+    Optional<StudentDataModel> findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(String userId);
     
 }

@@ -17,9 +17,9 @@ public class StudentDataController {
 
     private final StudentDataService studentDataService;
 
-    @PostMapping("{id}")
+    /*@PostMapping("{id}")
     public StudentDataModel createData(@PathVariable(name = "id") String userId){
         return studentDataService.createData(userId);
-    }
+    }*/
     
 }
