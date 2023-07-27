@@ -40,7 +40,7 @@ public class CoreService {
 
     public List<CourseProgramResponse> cachedCoursesTaken(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("courses-taken", userId);
-        
+
         if (!cacheUtil.isValidCache(cacheId).equals(true))
             throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
 
@@ -50,12 +50,13 @@ public class CoreService {
 
     @CircuitBreaker(name = "required-courses", fallbackMethod = "cachedRequiredCourses")
     public List<CourseProgramResponse> getAllRequiredCourses(String userId) {
-        
+
         var studentObject = clientService.getStudentByUserId(userId);
         var student = Unmarshal.toStudentResponse(studentObject);
 
         var program = student.getProgramCode().toString();
-        var requiredCourses = clientService.getCourseProgramsByProgramAndCourseType(program, constantUtil.getRequiredType());
+        var requiredCourses = clientService.getCourseProgramsByProgramAndCourseType(program,
+                constantUtil.getRequiredType());
 
         List<CourseProgramResponse> response = Unmarshal.toList(requiredCourses);
 
@@ -70,7 +71,7 @@ public class CoreService {
 
     public List<CourseProgramResponse> cachedRequiredCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("required-courses", userId);
-        
+
         if (!cacheUtil.isValidCache(cacheId).equals(true))
             throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
 
@@ -81,11 +82,11 @@ public class CoreService {
 
     @CircuitBreaker(name = "missing-required-courses", fallbackMethod = "cachedMissingRequiredCourses")
     public List<CourseProgramResponse> getMissingRequiredCourses(String userId) {
-        
+
         var coursesTaken = this.getCoursesTaken(userId).stream()
                 .filter(x -> x.getType().equals(constantUtil.getRequiredType()))
                 .collect(Collectors.toList());
-        
+
         var missingRequiredCourses = this.getAllRequiredCourses(userId);
 
         missingRequiredCourses.removeAll(coursesTaken);
@@ -98,7 +99,7 @@ public class CoreService {
 
     public List<CourseProgramResponse> cachedMissingRequiredCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("missing-required-courses", userId);
-        
+
         if (!cacheUtil.isValidCache(cacheId).equals(true))
             throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
 
@@ -109,22 +110,26 @@ public class CoreService {
 
     @CircuitBreaker(name = "elective-courses", fallbackMethod = "cachedElectiveCourses")
     public List<CourseProgramResponse> getAllElectiveCourses(String userId) {
-        
+
         var studentObject = clientService.getStudentByUserId(userId);
         var student = Unmarshal.toStudentResponse(studentObject);
 
         var program = student.getProgramCode().toString();
-        var electiveCourses = clientService.getCourseProgramsByProgramAndNotCourseType(program, constantUtil.getRequiredType());
+        var electiveCourses = clientService.getCourseProgramsByProgramAndNotCourseType(program,
+                constantUtil.getRequiredType());
 
         var cacheId = cacheUtil.generateCacheId("elective-courses", userId);
         cacheUtil.cacheData(cacheId, electiveCourses);
 
-        return Unmarshal.toList(electiveCourses);
+        var list = Unmarshal.toList(electiveCourses);
+
+        return list.stream().filter(x -> !x.getType().equals(constantUtil.getSecondLayer()))
+                .collect(Collectors.toList());
     }
 
     public List<CourseProgramResponse> cachedElectiveCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("elective-courses", userId);
-        
+
         if (!cacheUtil.isValidCache(cacheId).equals(true))
             throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
 
@@ -135,7 +140,7 @@ public class CoreService {
 
     @CircuitBreaker(name = "missing-elective-courses", fallbackMethod = "cachedMissingElectiveCourses")
     public List<CourseProgramResponse> getMissingElectiveCourses(String userId) {
-        
+
         var coursesTaken = this.getCoursesTaken(userId).stream()
                 .filter(x -> !x.getType().equals(constantUtil.getRequiredType()))
                 .collect(Collectors.toList());
@@ -151,7 +156,7 @@ public class CoreService {
 
     public List<CourseProgramResponse> cachedMissingElectiveCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("missing-elective-courses", userId);
-        
+
         if (!cacheUtil.isValidCache(cacheId).equals(true))
             throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
 
