@@ -27,7 +27,7 @@ public class StudentDataModel {
     private String userId;
 
     @Field(name = "courses_taken")
-    private Long coursesTaken;
+    private Integer coursesTaken;
 
     @Field(name = "term")
     private Short studentTerm;

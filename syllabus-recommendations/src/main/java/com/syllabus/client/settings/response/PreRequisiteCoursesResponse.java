@@ -1,5 +1,7 @@
 package com.syllabus.client.settings.response;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -24,5 +26,5 @@ public class PreRequisiteCoursesResponse {
     private Short workload;
 
     @JsonProperty("pre_requisite_courses")
-    private PreRequisiteResponse[] preRequisites;    
+    private List<PreRequisiteResponse> preRequisites;    
 }

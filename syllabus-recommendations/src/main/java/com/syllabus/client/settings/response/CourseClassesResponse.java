@@ -1,5 +1,7 @@
 package com.syllabus.client.settings.response;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +23,6 @@ public class CourseClassesResponse {
     private String courseName;
 
     @JsonProperty("classes")
-    private ClassResponse[] classes;
+    private List<ClassResponse> classes;
     
 }
