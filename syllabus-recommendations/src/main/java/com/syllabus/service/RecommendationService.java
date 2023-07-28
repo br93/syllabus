@@ -2,6 +2,8 @@ package com.syllabus.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -47,55 +49,55 @@ public class RecommendationService {
 
     }
 
-    private void addClass(Set<String> classes, List<String> validClasses, List<Boolean> schedules, Integer workload, String course) {
+    private void addClass(Set<String> classes, List<String> validClasses, List<Boolean> schedules, Integer workload,
+            String course) {
+
+        List<String> scheduleStrings = Arrays.asList("M", "T", "N");
 
         classes.forEach(classString -> {
-            var classSchedules = settingsClient.getClassSchedulesByClassCode(classString).stream().collect(Collectors.toCollection(HashSet::new));
+            var classSchedules = settingsClient.getClassSchedulesByClassCode(classString).stream()
+                    .collect(Collectors.toCollection(HashSet::new));
 
-            validatingClassWithSchedule(schedules.get(0), "M", classSchedules, validClasses, workload, course);
-            validatingClassWithSchedule(schedules.get(1), "T", classSchedules, validClasses, workload, course);
-            validatingClassWithSchedule(schedules.get(2), "N", classSchedules, validClasses, workload, course);
+            validatingClassWithSchedule(schedules.get(0), scheduleStrings.get(0), classSchedules, validClasses, workload, course);
+            validatingClassWithSchedule(schedules.get(1), scheduleStrings.get(1), classSchedules, validClasses, workload, course);
+            validatingClassWithSchedule(schedules.get(2), scheduleStrings.get(2), classSchedules, validClasses, workload, course);
 
         });
     }
 
-    private void validatingClassWithSchedule(Boolean schedule, String scheduleString,
+    private void validatingClassWithSchedule(boolean schedule, String scheduleString,
             Set<ClassScheduleResponse> classSchedules, List<String> validClasses,
             Integer workload, String course) {
 
-        if (schedule.equals(true) && validClasses.size() < workload) {
-            var size = classSchedules.size();
-
+        if (schedule && validClasses.size() < workload) {
             List<String> auxList = classSchedules.stream()
                     .filter(classSchedule -> classSchedule.getTimeOfDay().equals(scheduleString))
                     .map(ClassScheduleResponse::getClassCode)
-                    .collect(Collectors.toList());
-            System.out.println("auxList = " + auxList);
-            if (size == auxList.size() && validClasses.size() + size < workload){
-                validClasses.addAll(auxList);
-                System.out.println("BEFORE :" + validClasses);
-                //removeDuplicates(validClasses, course);
-        
-            }
-                
+                    .collect(Collectors.toCollection(ArrayList::new));
 
-            
+            int size = classSchedules.size();
+            if (size == auxList.size() && validClasses.size() + size < workload) {
+                validClasses.addAll(auxList);
+                removeDuplicates(validClasses, course);
+            }
         }
 
     }
 
-    private void removeDuplicates(List<String> classes, String course){
-        List<String> removeList = classes.stream().filter(x -> x.contains(course)).collect(Collectors.toCollection(ArrayList::new));
-        System.out.println("REMOVE-LIST: " + removeList);
-        
-        if (!removeList.isEmpty()){
-            classes.removeAll(removeList.subList(1, removeList.size()));
+    private void removeDuplicates(List<String> classes, String course) {
+
+        Set<String> uniqueClasses = classes.stream().filter(x -> x.contains(course))
+                .collect(Collectors.toSet());
+
+        if (uniqueClasses.size() > 1) {
+
+            List<String> listNonDuplicates = new ArrayList<>(uniqueClasses);
+            Collections.shuffle(listNonDuplicates);
+            listNonDuplicates.remove(0);
+
+            classes.removeIf(uniqueClasses::contains);
         }
-            
-
-        
-
-    }   
+    }
 
     private List<String> getCorrectTypeOfRecommendation(StudentDataModel studentData, boolean required) {
         if (required)
@@ -105,7 +107,8 @@ public class RecommendationService {
 
     private List<String> convertMapToList(Map<String, Double> map) {
         return map.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue()).map(Map.Entry::getKey)
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
 
