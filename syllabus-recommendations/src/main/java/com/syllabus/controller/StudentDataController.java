@@ -12,14 +12,14 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/recommendations")
+@RequestMapping("api/v1/recommendations/data")
 public class StudentDataController {
 
     private final StudentDataService studentDataService;
 
-    /*@PostMapping("{id}")
+    @PostMapping("{id}")
     public StudentDataModel createData(@PathVariable(name = "id") String userId){
         return studentDataService.createData(userId);
-    }*/
+    }
     
 }

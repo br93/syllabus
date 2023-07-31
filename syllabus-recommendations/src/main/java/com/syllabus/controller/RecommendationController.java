@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.syllabus.data.model.RecommendationModel;
+import com.syllabus.data.response.RecommendationResponse;
 import com.syllabus.service.RecommendationService;
+import com.syllabus.util.RecommendationMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,17 +23,21 @@ import lombok.RequiredArgsConstructor;
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
+    private final RecommendationMapper recommendationMapper;
 
     @PostMapping("{id}")
-    public ResponseEntity<RecommendationModel> createRecommendation(@PathVariable(name = "id") String userId,
+    public ResponseEntity<RecommendationResponse> createRecommendation(@PathVariable(name = "id") String userId,
             @RequestParam(name = "required", defaultValue = "true") Boolean isRequired,
             @RequestParam(name = "morning", defaultValue = "false") Boolean morning,
             @RequestParam(name = "afternoon", defaultValue = "false") Boolean afternoon,
             @RequestParam(name = "night", defaultValue = "false") Boolean night,
             @RequestParam(name = "workload") Integer workload) {
+
         List<Boolean> schedules = Arrays.asList(morning, afternoon, night);
 
-        return new ResponseEntity<>(recommendationService.createRecommendation(userId, isRequired, schedules, workload),
+        var recommendation = recommendationService.createRecommendation(userId, isRequired, schedules, workload);
+
+        return new ResponseEntity<>(recommendationMapper.toResponse(recommendation),
                 HttpStatus.OK);
     }
 }

@@ -1,7 +1,5 @@
 package com.syllabus.data.response;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,13 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RecommendationResponse {
+public class RecommendationDetail {
 
-    @JsonProperty(value = "recommendation_id", index = 0)
-    private String recommendationId;
-
-    private Set<String> recommendation;
-
-    private Integer workload;
+    @JsonProperty(value = "class_code", index = 0)
+    private String classCode;
+    private String schedule;
     
 }
