@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.syllabus.exception.RecommendationNotFoundException;
 import com.syllabus.exception.StudentDataNotFoundException;
 
 @RestControllerAdvice
@@ -28,6 +29,12 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(StudentDataNotFoundException.class)
     public ResponseEntity<Map<String, List<String>>> handleUserNotFoundException(StudentDataNotFoundException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RecommendationNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleUserNotFoundException(RecommendationNotFoundException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }

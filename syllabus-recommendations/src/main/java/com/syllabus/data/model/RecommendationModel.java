@@ -1,7 +1,7 @@
 package com.syllabus.data.model;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -24,7 +24,7 @@ public class RecommendationModel {
 
     private String userId;
     
-    private List<String> recommendation;
+    private Set<String> recommendation;
 
     private Integer workload;
 

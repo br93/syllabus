@@ -47,7 +47,7 @@ public class RecommendationService {
         });
 
         return recommendationRepository.save(new RecommendationModel(null, userId, 
-                validClasses, validClasses.size(), schedules.get(0), schedules.get(1), schedules.get(2), isRequired, 
+                new HashSet<>(validClasses), validClasses.size(), schedules.get(0), schedules.get(1), schedules.get(2), isRequired, 
                 Instant.now(), Instant.now(), null));
 
     }

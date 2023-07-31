@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RecommendationDetail {
+public class RecommendationTimetable {
 
     @JsonProperty(value = "class_code", index = 0)
     private String classCode;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.response.RecommendationResponse;
+import com.syllabus.data.response.RecommendationTimetable;
 import com.syllabus.service.RecommendationService;
+import com.syllabus.service.TimetableService;
 import com.syllabus.util.RecommendationMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -25,13 +28,14 @@ public class RecommendationController {
     private final RecommendationService recommendationService;
     private final RecommendationMapper recommendationMapper;
 
-    @PostMapping("{id}")
-    public ResponseEntity<RecommendationResponse> createRecommendation(@PathVariable(name = "id") String userId,
+    @PostMapping
+    public ResponseEntity<RecommendationResponse> createRecommendation(
+            @RequestParam(name = "user_id", required = true) String userId,
             @RequestParam(name = "required", defaultValue = "true") Boolean isRequired,
             @RequestParam(name = "morning", defaultValue = "false") Boolean morning,
             @RequestParam(name = "afternoon", defaultValue = "false") Boolean afternoon,
             @RequestParam(name = "night", defaultValue = "false") Boolean night,
-            @RequestParam(name = "workload") Integer workload) {
+            @RequestParam(name = "workload", required = true) Integer workload) {
 
         List<Boolean> schedules = Arrays.asList(morning, afternoon, night);
 
@@ -40,4 +44,5 @@ public class RecommendationController {
         return new ResponseEntity<>(recommendationMapper.toResponse(recommendation),
                 HttpStatus.OK);
     }
+
 }
