@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -30,27 +31,28 @@ public class RecommendationService {
 
     private final SettingsClient settingsClient;
 
-    public RecommendationModel createRecommendation(String userId, Boolean isRequired, List<Boolean> schedules,
-            Integer workload) {
+    public RecommendationModel createRecommendation(String userId, Boolean isRequired, List<Boolean> schedules, Integer workload) {
 
         var studentData = studentDataService.getRecentStudentDataByUserId(userId);
         List<String> courses = this.getCorrectTypeOfRecommendation(studentData, isRequired);
+        
         List<String> validClasses = new ArrayList<>();
+        Set<String> uniqueSchedules = new HashSet<>();
 
         courses.forEach(course -> {
             var classes = settingsClient.getClassesByCourse(course).getClasses().stream()
                     .map(ClassResponse::getClassCode)
                     .collect(Collectors.toCollection(HashSet::new));
-            this.addClass(classes, validClasses, schedules, workload, course);
+            this.addClass(classes, validClasses, schedules, workload, course, uniqueSchedules);
         });
 
-        return recommendationRepository.save(new RecommendationModel(null, userId, validClasses, validClasses.size(),
-                schedules.get(0), schedules.get(1), schedules.get(2), isRequired, Instant.now(), Instant.now(), null));
+        return recommendationRepository.save(new RecommendationModel(null, userId, 
+                validClasses, validClasses.size(), schedules.get(0), schedules.get(1), schedules.get(2), isRequired, 
+                Instant.now(), Instant.now(), null));
 
     }
 
-    private void addClass(Set<String> classes, List<String> validClasses, List<Boolean> schedules, Integer workload,
-            String course) {
+    private void addClass(Set<String> classes, List<String> validClasses, List<Boolean> schedules, Integer workload, String course, Set<String> uniqueSchedules) {
 
         List<String> scheduleStrings = Arrays.asList("M", "T", "N");
 
@@ -58,35 +60,59 @@ public class RecommendationService {
             var classSchedules = settingsClient.getClassSchedulesByClassCode(classString).stream()
                     .collect(Collectors.toCollection(HashSet::new));
 
-            validatingClassWithSchedule(schedules.get(0), scheduleStrings.get(0), classSchedules, validClasses, workload, course);
-            validatingClassWithSchedule(schedules.get(1), scheduleStrings.get(1), classSchedules, validClasses, workload, course);
-            validatingClassWithSchedule(schedules.get(2), scheduleStrings.get(2), classSchedules, validClasses, workload, course);
+            validatingClassWithSchedule(schedules.get(0), scheduleStrings.get(0), classSchedules, validClasses, workload, course, uniqueSchedules);
+            validatingClassWithSchedule(schedules.get(1), scheduleStrings.get(1), classSchedules, validClasses, workload, course, uniqueSchedules);
+            validatingClassWithSchedule(schedules.get(2), scheduleStrings.get(2), classSchedules, validClasses, workload, course, uniqueSchedules);
 
         });
     }
 
-    private void validatingClassWithSchedule(boolean schedule, String scheduleString,
-            Set<ClassScheduleResponse> classSchedules, List<String> validClasses,
-            Integer workload, String course) {
+    private void validatingClassWithSchedule(boolean schedule, String scheduleString, Set<ClassScheduleResponse> classSchedules, List<String> validClasses,
+            Integer workload, String course, Set<String> uniqueSchedules) {
 
-        if (schedule && validClasses.size() < workload) {
-            List<String> auxList = classSchedules.stream()
-                    .filter(classSchedule -> classSchedule.getTimeOfDay().equals(scheduleString))
-                    .map(ClassScheduleResponse::getClassCode)
-                    .collect(Collectors.toCollection(ArrayList::new));
+        if (schedule && validClasses.size() < workload) 
+            addValidClasses(classSchedules, workload, validClasses, scheduleString, course, uniqueSchedules);
 
-            int size = classSchedules.size();
-            if (size == auxList.size() && validClasses.size() + size < workload) {
-                validClasses.addAll(auxList);
-                removeDuplicates(validClasses, course);
-            }
-        }
+        
 
     }
 
-    private void removeDuplicates(List<String> classes, String course) {
+    private void addValidClasses(Set<ClassScheduleResponse> classSchedules, Integer workload, List<String> validClasses, String scheduleString, String course, Set<String> uniqueSchedules) {
+        
+        List<String> classes = filterByTimeOfDay(classSchedules, scheduleString)
+                .map(ClassScheduleResponse::getClassCode)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        Set<String> uniqueClasses = classes.stream().filter(x -> x.contains(course))
+        List<String> scheduleList = filterByTimeOfDay(classSchedules, scheduleString)
+                .map(ClassScheduleResponse::getSchedule)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        int size = classSchedules.size();
+        
+        if (size == classes.size() && validClasses.size() + size < workload) {
+            validClasses.addAll(classes);
+            removeDuplicates(validClasses, course);
+            removeInvalidClassesWithSameSchedule(scheduleList, classes, validClasses, uniqueSchedules);
+        }
+    }
+
+    private Stream<ClassScheduleResponse> filterByTimeOfDay(Set<ClassScheduleResponse> classSchedules, String scheduleString) {
+        return classSchedules.stream().filter(classSchedule -> classSchedule.getTimeOfDay().equals(scheduleString));
+    }
+
+    private void removeInvalidClassesWithSameSchedule(List<String> newSchedules, List<String> newClasses, List<String> validClasses, Set<String> uniqueSchedules) {
+        
+        int initialSize = uniqueSchedules.size();
+        uniqueSchedules.addAll(newSchedules);
+        int delta = uniqueSchedules.size() - initialSize;
+
+        if (delta == 0 || delta < newSchedules.size())
+            validClasses.removeAll(newClasses);
+    }
+
+    private void removeDuplicates(List<String> validClasses, String course) {
+
+        Set<String> uniqueClasses = validClasses.stream().filter(x -> x.contains(course))
                 .collect(Collectors.toSet());
 
         if (uniqueClasses.size() > 1) {
@@ -95,7 +121,7 @@ public class RecommendationService {
             Collections.shuffle(listNonDuplicates);
             listNonDuplicates.remove(0);
 
-            classes.removeIf(uniqueClasses::contains);
+            validClasses.removeIf(uniqueClasses::contains);
         }
     }
 
