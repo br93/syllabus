@@ -1,8 +1,8 @@
 package com.syllabus.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.model.StudentDataModel;
@@ -17,8 +17,8 @@ public class StudentDataController {
 
     private final StudentDataService studentDataService;
 
-    @PostMapping("{id}")
-    public StudentDataModel createData(@PathVariable(name = "id") String userId){
+    @PostMapping
+    public StudentDataModel createData(@RequestParam(name = "user_id") String userId){
         return studentDataService.createData(userId);
     }
     
