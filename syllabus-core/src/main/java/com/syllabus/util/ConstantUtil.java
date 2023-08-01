@@ -11,15 +11,15 @@ public class ConstantUtil {
 
     private final Environment environment;
 
-    public String getRequiredType() {
+    public String constantRequiredType() {
         return environment.getProperty("required.course");
     }
 
-    public String getSecondLayer() {
+    public String constantSecondLayer() {
         return environment.getProperty("second.layer.course");
     }
 
-    public String getServiceUnavailableMessage(){
+    public String serviceUnavailableMessage(){
         return environment.getProperty("message.service.unavailable");
     }
 }

@@ -1,4 +1,4 @@
-package com.syllabus.util;
+package com.syllabus.repository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class CacheUtil {
+public class CacheRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
     
@@ -25,8 +25,9 @@ public class CacheUtil {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public Boolean isValidCache(String key){
-        return redisTemplate.hasKey(key);
+    public boolean hasKey(String key){
+        Boolean hasKey = redisTemplate.hasKey(key);
+        return hasKey != null && hasKey.equals(true);
     }
 
 }

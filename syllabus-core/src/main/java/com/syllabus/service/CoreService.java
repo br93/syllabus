@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.syllabus.client.settings.CourseProgramResponse;
 import com.syllabus.exception.CustomCallNotPermittedException;
-import com.syllabus.util.CacheUtil;
+import com.syllabus.repository.CacheRepository;
 import com.syllabus.util.ConstantUtil;
 import com.syllabus.util.Unmarshal;
 import com.syllabus.util.Validation;
@@ -22,7 +22,7 @@ public class CoreService {
     private final ClientService clientService;
 
     private final ConstantUtil constantUtil;
-    private final CacheUtil cacheUtil;
+    private final CacheRepository cacheUtil;
 
     @CircuitBreaker(name = "courses-taken", fallbackMethod = "cachedCoursesTaken")
     public List<CourseProgramResponse> getCoursesTaken(String userId) {
@@ -41,8 +41,8 @@ public class CoreService {
     public List<CourseProgramResponse> cachedCoursesTaken(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("courses-taken", userId);
 
-        if (!cacheUtil.isValidCache(cacheId).equals(true))
-            throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheUtil.hasKey(cacheId))
+            throw new CustomCallNotPermittedException(constantUtil.serviceUnavailableMessage(), exception);
 
         var cache = cacheUtil.getCachedData(cacheId);
         return Unmarshal.toList(cache);
@@ -56,7 +56,7 @@ public class CoreService {
 
         var program = student.getProgramCode().toString();
         var requiredCourses = clientService.getCourseProgramsByProgramAndCourseType(program,
-                constantUtil.getRequiredType());
+                constantUtil.constantRequiredType());
 
         List<CourseProgramResponse> response = Unmarshal.toList(requiredCourses);
 
@@ -72,8 +72,8 @@ public class CoreService {
     public List<CourseProgramResponse> cachedRequiredCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("required-courses", userId);
 
-        if (!cacheUtil.isValidCache(cacheId).equals(true))
-            throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheUtil.hasKey(cacheId))
+            throw new CustomCallNotPermittedException(constantUtil.serviceUnavailableMessage(), exception);
 
         var cache = cacheUtil.getCachedData(cacheId);
 
@@ -84,7 +84,7 @@ public class CoreService {
     public List<CourseProgramResponse> getMissingRequiredCourses(String userId) {
 
         var coursesTaken = this.getCoursesTaken(userId).stream()
-                .filter(x -> x.getType().equals(constantUtil.getRequiredType()))
+                .filter(x -> x.getType().equals(constantUtil.constantRequiredType()))
                 .collect(Collectors.toList());
 
         var missingRequiredCourses = this.getAllRequiredCourses(userId);
@@ -100,8 +100,8 @@ public class CoreService {
     public List<CourseProgramResponse> cachedMissingRequiredCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("missing-required-courses", userId);
 
-        if (!cacheUtil.isValidCache(cacheId).equals(true))
-            throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheUtil.hasKey(cacheId))
+            throw new CustomCallNotPermittedException(constantUtil.serviceUnavailableMessage(), exception);
 
         var cache = cacheUtil.getCachedData(cacheId);
 
@@ -116,22 +116,22 @@ public class CoreService {
 
         var program = student.getProgramCode().toString();
         var electiveCourses = clientService.getCourseProgramsByProgramAndNotCourseType(program,
-                constantUtil.getRequiredType());
+                constantUtil.constantRequiredType());
 
         var cacheId = cacheUtil.generateCacheId("elective-courses", userId);
         cacheUtil.cacheData(cacheId, electiveCourses);
 
         var list = Unmarshal.toList(electiveCourses);
 
-        return list.stream().filter(x -> !x.getType().equals(constantUtil.getSecondLayer()))
+        return list.stream().filter(x -> !x.getType().equals(constantUtil.constantSecondLayer()))
                 .collect(Collectors.toList());
     }
 
     public List<CourseProgramResponse> cachedElectiveCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("elective-courses", userId);
 
-        if (!cacheUtil.isValidCache(cacheId).equals(true))
-            throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheUtil.hasKey(cacheId))
+            throw new CustomCallNotPermittedException(constantUtil.serviceUnavailableMessage(), exception);
 
         var cache = cacheUtil.getCachedData(cacheId);
 
@@ -142,7 +142,7 @@ public class CoreService {
     public List<CourseProgramResponse> getMissingElectiveCourses(String userId) {
 
         var coursesTaken = this.getCoursesTaken(userId).stream()
-                .filter(x -> !x.getType().equals(constantUtil.getRequiredType()))
+                .filter(x -> !x.getType().equals(constantUtil.constantRequiredType()))
                 .collect(Collectors.toList());
 
         var missingElectiveCourses = this.getAllElectiveCourses(userId);
@@ -157,15 +157,15 @@ public class CoreService {
     public List<CourseProgramResponse> cachedMissingElectiveCourses(String userId, Throwable exception) {
         var cacheId = cacheUtil.generateCacheId("missing-elective-courses", userId);
 
-        if (!cacheUtil.isValidCache(cacheId).equals(true))
-            throw new CustomCallNotPermittedException(constantUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheUtil.hasKey(cacheId))
+            throw new CustomCallNotPermittedException(constantUtil.serviceUnavailableMessage(), exception);
 
         var cache = cacheUtil.getCachedData(cacheId);
         return Unmarshal.toList(cache);
     }
 
     private List<CourseProgramResponse> getAllSecondLayerCourses(String program) {
-        var response = clientService.getCourseProgramsByProgramAndCourseType(program, constantUtil.getSecondLayer());
+        var response = clientService.getCourseProgramsByProgramAndCourseType(program, constantUtil.constantSecondLayer());
         return Unmarshal.toList(response);
     }
 
