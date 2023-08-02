@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syllabus.client.students.StudentResponse;
 import com.syllabus.unmarshal.Unmarshal;
 
-public class StudentResponseUnmarshal implements Unmarshal<StudentResponse>{
+public class StudentUnmarshal implements Unmarshal<StudentResponse>{
 
     @Override
     public StudentResponse toResponse(Object object) {

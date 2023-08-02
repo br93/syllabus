@@ -15,10 +15,10 @@ import com.syllabus.client.settings.response.PreRequisiteCoursesResponse;
 public interface SettingsClient {
 
     @GetMapping(value = "${settings.ms.courses.path}/{course_code}/prerequisites/count")
-    public PreRequisiteCountResponse getAsPreRequisiteCount(@PathVariable("course_code") String courseCode);
+    public PreRequisiteCountResponse getAsPreRequisiteCountByCourseCode(@PathVariable("course_code") String courseCode);
 
     @GetMapping(value = "${settings.ms.courses.path}/{course_code}/prerequisites")
-    public PreRequisiteCoursesResponse getPreRequisites(@PathVariable("course_code") String courseCode);
+    public PreRequisiteCoursesResponse getPreRequisitesByCourseCode(@PathVariable("course_code") String courseCode);
 
     @GetMapping(value = "${settings.ms.courses.path}/{course_code}/classes")
     public CourseClassesResponse getClassesByCourse(@PathVariable("course_code") String courseCode);

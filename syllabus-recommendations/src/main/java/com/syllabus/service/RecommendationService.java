@@ -20,7 +20,6 @@ import com.syllabus.data.response.RecommendationResponse;
 import com.syllabus.data.response.StudentDataResponse;
 import com.syllabus.mapper.RecommendationMapper;
 import com.syllabus.repository.RecommendationRepository;
-import com.syllabus.service.client.ClientService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syllabus.client.settings.response.PreRequisiteCoursesResponse;
 import com.syllabus.unmarshal.Unmarshal;
 
-public class PreRequisiteCoursesResponseUnmarshal implements Unmarshal<PreRequisiteCoursesResponse>{
+public class PreRequisiteCoursesUnmarshal implements Unmarshal<PreRequisiteCoursesResponse>{
 
     @Override
     public PreRequisiteCoursesResponse toResponse(Object object) {

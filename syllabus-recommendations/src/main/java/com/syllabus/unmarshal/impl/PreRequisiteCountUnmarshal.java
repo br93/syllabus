@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syllabus.client.settings.response.PreRequisiteCountResponse;
 import com.syllabus.unmarshal.Unmarshal;
 
-public class PreRequisiteCountResponseUnmarshal implements Unmarshal<PreRequisiteCountResponse>{
+public class PreRequisiteCountUnmarshal implements Unmarshal<PreRequisiteCountResponse>{
 
     @Override
     public PreRequisiteCountResponse toResponse(Object object) {
