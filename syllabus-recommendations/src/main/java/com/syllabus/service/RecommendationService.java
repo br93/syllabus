@@ -13,12 +13,14 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import com.syllabus.client.settings.SettingsClient;
 import com.syllabus.client.settings.response.ClassResponse;
 import com.syllabus.client.settings.response.ClassScheduleResponse;
 import com.syllabus.data.model.RecommendationModel;
-import com.syllabus.data.model.StudentDataModel;
+import com.syllabus.data.response.RecommendationResponse;
+import com.syllabus.data.response.StudentDataResponse;
+import com.syllabus.mapper.RecommendationMapper;
 import com.syllabus.repository.RecommendationRepository;
+import com.syllabus.service.client.ClientService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,9 +31,11 @@ public class RecommendationService {
     private final RecommendationRepository recommendationRepository;
     private final StudentDataService studentDataService;
 
-    private final SettingsClient settingsClient;
+    private final ClientService clientService;
 
-    public RecommendationModel createRecommendation(String userId, Boolean isRequired, List<Boolean> schedules, Integer workload) {
+    private final RecommendationMapper recommendationMapper;
+
+    public RecommendationResponse createRecommendation(String userId, Boolean isRequired, List<Boolean> schedules, Integer workload) {
 
         var studentData = studentDataService.getRecentStudentDataByUserId(userId);
         List<String> courses = this.getCorrectTypeOfRecommendation(studentData, isRequired);
@@ -40,15 +44,17 @@ public class RecommendationService {
         Set<String> uniqueSchedules = new HashSet<>();
 
         courses.forEach(course -> {
-            var classes = settingsClient.getClassesByCourse(course).getClasses().stream()
+            var classes = clientService.getClassesByCourse(course).getClasses().stream()
                     .map(ClassResponse::getClassCode)
                     .collect(Collectors.toCollection(HashSet::new));
             this.addClass(classes, validClasses, schedules, workload, course, uniqueSchedules);
         });
-
-        return recommendationRepository.save(new RecommendationModel(null, userId, 
+        
+        var recommendation =  recommendationRepository.save(new RecommendationModel(null, userId, 
                 new HashSet<>(validClasses), validClasses.size(), schedules.get(0), schedules.get(1), schedules.get(2), isRequired, 
                 Instant.now(), Instant.now(), null));
+
+        return recommendationMapper.toResponse(recommendation);
 
     }
 
@@ -57,7 +63,7 @@ public class RecommendationService {
         List<String> scheduleStrings = Arrays.asList("M", "T", "N");
 
         classes.forEach(classString -> {
-            var classSchedules = settingsClient.getClassSchedulesByClassCode(classString).stream()
+            var classSchedules = clientService.getClassSchedulesByClassCode(classString).stream()
                     .collect(Collectors.toCollection(HashSet::new));
 
             this.validatingClassWithSchedule(schedules.get(0), scheduleStrings.get(0), classSchedules, validClasses, workload, course, uniqueSchedules);
@@ -135,7 +141,7 @@ public class RecommendationService {
         return validClasses.stream().filter(validClass -> validClass.contains(course));
     }
 
-    private List<String> getCorrectTypeOfRecommendation(StudentDataModel studentData, boolean required) {
+    private List<String> getCorrectTypeOfRecommendation(StudentDataResponse studentData, boolean required) {
         if (required)
             return this.convertMapToList(studentData.getRequiredCourses());
         return this.convertMapToList(studentData.getElectiveCourses());

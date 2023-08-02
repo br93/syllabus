@@ -1,4 +1,4 @@
-package com.syllabus.util;
+package com.syllabus.mapper;
 
 import org.mapstruct.Mapper;
 

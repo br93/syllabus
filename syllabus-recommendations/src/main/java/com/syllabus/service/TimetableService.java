@@ -12,8 +12,8 @@ import com.syllabus.client.settings.SettingsClient;
 import com.syllabus.data.model.RecommendationModel;
 import com.syllabus.data.response.RecommendationTimetable;
 import com.syllabus.exception.RecommendationNotFoundException;
+import com.syllabus.mapper.RecommendationMapper;
 import com.syllabus.repository.RecommendationRepository;
-import com.syllabus.util.RecommendationMapper;
 
 import lombok.RequiredArgsConstructor;
 

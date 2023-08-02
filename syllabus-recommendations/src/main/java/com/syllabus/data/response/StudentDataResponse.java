@@ -1,4 +1,4 @@
-package com.syllabus.client.core.response;
+package com.syllabus.data.response;
 
 import java.util.Map;
 

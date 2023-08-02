@@ -9,13 +9,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.syllabus.client.core.CoreClient;
 import com.syllabus.client.core.CoreResponse;
-import com.syllabus.client.settings.SettingsClient;
 import com.syllabus.client.settings.response.PreRequisiteResponse;
-import com.syllabus.client.students.StudentsClient;
 import com.syllabus.data.model.StudentDataModel;
+import com.syllabus.data.response.StudentDataResponse;
 import com.syllabus.exception.StudentDataNotFoundException;
+import com.syllabus.mapper.StudentDataMapper;
 import com.syllabus.repository.StudentDataRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,47 +24,50 @@ import lombok.RequiredArgsConstructor;
 public class StudentDataService {
 
     private final StudentDataRepository studentDataRepository;
+    private final StudentDataMapper studentDataMapper;
 
-    private final CoreClient coreClient;
-    private final SettingsClient settingsClient;
-    private final StudentsClient studentsClient;
+    private final ClientService clientService;
 
-    public StudentDataModel createData(String userId) {
+    public StudentDataResponse createData(String userId) {
 
-        var student = studentsClient.getStudentByUserId(userId);
+        var student = clientService.getStudentByUserId(userId);
         final Short studentTerm = student.getTerm().shortValue();
 
-        var coursesTaken = coreClient.getCoursesTaken(userId).toList();
+        var coursesTaken = clientService.getCoursesTakenByUserId(userId);
 
-        var missingRequiredCourses = coreClient.getMissingRequiredCourses(userId).stream()
-                .collect(Collectors.toCollection(ArrayList::new));
+        var missingRequiredCourses = clientService.getMissingRequiredCoursesByUserId(userId);
         Map<String, Double> requiredCourses = this.formatCourses(coursesTaken, missingRequiredCourses, studentTerm);
 
-        var missingElectiveCourses = coreClient.getMissingElectiveCourses(userId).stream()
-                .collect(Collectors.toCollection(ArrayList::new));
+        var missingElectiveCourses = clientService.getMissingElectiveCoursesByUserId(userId);
         Map<String, Double> electiveCourses = this.formatCourses(coursesTaken, missingElectiveCourses, studentTerm);
 
-        StudentDataModel studentData = new StudentDataModel(null, userId, 
+        var studentData = studentDataRepository.save(new StudentDataModel(null, userId, 
             coursesTaken.size(), studentTerm, requiredCourses, electiveCourses,
-            Instant.now(), Instant.now(), null);
+            Instant.now(), Instant.now(), null));
 
-        return studentDataRepository.save(studentData);
+        return studentDataMapper.toResponse(studentData);
 
     }
 
-    public StudentDataModel getStudentDataById(String id) {
-        return studentDataRepository.findByStudentDataIdAndDeletedAtIsNull(id)
+    public StudentDataResponse getStudentDataById(String id) {
+        var studentData = studentDataRepository.findByStudentDataIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+
+        return studentDataMapper.toResponse(studentData);
     }
 
-    public StudentDataModel getStudentDataByUserIdAndCoursesTaken(String id, Long coursesTaken) {
-        return studentDataRepository.findByUserIdAndCoursesTakenAndDeletedAtIsNull(id, coursesTaken)
+    public StudentDataResponse getStudentDataByUserIdAndCoursesTaken(String id, Long coursesTaken) {
+        var studentData = studentDataRepository.findByUserIdAndCoursesTakenAndDeletedAtIsNull(id, coursesTaken)
                 .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+
+        return studentDataMapper.toResponse(studentData);
     }
 
-    public StudentDataModel getRecentStudentDataByUserId(String id) {
-        return studentDataRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(id)
+    public StudentDataResponse getRecentStudentDataByUserId(String id) {
+        var studentData = studentDataRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(id)
                 .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+
+        return studentDataMapper.toResponse(studentData);
     }
 
     private Map<String, Double> formatCourses(List<CoreResponse> coursesTaken, List<CoreResponse> missingCourses,
@@ -89,11 +91,11 @@ public class StudentDataService {
     private void checkPreRequisite(CoreResponse course, List<String> listCoursesTaken,
             List<CoreResponse> coursesToRemove) {
 
-        var preRequisites = settingsClient.getPreRequisites(course.getCourseCode()).getPreRequisites();
+        var preRequisites = clientService.getPreRequisitesByCourseCode(course.getCourseCode()).getPreRequisites();
 
         if (!preRequisites.isEmpty()) {
             var list = preRequisites.stream().map(PreRequisiteResponse::getCourseCode)
-                    .collect(Collectors.toCollection(ArrayList::new));
+                    .collect(Collectors.toList());
 
             if (!listCoursesTaken.containsAll(list))
                 coursesToRemove.add(course);
@@ -105,7 +107,7 @@ public class StudentDataService {
 
         courses.forEach(course -> {
             var courseTerm = course.getTerm();
-            var preRequisiteCount = settingsClient.getAsPreRequisiteCount(course.getCourseCode()).getCount();
+            var preRequisiteCount = clientService.getAsPreRequisiteCountByCourseCode(course.getCourseCode()).getCount();
 
             var factor = this.getTermFactor(studentTerm, courseTerm);
             mappedCourses.put(course.getCourseCode(), factor + preRequisiteCount * factor);

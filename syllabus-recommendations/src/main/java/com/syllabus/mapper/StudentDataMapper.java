@@ -1,9 +1,9 @@
-package com.syllabus.util;
+package com.syllabus.mapper;
 
 import org.mapstruct.Mapper;
 
-import com.syllabus.client.core.response.StudentDataResponse;
 import com.syllabus.data.model.StudentDataModel;
+import com.syllabus.data.response.StudentDataResponse;
 
 @Mapper(componentModel = "spring")
 public interface StudentDataMapper {

@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.syllabus.client.core.response.StudentDataResponse;
+import com.syllabus.data.response.StudentDataResponse;
 import com.syllabus.service.StudentDataService;
-import com.syllabus.util.StudentDataMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class StudentDataController {
 
     private final StudentDataService studentDataService;
-    private final StudentDataMapper studentDataMapper;
-
+    
     @PostMapping
     public ResponseEntity<StudentDataResponse> createData(@RequestParam(name = "user_id") String userId){
-        return new ResponseEntity<>(studentDataMapper.toResponse(studentDataService.createData(userId)), HttpStatus.OK);
+        var studentData = studentDataService.createData(userId);
+        return new ResponseEntity<>(studentData, HttpStatus.OK);
     }
     
 }

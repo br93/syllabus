@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.response.RecommendationResponse;
+import com.syllabus.mapper.RecommendationMapper;
 import com.syllabus.service.RecommendationService;
-import com.syllabus.util.RecommendationMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
-    private final RecommendationMapper recommendationMapper;
 
     @PostMapping
     public ResponseEntity<RecommendationResponse> createRecommendation(
@@ -37,8 +36,7 @@ public class RecommendationController {
 
         var recommendation = recommendationService.createRecommendation(userId, isRequired, schedules, workload);
 
-        return new ResponseEntity<>(recommendationMapper.toResponse(recommendation),
-                HttpStatus.OK);
+        return new ResponseEntity<>(recommendation,HttpStatus.OK);
     }
 
 }
