@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.response.RecommendationResponse;
-import com.syllabus.mapper.RecommendationMapper;
 import com.syllabus.service.RecommendationService;
 
 import lombok.RequiredArgsConstructor;

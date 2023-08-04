@@ -17,12 +17,6 @@ import com.syllabus.client.settings.response.PreRequisiteCountResponse;
 import com.syllabus.client.settings.response.PreRequisiteCoursesResponse;
 import com.syllabus.client.students.StudentResponse;
 import com.syllabus.client.students.StudentsClient;
-import com.syllabus.unmarshal.impl.ClassScheduleUnmarshal;
-import com.syllabus.unmarshal.impl.CoreUnmarshal;
-import com.syllabus.unmarshal.impl.CourseClassesUnmarshal;
-import com.syllabus.unmarshal.impl.PreRequisiteCountUnmarshal;
-import com.syllabus.unmarshal.impl.PreRequisiteCoursesUnmarshal;
-import com.syllabus.unmarshal.impl.StudentUnmarshal;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,13 +29,6 @@ public class ClientService {
     private final CoreClient coreClient;
     private final SettingsClient settingsClient;
     private final StudentsClient studentsClient;
-
-    private final ClassScheduleUnmarshal classScheduleUnmarshal;
-    private final CoreUnmarshal coreUnmarshal;
-    private final CourseClassesUnmarshal coursesClassesUnmarshal;
-    private final PreRequisiteCountUnmarshal preRequisiteCountUnmarshal;
-    private final PreRequisiteCoursesUnmarshal preRequisiteCoursesUnmarshal;
-    private final StudentUnmarshal studentUnmarshal;
 
     public CourseClassesResponse getClassesByCourse(String courseCode) {
 
