@@ -51,7 +51,7 @@ public class CacheService {
     }
 
     public List<CoreResponse> getCoursesTakenByUserId(String userId) {
-        var cacheId = cacheRepository.generateCacheId(CacheConstants.MISSING_ELECTIVE, userId);
+        var cacheId = cacheRepository.generateCacheId(CacheConstants.COURSES_TAKEN, userId);
         var cache = cacheRepository.getCachedData(cacheId);
 
         return coreUnmarshal.toList(cache);

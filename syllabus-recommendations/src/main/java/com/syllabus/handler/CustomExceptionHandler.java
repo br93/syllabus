@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.syllabus.exception.CacheException;
+import com.syllabus.exception.CustomCallNotPermittedException;
 import com.syllabus.exception.RecommendationNotFoundException;
 import com.syllabus.exception.StudentDataNotFoundException;
 
@@ -42,6 +43,13 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CacheException.class)
     public ResponseEntity<Map<String, List<String>>> handleCacheException(CacheException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(CustomCallNotPermittedException.class)
+    public ResponseEntity<Map<String, List<String>>> handleCustomCallNotPermittedException(
+            CustomCallNotPermittedException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
     }

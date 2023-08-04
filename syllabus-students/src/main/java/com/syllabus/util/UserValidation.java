@@ -19,11 +19,7 @@ public class UserValidation {
 
     @CircuitBreaker(name = "get-user", fallbackMethod = "fallbackGetUser")
     public AccountResponse getUser() {
-        var user = this.accountClient.getAccount().getUser();
-        
-        if(!this.isAuthorizedById(user.getUserId()))
-            throw new UserUnauthorizedException(MessageConstants.USER_UNAUTHORIZED);
-        return user;
+        return accountClient.getAccount().getUser();
     }
 
     public AccountResponse fallbackGetUser(Throwable exception) {

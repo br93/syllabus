@@ -17,7 +17,10 @@ import com.syllabus.client.settings.response.PreRequisiteCountResponse;
 import com.syllabus.client.settings.response.PreRequisiteCoursesResponse;
 import com.syllabus.client.students.StudentResponse;
 import com.syllabus.client.students.StudentsClient;
+import com.syllabus.exception.CustomCallNotPermittedException;
+import com.syllabus.message.MessageConstants;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class ClientService {
     private final SettingsClient settingsClient;
     private final StudentsClient studentsClient;
 
+    @CircuitBreaker(name = "classes-by-course", fallbackMethod = "fallbackCourseClasses")
     public CourseClassesResponse getClassesByCourse(String courseCode) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.CLASSES, courseCode);
@@ -40,6 +44,11 @@ public class ClientService {
         return settingsClient.getClassesByCourse(courseCode);
     }
 
+    public CourseClassesResponse fallbackCourseClasses(String courseCode, Throwable exception) {
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
+    }
+
+    @CircuitBreaker(name = "class-schedules-by-class-code", fallbackMethod = "fallbackListClassSchedule")
     public List<ClassScheduleResponse> getClassSchedulesByClassCode(String classCode) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.CLASS_SCHEDULES, classCode);
@@ -49,6 +58,11 @@ public class ClientService {
         return settingsClient.getClassSchedulesByClassCode(classCode);
     }
 
+    public List<ClassScheduleResponse> fallbackListClassSchedule(String classCode, Throwable exception) {
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
+    }
+
+    @CircuitBreaker(name = "student-by-user-id", fallbackMethod = "fallbackStudent")
     public StudentResponse getStudentByUserId(String userId) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.STUDENTS, userId);
@@ -58,6 +72,11 @@ public class ClientService {
         return studentsClient.getStudentByUserId(userId);
     }
 
+    public StudentResponse fallbackStudent(String userId, Throwable exception){
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
+    }
+
+    @CircuitBreaker(name = "courses-taken-by-user-id", fallbackMethod = "fallbackListCore")
     public List<CoreResponse> getCoursesTakenByUserId(String userId) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.COURSES_TAKEN, userId);
@@ -69,6 +88,11 @@ public class ClientService {
 
     }
 
+    public List<CoreResponse> fallbackListCore(String userId, Throwable exception){
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
+    }
+
+    @CircuitBreaker(name = "missing-required-courses-by-user-id", fallbackMethod = "fallbackListCore")
     public List<CoreResponse> getMissingRequiredCoursesByUserId(String userId) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.MISSING_REQUIRED, userId);
@@ -79,6 +103,7 @@ public class ClientService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @CircuitBreaker(name = "missing-elective-courses-by-user-id", fallbackMethod = "fallbackListCore")
     public List<CoreResponse> getMissingElectiveCoursesByUserId(String userId) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.MISSING_ELECTIVE, userId);
@@ -89,6 +114,7 @@ public class ClientService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @CircuitBreaker(name = "pre-requisites-by-course-code", fallbackMethod = "fallbackPreRequisiteCourses")
     public PreRequisiteCoursesResponse getPreRequisitesByCourseCode(String courseCode) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.PRE_REQUISITES, courseCode);
@@ -98,6 +124,11 @@ public class ClientService {
         return settingsClient.getPreRequisitesByCourseCode(courseCode);
     }
 
+    public PreRequisiteCoursesResponse fallbackPreRequisiteCourses(String courseCode, Throwable exception){
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
+    }
+
+    @CircuitBreaker(name = "as-pre-requisite-count-by-course-code", fallbackMethod = "fallbackPreRequisiteCount")
     public PreRequisiteCountResponse getAsPreRequisiteCountByCourseCode(String courseCode) {
 
         var cacheId = cacheService.generateCacheId(CacheConstants.PRE_REQUISITES_COUNT, courseCode);
@@ -105,6 +136,10 @@ public class ClientService {
         if (cacheService.hasKey(cacheId))
             return cacheService.getAsPreRequisiteCountByCourseCode(courseCode);
         return settingsClient.getAsPreRequisiteCountByCourseCode(courseCode);
+    }
+
+    public PreRequisiteCountResponse fallbackPreRequisiteCount(String courseCode, Throwable exception){
+        throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE);
     }
 
 }

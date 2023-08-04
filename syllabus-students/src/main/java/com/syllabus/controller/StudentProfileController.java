@@ -35,7 +35,7 @@ public class StudentProfileController {
         var student = this.studentService.getStudentByUserId(userId);
         var response = this.studentMapper.toStudentResponse(student);
 
-        cacheService.cacheStudent(cacheId, response);
+        cacheService.cacheStudent(userId, response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
