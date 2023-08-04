@@ -1,8 +1,8 @@
 package com.syllabus.cache;
 
-public class CacheConstant {
+public class CacheConstants {
 
-    private CacheConstant(){}
+    private CacheConstants(){}
 
     public static final String CLASSES = "classes";
     public static final String CLASS_SCHEDULES = "class-schedules";

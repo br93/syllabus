@@ -13,7 +13,7 @@ import com.syllabus.data.model.RecommendationModel;
 import com.syllabus.data.response.RecommendationTimetable;
 import com.syllabus.exception.RecommendationNotFoundException;
 import com.syllabus.mapper.RecommendationMapper;
-import com.syllabus.message.MessageConstant;
+import com.syllabus.message.MessageConstants;
 import com.syllabus.repository.RecommendationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class TimetableService {
     public List<RecommendationTimetable> getRecentTimetableByUserId(String userId){
         
         List<RecommendationTimetable> timetable = new ArrayList<>();
-        var recommendation = recommendationRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId).orElseThrow(() -> new RecommendationNotFoundException(MessageConstant.RECOMMENDATION_NOT_FOUND));
+        var recommendation = recommendationRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId).orElseThrow(() -> new RecommendationNotFoundException(MessageConstants.RECOMMENDATION_NOT_FOUND));
 
         this.generateTimetable(recommendation, timetable);
         
@@ -39,7 +39,7 @@ public class TimetableService {
     public List<RecommendationTimetable> getTimetableByRecommendationId(String recommendationId){
 
         List<RecommendationTimetable> timetable = new ArrayList<>();
-        var recommendation = recommendationRepository.findByRecommendationIdAndDeletedAtIsNull(recommendationId).orElseThrow(() -> new RecommendationNotFoundException(MessageConstant.RECOMMENDATION_NOT_FOUND));
+        var recommendation = recommendationRepository.findByRecommendationIdAndDeletedAtIsNull(recommendationId).orElseThrow(() -> new RecommendationNotFoundException(MessageConstants.RECOMMENDATION_NOT_FOUND));
 
         this.generateTimetable(recommendation, timetable);
 

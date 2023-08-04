@@ -12,7 +12,7 @@ import com.syllabus.client.core.CoreResponse;
 import com.syllabus.unmarshal.Unmarshal;
 
 @Component
-public class CoreResponseUnmarshal implements Unmarshal<CoreResponse>{
+public class CoreUnmarshal implements Unmarshal<CoreResponse>{
 
     @Override
     public CoreResponse toResponse(Object object) {

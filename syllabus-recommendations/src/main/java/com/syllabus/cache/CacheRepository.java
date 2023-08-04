@@ -5,6 +5,9 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.syllabus.exception.CacheException;
+import com.syllabus.message.MessageConstants;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,6 +31,18 @@ public class CacheRepository {
     public boolean hasKey(String key){
         Boolean hasKey = redisTemplate.hasKey(key);
         return hasKey != null && hasKey.equals(true);
+    }
+
+    public void flushCache() {
+
+        var connectionFactory = redisTemplate.getConnectionFactory();
+
+        if (connectionFactory == null) {
+            throw new CacheException(MessageConstants.CACHE_EXCEPTION);
+        }
+
+        connectionFactory.getConnection().serverCommands().flushDb();
+
     }
     
 }
