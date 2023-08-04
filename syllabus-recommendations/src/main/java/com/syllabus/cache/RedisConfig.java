@@ -1,4 +1,4 @@
-package com.syllabus.config;
+package com.syllabus.cache;
 
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
