@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.syllabus.cache.CacheConstants;
 import com.syllabus.client.settings.SettingsClient;
 import com.syllabus.client.settings.cache.SettingsCacheClient;
 import com.syllabus.client.settings.response.CourseResponse;
@@ -14,6 +15,7 @@ import com.syllabus.client.settings.response.UniversityResponse;
 import com.syllabus.exception.CustomCallNotPermittedException;
 import com.syllabus.exception.ProgramNotFoundException;
 import com.syllabus.exception.UniversityInfoInvalidException;
+import com.syllabus.message.MessageConstants;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,6 @@ public class Validator {
 
     private final SettingsClient configClient;
     private final SettingsCacheClient cacheClient;
-
-    private final MessageUtil messageUtil;
-
-    private static final String UNIVERSITY = "university";
-    private static final String COURSES = "courses";
-    private static final String PROGRAM = "program";
     
     @CircuitBreaker(name = "valid-courses", fallbackMethod = "cachedValidCourses")
     public boolean validCourses(Set<String> courses, String universityCode) {
@@ -43,10 +39,10 @@ public class Validator {
 
     public boolean cachedValidCourses(Set<String> courses, String universityCode, Throwable exception) {
 
-        var cacheId = COURSES+universityCode;
+        var cacheId = CacheConstants.COURSES+universityCode;
 
-         if (cacheClient.isCached(cacheId).equals(false))
-            throw new CustomCallNotPermittedException(messageUtil.getServiceUnavailableMessage(), exception);
+         if (cacheClient.isCached(cacheId))
+            throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE, exception);
 
         UniversityCoursesResponse universityCourses = cacheClient.cachedCoursesByUniversity(cacheId);
         List<CourseResponse> coursesList = universityCourses.getCourses();
@@ -58,32 +54,32 @@ public class Validator {
     @CircuitBreaker(name = "validate-university-info", fallbackMethod = "cachedValidateUniversityInfo")
     public void validateUniversityInfo(String universityCode, Short term, String programCode) {
         if (!validUniversityCode(universityCode))
-            throw new UniversityInfoInvalidException("university code invalid");
+            throw new UniversityInfoInvalidException(MessageConstants.INVALID_UNIVERSITY_INFO_UNIVERSITY_CODE);
 
         try {
             Short programTerms = configClient.getProgramByIdOrCode(programCode).getTerms();
                 if (!validTerm(term, programTerms))
-                    throw new UniversityInfoInvalidException("term invalid");
+                    throw new UniversityInfoInvalidException(MessageConstants.INVALID_UNIVERSITY_INFO_TERM);
         } catch (Exception ex) {
-            throw new ProgramNotFoundException("program not found");
+            throw new ProgramNotFoundException(MessageConstants.PROGRAM_NOT_FOUND);
         }
 
     }
 
     public void cacheValidateUniversityInfo(String universityCode, Short term, String programCode, Throwable exception) {
 
-        var programCache = PROGRAM+programCode;
-        var universityCache = UNIVERSITY+universityCode;
+        var programCache = CacheConstants.PROGRAM+programCode;
+        var universityCache = CacheConstants.UNIVERSITY+universityCode;
 
-        if (cacheClient.isCached(programCache).equals(false) || cacheClient.isCached(universityCache).equals(false))
-            throw new CustomCallNotPermittedException(messageUtil.getServiceUnavailableMessage(), exception);
+        if (!cacheClient.isCached(programCache) || !cacheClient.isCached(universityCache))
+            throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE, exception);
   
         try {
             Short programTerms = cacheClient.cachedProgramByIdOrCode(programCache).getTerms();
                 if (!validTerm(term, programTerms))
-                    throw new UniversityInfoInvalidException("term invalid");
+                    throw new UniversityInfoInvalidException(MessageConstants.INVALID_UNIVERSITY_INFO_TERM);
         } catch (Exception ex) {
-            throw new ProgramNotFoundException("program not found");
+            throw new ProgramNotFoundException(MessageConstants.PROGRAM_NOT_FOUND);
         }
     }
 
@@ -95,11 +91,11 @@ public class Validator {
     }
 
     public boolean cachedValidUniversityCode(String universityCode, Throwable exception) {
-        var cacheId = UNIVERSITY+universityCode;
+        var cacheId = CacheConstants.UNIVERSITY+universityCode;
         var isCached = cacheClient.isCached(cacheId);
 
-        if (isCached.equals(false))
-            throw new CustomCallNotPermittedException(messageUtil.getServiceUnavailableMessage(), exception);
+        if (!isCached)
+            throw new CustomCallNotPermittedException(MessageConstants.SERVICE_UNAVAILABLE, exception);
 
         return isCached;
     }

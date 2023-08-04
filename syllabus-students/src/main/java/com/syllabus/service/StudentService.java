@@ -8,6 +8,7 @@ import com.syllabus.data.model.StudentModel;
 import com.syllabus.exception.CourseNotFoundException;
 import com.syllabus.exception.StudentNotFoundException;
 import com.syllabus.exception.UserUnauthorizedException;
+import com.syllabus.message.MessageConstants;
 import com.syllabus.repository.StudentRepository;
 import com.syllabus.util.UserValidation;
 import com.syllabus.util.Validator;
@@ -22,30 +23,27 @@ public class StudentService {
     private final UserValidation userValidation;
     private final Validator validator;
 
-    private final CacheService cacheService;
-
     public StudentModel createStudent(StudentModel student) {
 
         validator.validateUniversityInfo(student.getUniversityCode(), Short.valueOf(student.getTerm().toString()),
                 student.getProgramCode().toString());
 
         if (!validator.validCourses(student.getCourseCodes(), student.getUniversityCode()))
-            throw new CourseNotFoundException("course not found");
+            throw new CourseNotFoundException(MessageConstants.COURSE_NOT_FOUND);
 
         this.updateInstantStudent(student, Instant.now(), false);
         student.setUserId(userValidation.getUser().getUserId());
 
-        cacheService.flush();
         return studentRepository.save(student);
     }
 
     public StudentModel getStudent(String id) {
 
         var student = studentRepository.findByStudentIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new StudentNotFoundException("student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(MessageConstants.STUDENT_NOT_FOUND));
 
         if (!userValidation.isAuthorizedById(student.getUserId()))
-            throw new UserUnauthorizedException("user unauthorized");
+            throw new UserUnauthorizedException(MessageConstants.USER_UNAUTHORIZED);
 
         return student;
 
@@ -54,10 +52,10 @@ public class StudentService {
     public StudentModel getStudentByUserId(String userId) {
 
         if (!userValidation.isAuthorizedById(userId))
-            throw new UserUnauthorizedException("user unauthorized");
+            throw new UserUnauthorizedException(MessageConstants.USER_UNAUTHORIZED);
 
         return studentRepository.findByUserIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new StudentNotFoundException("student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(MessageConstants.STUDENT_NOT_FOUND));
 
     }
 

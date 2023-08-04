@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.syllabus.exception.CacheException;
+import com.syllabus.message.MessageConstants;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +37,7 @@ public class CacheRepository {
         var connectionFactory = redisTemplate.getConnectionFactory();
 
         if (connectionFactory == null) {
-            throw new CacheException("connection failed with cache");
+            throw new CacheException(MessageConstants.CACHE_EXCEPTION);
         }
 
         connectionFactory.getConnection().serverCommands().flushDb();

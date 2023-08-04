@@ -10,5 +10,5 @@ public interface SettingsCacheClient {
     public UniversityResponse cachedUniversityByIdOrCode(String universityCode);
     public ProgramResponse cachedProgramByIdOrCode(String programCode);
 
-    public Boolean isCached(String key);
+    public boolean isCached(String key);
 }

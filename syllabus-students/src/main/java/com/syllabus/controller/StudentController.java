@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.syllabus.cache.CacheService;
 import com.syllabus.data.StudentRequest;
 import com.syllabus.data.StudentResponse;
 import com.syllabus.service.StudentService;
@@ -26,9 +27,12 @@ public class StudentController {
     private final StudentService studentService;
     private final StudentMapper studentMapper;
 
+    private final CacheService cacheService;
+
     @PostMapping
     public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest request) {
         var student = this.studentService.createStudent(this.studentMapper.toStudentModel(request));
+        cacheService.flush();
         return new ResponseEntity<>(this.studentMapper.toStudentResponse(student), HttpStatus.CREATED);
     }
 

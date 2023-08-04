@@ -2,10 +2,10 @@ package com.syllabus.client.settings.cache;
 
 import org.springframework.stereotype.Component;
 
+import com.syllabus.cache.CacheService;
 import com.syllabus.client.settings.response.ProgramResponse;
 import com.syllabus.client.settings.response.UniversityCoursesResponse;
 import com.syllabus.client.settings.response.UniversityResponse;
-import com.syllabus.service.CacheService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,7 @@ public class SettingsCacheClientImpl implements SettingsCacheClient {
     }
 
     @Override
-    public Boolean isCached(String key) {
+    public boolean isCached(String key) {
         return cacheService.isCached(key);
     }
 
