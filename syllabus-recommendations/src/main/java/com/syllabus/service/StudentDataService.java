@@ -15,6 +15,7 @@ import com.syllabus.data.model.StudentDataModel;
 import com.syllabus.data.response.StudentDataResponse;
 import com.syllabus.exception.StudentDataNotFoundException;
 import com.syllabus.mapper.StudentDataMapper;
+import com.syllabus.message.MessageConstant;
 import com.syllabus.repository.StudentDataRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -51,21 +52,21 @@ public class StudentDataService {
 
     public StudentDataResponse getStudentDataById(String id) {
         var studentData = studentDataRepository.findByStudentDataIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+                .orElseThrow(() -> new StudentDataNotFoundException(MessageConstant.STUDENT_NOT_FOUND));
 
         return studentDataMapper.toResponse(studentData);
     }
 
     public StudentDataResponse getStudentDataByUserIdAndCoursesTaken(String id, Long coursesTaken) {
         var studentData = studentDataRepository.findByUserIdAndCoursesTakenAndDeletedAtIsNull(id, coursesTaken)
-                .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+                .orElseThrow(() -> new StudentDataNotFoundException(MessageConstant.STUDENT_NOT_FOUND));
 
         return studentDataMapper.toResponse(studentData);
     }
 
     public StudentDataResponse getRecentStudentDataByUserId(String id) {
         var studentData = studentDataRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(id)
-                .orElseThrow(() -> new StudentDataNotFoundException("student data not found"));
+                .orElseThrow(() -> new StudentDataNotFoundException(MessageConstant.STUDENT_NOT_FOUND));
 
         return studentDataMapper.toResponse(studentData);
     }
