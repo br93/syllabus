@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import com.syllabus.client.ClientService;
 import com.syllabus.client.settings.response.ClassResponse;
 import com.syllabus.client.settings.response.ClassScheduleResponse;
 import com.syllabus.data.model.RecommendationModel;

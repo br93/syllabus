@@ -1,4 +1,4 @@
-package com.syllabus.repository;
+package com.syllabus.cache;
 
 import java.util.concurrent.TimeUnit;
 

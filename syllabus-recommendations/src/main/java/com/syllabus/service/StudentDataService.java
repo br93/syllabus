@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.syllabus.client.ClientService;
 import com.syllabus.client.core.CoreResponse;
 import com.syllabus.client.settings.response.PreRequisiteResponse;
 import com.syllabus.data.model.StudentDataModel;

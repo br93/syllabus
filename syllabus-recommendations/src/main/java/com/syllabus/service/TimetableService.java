@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.syllabus.client.ClientService;
 import com.syllabus.data.model.RecommendationModel;
 import com.syllabus.data.response.RecommendationTimetable;
 import com.syllabus.exception.RecommendationNotFoundException;
