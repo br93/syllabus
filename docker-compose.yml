@@ -1,0 +1,40 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: syllabus-mysql
+    restart: always
+    ports: [33060:3306]
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_USER: br93
+      MYSQL_PASSWORD: root4567
+      MYSQL_ROOT_PASSWORD: root4567
+      MYSQL_DATABASE: config_db
+    healthcheck:
+      test: ["CMD-SHELL", 'mysqladmin ping']
+      interval: 10s
+      timeout: 2s
+      retries: 10
+    networks:
+      - syllabus-network
+  settings-go:
+    build: ./syllabus-settings-go
+    container_name: syllabus-settings-go
+    ports:
+      - "9010:9010"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: exit 0
+    networks:
+      - syllabus-network
+networks:
+  syllabus-network:
+    driver:
+      bridge
+
+volumes:
+  mysql-data:

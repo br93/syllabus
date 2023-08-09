@@ -1,0 +1,10 @@
+#BUILD
+FROM golang:1.21.0-alpine3.18 AS build
+WORKDIR /app
+
+COPY . ./
+COPY .env ./
+RUN go mod download
+
+RUN go build -o settings-go .
+CMD ["./settings-go"]
