@@ -1,4 +1,4 @@
-package com.syllabus.producer;
+package com.syllabus.kafka.producer;
 
 import java.util.HashMap;
 import java.util.Map;

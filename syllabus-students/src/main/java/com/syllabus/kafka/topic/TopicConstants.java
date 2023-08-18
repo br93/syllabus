@@ -1,4 +1,4 @@
-package com.syllabus.topic;
+package com.syllabus.kafka.topic;
 
 public class TopicConstants {
 

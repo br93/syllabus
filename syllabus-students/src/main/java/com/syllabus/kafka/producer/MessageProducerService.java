@@ -1,4 +1,4 @@
-package com.syllabus.producer;
+package com.syllabus.kafka.producer;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -7,7 +7,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Service;
 
 import com.syllabus.data.StudentResponse;
-import com.syllabus.topic.TopicConstants;
+import com.syllabus.kafka.topic.TopicConstants;
 
 import lombok.RequiredArgsConstructor;
 

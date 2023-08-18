@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syllabus.data.StudentResponse;
-import com.syllabus.producer.MessageProducerService;
+import com.syllabus.kafka.producer.MessageProducerService;
 import com.syllabus.service.StudentService;
 import com.syllabus.util.StudentMapper;
 
