@@ -10,14 +10,15 @@ import com.syllabus.data.StudentResponse;
 @Service
 public class MessageTrackerService {
 
-     private final Map<String, StudentResponse> producedMessages = new HashMap<>();
+    private Map<String, StudentResponse> producedMessages = new HashMap<>();
 
-    public boolean isMessageProduced(String id) {
-        return producedMessages.containsKey(id);
+    public boolean isMessageProduced(String id, int count) {
+        return producedMessages.containsKey(id + count);
     }
 
     public void markMessageAsProduced(StudentResponse message) {
-        producedMessages.put(message.getStudentId(), message);
+        String id = message.getStudentId() + (message.getCourseCodes().size());
+        producedMessages.put(id, message);
     }
     
 }

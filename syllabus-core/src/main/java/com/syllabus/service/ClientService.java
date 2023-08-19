@@ -4,8 +4,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.syllabus.client.settings.SettingsClient;
-import com.syllabus.client.students.StudentsClient;
+import com.syllabus.client.SettingsClient;
+import com.syllabus.client.StudentsClient;
 import com.syllabus.repository.CacheRepository;
 
 import lombok.RequiredArgsConstructor;

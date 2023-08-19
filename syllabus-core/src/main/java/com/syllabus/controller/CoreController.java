@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.syllabus.client.settings.CourseProgramResponse;
-import com.syllabus.data.CoreResponseModel;
+import com.syllabus.data.CoreResponse;
+import com.syllabus.data.CourseProgramResponse;
 import com.syllabus.service.CoreService;
 import com.syllabus.util.CoreMapper;
 
@@ -27,7 +27,7 @@ public class CoreController {
     private final CoreMapper coreMapper;
 
     @GetMapping("students/{id}/courses-taken")
-    public ResponseEntity<Page<CoreResponseModel>> getCoursesTaken(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
+    public ResponseEntity<Page<CoreResponse>> getCoursesTaken(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
         
         var coursePrograms = coreService.getCoursesTaken(userId);
         Page<CourseProgramResponse> pageCoursePrograms = new PageImpl<>(coursePrograms, pageable, coursePrograms.size());
@@ -37,7 +37,7 @@ public class CoreController {
     }
 
     @GetMapping("students/{id}/required-courses")
-    public ResponseEntity<Page<CoreResponseModel>> getAllRequiredCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
+    public ResponseEntity<Page<CoreResponse>> getAllRequiredCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
         
         var coursePrograms = coreService.getAllRequiredCourses(userId);
         Page<CourseProgramResponse> pageCoursePrograms = new PageImpl<>(coursePrograms, pageable, coursePrograms.size());
@@ -46,7 +46,7 @@ public class CoreController {
     }
 
     @GetMapping("students/{id}/required-courses/missing")
-    public ResponseEntity<Page<CoreResponseModel>> getMissingRequiredCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
+    public ResponseEntity<Page<CoreResponse>> getMissingRequiredCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
         
         var coursePrograms = coreService.getMissingRequiredCourses(userId);
         Page<CourseProgramResponse> pageCoursePrograms = new PageImpl<>(coursePrograms, pageable, coursePrograms.size());
@@ -55,7 +55,7 @@ public class CoreController {
     }
 
     @GetMapping("students/{id}/elective-courses")
-    public ResponseEntity<Page<CoreResponseModel>> getAllElectiveCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
+    public ResponseEntity<Page<CoreResponse>> getAllElectiveCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
         
         var coursePrograms = coreService.getAllElectiveCourses(userId);
         Page<CourseProgramResponse> pageCoursePrograms = new PageImpl<>(coursePrograms, pageable, coursePrograms.size());
@@ -64,7 +64,7 @@ public class CoreController {
     }
 
     @GetMapping("students/{id}/elective-courses/missing")
-    public ResponseEntity<Page<CoreResponseModel>> getMissingElectiveCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
+    public ResponseEntity<Page<CoreResponse>> getMissingElectiveCourses(@PageableDefault Pageable pageable, @PathVariable(name = "id") String userId) {
         
         var coursePrograms = coreService.getMissingElectiveCourses(userId);
         Page<CourseProgramResponse> pageCoursePrograms = new PageImpl<>(coursePrograms, pageable, coursePrograms.size());

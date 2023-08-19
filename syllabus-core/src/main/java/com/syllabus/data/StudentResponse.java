@@ -1,4 +1,4 @@
-package com.syllabus.client.students;
+package com.syllabus.data;
 
 import java.io.Serializable;
 import java.util.HashSet;

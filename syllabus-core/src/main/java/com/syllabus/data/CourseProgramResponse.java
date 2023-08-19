@@ -1,5 +1,8 @@
 package com.syllabus.data;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CoreResponseModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CourseProgramResponse implements Serializable{
+
+    @JsonProperty("course_program_id")
+    private String courseProgramId;
 
     @JsonProperty("course_code")
     private String courseCode;

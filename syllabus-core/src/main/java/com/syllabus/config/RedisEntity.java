@@ -3,7 +3,7 @@ package com.syllabus.config;
 import java.io.Serializable;
 import java.util.List;
 
-import com.syllabus.client.settings.CourseProgramResponse;
+import com.syllabus.data.CourseProgramResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

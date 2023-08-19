@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.syllabus.client.settings.CourseProgramResponse;
-import com.syllabus.client.students.StudentResponse;
+import com.syllabus.data.StudentResponse;
+import com.syllabus.data.CourseProgramResponse;
 
 public class Unmarshal {
 

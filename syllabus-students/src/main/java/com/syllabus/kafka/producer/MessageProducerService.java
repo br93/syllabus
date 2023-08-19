@@ -7,7 +7,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Service;
 
 import com.syllabus.data.StudentResponse;
-import com.syllabus.kafka.topic.TopicConstants;
+import com.syllabus.kafka.KafkaConstants;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class MessageProducerService {
     private final MessageTrackerService messageTrackerService;
 
     public void produceMessageIfNotProduced(String id, StudentResponse data) {
-        if (!messageTrackerService.isMessageProduced(id)) {
+        if (!messageTrackerService.isMessageProduced(id, data.getCourseCodes().size())) {
             Message<StudentResponse> message = this.messageBuilder(data);
             kafkaTemplate.send(message);
             
@@ -29,7 +29,7 @@ public class MessageProducerService {
     }
 
     private Message<StudentResponse> messageBuilder(StudentResponse data){
-        return MessageBuilder.withPayload(data).setHeader(KafkaHeaders.TOPIC, TopicConstants.TOPIC_NAME).build();
+        return MessageBuilder.withPayload(data).setHeader(KafkaHeaders.TOPIC, KafkaConstants.TOPIC_NAME).build();
     }
 
 

@@ -5,8 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.syllabus.client.settings.CourseProgramResponse;
+import com.syllabus.data.StudentResponse;
+import com.syllabus.data.CourseProgramResponse;
 import com.syllabus.exception.CustomCallNotPermittedException;
+import com.syllabus.kafka.KafkaConsumer;
 import com.syllabus.repository.CacheRepository;
 import com.syllabus.util.ConstantUtil;
 import com.syllabus.util.Unmarshal;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class CoreService {
 
     private final ClientService clientService;
+    private final KafkaConsumer kafkaConsumer;
 
     private final ConstantUtil constantUtil;
     private final CacheRepository cacheUtil;
@@ -27,8 +30,7 @@ public class CoreService {
     @CircuitBreaker(name = "courses-taken", fallbackMethod = "cachedCoursesTaken")
     public List<CourseProgramResponse> getCoursesTaken(String userId) {
 
-        var studentObject = clientService.getStudentByUserId(userId);
-        var student = Unmarshal.toStudentResponse(studentObject);
+        var student = this.getStudentInfo(userId);
 
         var coursePrograms = clientService.getCourseProgramsByCourseCodeIn(student.getCourseCodes());
 
@@ -51,8 +53,7 @@ public class CoreService {
     @CircuitBreaker(name = "required-courses", fallbackMethod = "cachedRequiredCourses")
     public List<CourseProgramResponse> getAllRequiredCourses(String userId) {
 
-        var studentObject = clientService.getStudentByUserId(userId);
-        var student = Unmarshal.toStudentResponse(studentObject);
+        var student = this.getStudentInfo(userId);
 
         var program = student.getProgramCode().toString();
         var requiredCourses = clientService.getCourseProgramsByProgramAndCourseType(program,
@@ -111,8 +112,7 @@ public class CoreService {
     @CircuitBreaker(name = "elective-courses", fallbackMethod = "cachedElectiveCourses")
     public List<CourseProgramResponse> getAllElectiveCourses(String userId) {
 
-        var studentObject = clientService.getStudentByUserId(userId);
-        var student = Unmarshal.toStudentResponse(studentObject);
+        var student = this.getStudentInfo(userId);
 
         var program = student.getProgramCode().toString();
         var electiveCourses = clientService.getCourseProgramsByProgramAndNotCourseType(program,
@@ -167,6 +167,18 @@ public class CoreService {
     private List<CourseProgramResponse> getAllSecondLayerCourses(String program) {
         var response = clientService.getCourseProgramsByProgramAndCourseType(program, constantUtil.constantSecondLayer());
         return Unmarshal.toList(response);
+    }
+
+    private StudentResponse getStudentInfo(String userId){
+        var studentMessage = kafkaConsumer.getMessage();
+
+        if(studentMessage != null){
+            System.out.println("Message");
+            return studentMessage;
+        }
+
+        var studentObject = clientService.getStudentByUserId(userId);
+        return Unmarshal.toStudentResponse(studentObject);
     }
 
 }
