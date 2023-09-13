@@ -61,6 +61,29 @@ services:
       test: exit 0
     networks:
       - syllabus-network
+  discovery-service:
+    build: ./syllabus-discovery-service
+    container_name: syllabus-discovery-service
+    ports:
+      - "8761:8761"
+    environment:
+      eureka-host: syllabus-discovery-service
+      eureka.server.user: admin
+      eureka.server.password: eureka1234
+    healthcheck:
+      test: exit 0
+    networks:
+      - syllabus-network
+  auth-sidecar:
+    build: ./syllabus-auth
+    container_name: syllabus-auth-sidecar
+    depends_on:
+      auth-go:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - syllabus-network
 networks:
   syllabus-network:
     driver:
