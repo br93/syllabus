@@ -62,7 +62,9 @@ services:
     networks:
       - syllabus-network
   discovery-service:
-    build: ./syllabus-discovery-service
+    build:
+      context: .
+      dockerfile: discovery-service.Dockerfile
     container_name: syllabus-discovery-service
     ports:
       - "8761:8761"
