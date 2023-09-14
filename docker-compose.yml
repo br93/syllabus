@@ -68,10 +68,10 @@ services:
     container_name: syllabus-discovery-service
     ports:
       - "8761:8761"
-    environment:
-      eureka-host: syllabus-discovery-service
-      eureka.server.user: admin
-      eureka.server.password: eureka1234
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
     healthcheck:
       test: exit 0
     networks:
@@ -86,6 +86,11 @@ services:
         condition: service_healthy
     networks:
       - syllabus-network
+
+secrets:
+  eureka_server_secret:
+    file: ./syllabus-secrets/eureka_server_secret.enc
+
 networks:
   syllabus-network:
     driver:
