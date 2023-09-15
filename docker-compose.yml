@@ -1,5 +1,6 @@
 version: '3'
 services:
+  
   mysql:
     image: mysql:latest
     container_name: syllabus-mysql
@@ -19,6 +20,7 @@ services:
       retries: 10
     networks:
       - syllabus-network
+  
   postgresql:
     image: postgres:latest
     container_name: syllabus-postgresql
@@ -37,6 +39,7 @@ services:
       retries: 5
     networks:
       - syllabus-network
+  
   redis:
     image: redis
     container_name: syllabus-redis
@@ -47,6 +50,7 @@ services:
       - redis-data:/data
     networks:
       - syllabus-network
+  
   mongodb:
     image: mongo
     container_name: syllabus-mongodb
@@ -70,20 +74,7 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongodb
     networks:
       - syllabus-network
-  settings-go:
-    build:
-      context: .
-      dockerfile: syllabus-settings-go.Dockerfile
-    container_name: syllabus-settings-go
-    ports:
-      - "9010:9010"
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    healthcheck:
-      test: exit 0
-    networks:
-      - syllabus-network
+ 
   auth-go:
     build:
       context: .
@@ -94,21 +85,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    healthcheck:
-      test: exit 0
-    networks:
-      - syllabus-network
-  discovery-service:
-    build:
-      context: .
-      dockerfile: syllabus-discovery-service.Dockerfile
-    container_name: syllabus-discovery-service
-    ports:
-      - "8761:8761"
-    env_file:
-      - ./docker.env
-    secrets:
-      - eureka_server_secret
     healthcheck:
       test: exit 0
     networks:
@@ -129,6 +105,21 @@ services:
         condition: service_healthy
     networks:
       - syllabus-network
+  
+  settings-go:
+    build:
+      context: .
+      dockerfile: syllabus-settings-go.Dockerfile
+    container_name: syllabus-settings-go
+    ports:
+      - "9010:9010"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    healthcheck:
+      test: exit 0
+    networks:
+      - syllabus-network
   settings-sidecar:
     build:
       context: .
@@ -145,6 +136,40 @@ services:
         condition: service_healthy
     networks:
       - syllabus-network
+  
+  discovery-service:
+    build:
+      context: .
+      dockerfile: syllabus-discovery-service.Dockerfile
+    container_name: syllabus-discovery-service
+    ports:
+      - "8761:8761"
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
+    healthcheck:
+      test: exit 0
+    networks:
+      - syllabus-network
+  
+  api-gateway:
+    build:
+      context: .
+      dockerfile: syllabus-api-gateway.Dockerfile
+    container_name: syllabus-api-gateway
+    ports:
+      - "8765:8765"
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - syllabus-network
+ 
   settings-batch:
     build:
       context: .
