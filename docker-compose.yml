@@ -112,10 +112,29 @@ services:
         condition: service_healthy
     networks:
       - syllabus-network
+  settings-batch:
+    build:
+      context: .
+      dockerfile: syllabus-settings-batch.Dockerfile
+    container_name: syllabus-settings-batch
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
+      - mysql_secret
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - syllabus-network
 
 secrets:
   eureka_server_secret:
     file: ./syllabus-secrets/eureka_server_secret.enc
+  mysql_secret:
+    file: ./syllabus-secrets/mysql_secret.enc
 
 networks:
   syllabus-network:
