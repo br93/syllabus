@@ -47,6 +47,29 @@ services:
       - redis-data:/data
     networks:
       - syllabus-network
+  mongodb:
+    image: mongo
+    container_name: syllabus-mongodb
+    restart: always
+    ports: [27018:27017]
+    volumes:
+      - mongo-data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: br93
+      MONGO_INITDB_ROOT_PASSWORD: root7890
+    networks:
+      - syllabus-network
+  mongo-express:
+    image: mongo-express
+    container_name: syllabus-mongo-express
+    restart: always
+    ports: [8081:8081]
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: br93
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root7890
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    networks:
+      - syllabus-network
   settings-go:
     build:
       context: .
@@ -155,3 +178,4 @@ volumes:
   mysql-data:
   postgres-data:
   redis-data:
+  mongo-data:
