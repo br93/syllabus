@@ -103,6 +103,8 @@ services:
         condition: service_healthy
       discovery-service:
         condition: service_healthy
+    healthcheck:
+      test: exit 0
     networks:
       - syllabus-network
   
@@ -164,8 +166,28 @@ services:
       - ./docker.env
     secrets:
       - eureka_server_secret
+    healthcheck:
+      test: exit 0
     depends_on:
       discovery-service:
+        condition: service_healthy
+    networks:
+      - syllabus-network
+
+  account-management:
+    build:
+      context: .
+      dockerfile: syllabus-account-management.Dockerfile
+    container_name: syllabus-account-management
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
+      - postgres_secret
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+      auth-sidecar:
         condition: service_healthy
     networks:
       - syllabus-network
@@ -183,7 +205,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      discovery-service:
+      api-gateway:
+        condition: service_healthy
+      auth-sidecar:
         condition: service_healthy
     networks:
       - syllabus-network
@@ -193,6 +217,8 @@ secrets:
     file: ./syllabus-secrets/eureka_server_secret.enc
   mysql_secret:
     file: ./syllabus-secrets/mysql_secret.enc
+  postgres_secret:
+    file: ./syllabus-secrets/postgres_secret.enc
 
 networks:
   syllabus-network:
