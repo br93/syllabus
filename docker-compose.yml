@@ -38,7 +38,9 @@ services:
     networks:
       - syllabus-network
   settings-go:
-    build: ./syllabus-settings-go
+    build:
+      context: .
+      dockerfile: syllabus-settings-go.Dockerfile
     container_name: syllabus-settings-go
     ports:
       - "9010:9010"
@@ -50,7 +52,9 @@ services:
     networks:
       - syllabus-network
   auth-go:
-    build: ./syllabus-auth-go
+    build:
+      context: .
+      dockerfile: syllabus-auth-go.Dockerfile
     container_name: syllabus-auth-go
     ports:
       - "8000:8000"
