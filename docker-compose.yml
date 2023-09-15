@@ -77,8 +77,14 @@ services:
     networks:
       - syllabus-network
   auth-sidecar:
-    build: ./syllabus-auth
+    build:
+      context: .
+      dockerfile: auth-sidecar.Dockerfile
     container_name: syllabus-auth-sidecar
+    env_file:
+      - ./docker.env
+    secrets:
+      - eureka_server_secret
     depends_on:
       auth-go:
         condition: service_healthy
