@@ -3,7 +3,7 @@ COPY pom.xml /tmp/
 COPY syllabus-account-management/pom.xml /tmp/app/
 COPY syllabus-account-management/src /tmp/app/src
 
-COPY syllabus-secrets/eureka_server_postgres_secret_config.sh /tmp/app/
+COPY syllabus-docker/secrets/eureka_server_postgres_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app/
 

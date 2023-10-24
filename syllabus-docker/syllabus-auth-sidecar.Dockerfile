@@ -2,7 +2,7 @@ FROM maven:3.9.4-amazoncorretto-11-al2023 AS maven_build
 COPY syllabus-auth/pom.xml /tmp/app/
 COPY syllabus-auth/src /tmp/app/src
 
-COPY syllabus-secrets/eureka_server_secret_config.sh /tmp/app/
+COPY syllabus-docker/secrets/eureka_server_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app
 

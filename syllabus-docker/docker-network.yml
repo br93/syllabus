@@ -1,0 +1,7 @@
+version: '3'
+
+networks:
+  syllabus-network:
+    name: syllabus-network
+    driver:
+      bridge

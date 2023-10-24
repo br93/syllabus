@@ -1,0 +1,90 @@
+version: '3'
+services:
+  
+  mysql:
+    image: mysql:latest
+    container_name: syllabus-mysql
+    restart: always
+    ports: [33060:3306]
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_USER: br93
+      MYSQL_PASSWORD: root4567
+      MYSQL_ROOT_PASSWORD: root4567
+      MYSQL_DATABASE: config_db
+    healthcheck:
+      test: ["CMD-SHELL", 'mysqladmin ping']
+      interval: 10s
+      timeout: 2s
+      retries: 10
+    networks:
+      - syllabus-network
+  
+  postgresql:
+    image: postgres:latest
+    container_name: syllabus-postgresql
+    restart: always
+    ports: [54320:5432] 
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: br93
+      POSTGRES_PASSWORD: root1234
+      POSTGRES_DB: auth_db
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - syllabus-network
+  
+  redis:
+    image: redis
+    container_name: syllabus-redis
+    restart: always
+    ports: [63790:6379]
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+    volumes:
+      - redis-data:/data
+    networks:
+      - syllabus-network
+  
+  mongodb:
+    image: mongo
+    container_name: syllabus-mongodb
+    restart: always
+    ports: [27018:27017]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+    volumes:
+      - mongo-data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: br93
+      MONGO_INITDB_ROOT_PASSWORD: root7890
+    networks:
+      - syllabus-network
+  mongo-express:
+    image: mongo-express
+    container_name: syllabus-mongo-express
+    restart: always
+    ports: [8081:8081]
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: br93
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root7890
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    networks:
+      - syllabus-network
+
+volumes:
+  mysql-data: 
+    name: syllabus-mysql-data
+  postgres-data:
+    name: syllabus-postgres-data
+  redis-data:
+    name: syllabus-redis-data
+  mongo-data:
+    name: syllabus-mongo-data

@@ -3,11 +3,11 @@ COPY pom.xml /tmp/
 COPY syllabus-students/pom.xml /tmp/app/
 COPY syllabus-students/src /tmp/app/src
 
-COPY syllabus-secrets/eureka_server_secret_config.sh /tmp/app/
+COPY syllabus-docker/secrets/eureka_server_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app/
 
-RUN mvn clean package
+RUN mvn clean package -Dmongo.port=27018
 
 FROM amazoncorretto:17.0.8-alpine3.17
 COPY --from=maven_build /tmp/app/target/syllabus-students-0.0.1-SNAPSHOT.jar /data/students.jar

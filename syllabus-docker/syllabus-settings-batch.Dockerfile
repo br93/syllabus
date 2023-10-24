@@ -3,7 +3,7 @@ COPY pom.xml /tmp/
 COPY syllabus-settings-batch/pom.xml /tmp/app/
 COPY syllabus-settings-batch/src /tmp/app/src
 
-COPY syllabus-secrets/eureka_server_mysql_secret_config.sh /tmp/app/
+COPY syllabus-docker/secrets/eureka_server_mysql_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app/
 

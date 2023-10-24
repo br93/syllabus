@@ -2,13 +2,17 @@ version: '3'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    container_name: syllabus-zookeper
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - syllabus-network
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: syllabus-kafka
     ports:
       - "9092:9092"
     environment:
@@ -21,3 +25,5 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_RETENTION_MS: 604800000 # 7 days
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - syllabus-network
