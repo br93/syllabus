@@ -8,7 +8,7 @@ WORKDIR /tmp/app
 
 RUN mvn package
 
-FROM amazoncorretto:11.0.20-alpine3.18
+FROM eclipse-temurin:11-jre-alpine
 COPY --from=maven_build /tmp/app/target/syllabus-auth-0.0.1-SNAPSHOT.jar /data/auth.jar
 
 RUN apk upgrade --update-cache --available && \

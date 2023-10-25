@@ -1,4 +1,5 @@
 FROM maven:3.9.4-amazoncorretto-17-al2023 AS maven_build
+
 COPY pom.xml /tmp/
 COPY syllabus-students/pom.xml /tmp/app/
 COPY syllabus-students/src /tmp/app/src
@@ -6,13 +7,9 @@ COPY syllabus-students/src /tmp/app/src
 COPY syllabus-docker/secrets/eureka_server_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app/
+RUN mvn clean package
 
-ARG host
-ENV mongo_host $host
-RUN echo ${mongo_host}
-RUN mvn clean package -Dspring.data.mongodb.host=${mongo_host}
-
-FROM amazoncorretto:17.0.8-alpine3.17
+FROM eclipse-temurin:17-jre-alpine
 COPY --from=maven_build /tmp/app/target/syllabus-students-0.0.1-SNAPSHOT.jar /data/students.jar
 
 RUN apk upgrade --update-cache --available && \

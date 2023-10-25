@@ -9,7 +9,7 @@ WORKDIR /tmp/app/
 
 RUN mvn package
 
-FROM amazoncorretto:17.0.8-alpine3.17
+FROM eclipse-temurin:17-jre-alpine
 COPY --from=maven_build /tmp/app/target/syllabus-account-management-0.0.1-SNAPSHOT.jar /data/account.jar
 
 RUN apk upgrade --update-cache --available && \

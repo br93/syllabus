@@ -9,7 +9,7 @@ WORKDIR /tmp/app/
 
 RUN mvn package
 
-FROM amazoncorretto:17-alpine3.16-jdk
+FROM eclipse-temurin:17-jre-alpine
 COPY --from=maven_build /tmp/app/target/syllabus-api-gateway-0.0.1-SNAPSHOT.jar /data/gateway.jar
 
 RUN apk upgrade --update-cache --available && \
