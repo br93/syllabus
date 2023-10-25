@@ -27,3 +27,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
       - syllabus-network
+
+networks:
+  syllabus-network:
+    external: true

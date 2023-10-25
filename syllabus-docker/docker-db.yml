@@ -88,3 +88,7 @@ volumes:
     name: syllabus-redis-data
   mongo-data:
     name: syllabus-mongo-data
+
+networks:
+  syllabus-network:
+    external: true
