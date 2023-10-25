@@ -21,13 +21,13 @@ services:
       - ./docker.env
     secrets:
       - eureka_server_secret
+    healthcheck:
+      test: exit 0    
     depends_on:
       auth-go:
         condition: service_healthy
       discovery-service:
         condition: service_healthy
-    healthcheck:
-      test: exit 0
     networks:
       - syllabus-network
   
@@ -51,6 +51,8 @@ services:
       - ./docker.env
     secrets:
       - eureka_server_secret
+    healthcheck:
+      test: exit 0
     depends_on:
       settings-go:
         condition: service_healthy
@@ -104,6 +106,8 @@ services:
     secrets:
       - eureka_server_secret
       - postgres_secret
+    healthcheck:
+      test: exit 0
     depends_on:
       auth-sidecar:
         condition: service_healthy
@@ -120,6 +124,8 @@ services:
     secrets:
       - eureka_server_secret
       - mysql_secret
+    healthcheck:
+      test: exit 0
     depends_on:
       auth-sidecar:
         condition: service_healthy
@@ -135,6 +141,8 @@ services:
       - ./docker.env
     secrets:
       - eureka_server_secret
+    healthcheck:
+      test: exit 0
     depends_on:
       auth-sidecar:
         condition: service_healthy
