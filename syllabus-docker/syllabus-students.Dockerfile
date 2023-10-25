@@ -7,7 +7,10 @@ COPY syllabus-docker/secrets/eureka_server_secret_config.sh /tmp/app/
 
 WORKDIR /tmp/app/
 
-RUN mvn clean package -Dmongo.port=27018
+ARG host
+ENV mongo_host $host
+RUN echo ${mongo_host}
+RUN mvn clean package -Dspring.data.mongodb.host=${mongo_host}
 
 FROM amazoncorretto:17.0.8-alpine3.17
 COPY --from=maven_build /tmp/app/target/syllabus-students-0.0.1-SNAPSHOT.jar /data/students.jar
