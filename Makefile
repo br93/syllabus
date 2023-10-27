@@ -32,17 +32,20 @@ up_services:
 	$(SERVICE_COMPOSE) up -d
 	@echo "Done"
 
-up_build: down build_network up_database up_kafka build_go pack_java 
+up_build: down_service build_network up_database up_kafka build_go pack_java 
 	@echo "Building and starting service compose..."
 	$(SERVICE_COMPOSE) up --build -d
-	@echo "Cleaning untag images..."
-	docker rmi `docker images | grep "<none>" | awk {'print $3'}`
 	@echo "Done"
 
 down:
 	@echo "Stopping compose..."
 	$(DATABASE_COMPOSE) down
 	$(KAFKA_COMPOSE) down
+	$(SERVICE_COMPOSE) down
+	@echo "Done"
+
+down_service:
+	@echo "Stopping service compose..."
 	$(SERVICE_COMPOSE) down
 	@echo "Done"
 
