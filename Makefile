@@ -34,13 +34,18 @@ build_network:
 	docker network create -d bridge syllabus-network || true
 	@echo "Done" 
 
+build_clean:
+	@echo "Cleaning untag images..."
+	docker rmi `docker images | grep "<none>" | awk {'print $3'}`
+	@echo "Done"
+
 build_go: build_auth build_settings
 
 pack_java: pack_discovery_service pack_api_gateway pack_sidecar_auth pack_sidecar_settings pack_acc_management pack_settings_batch pack_students pack_core pack_recommendations
 
 build_auth:
 	@echo "Building authentication service..."
-	cd $(SERVICES_FOLDER)/syllabus-auth-go && env $(ENV_GO) $(BUILD_GO)-auth .
+	cd $(SERVICES_FOLDER)/syllabus-auth-go && cp .env-docker .env && env $(ENV_GO) $(BUILD_GO)-auth .
 	@echo "Done"
 
 build_settings:
@@ -63,6 +68,10 @@ pack_sidecar_settings:
 	cd ${SERVICES_FOLDER}/syllabus-settings && ${MVND_PACKAGE} && ${MV_JAR}-settings-sidecar.jar
 	@echo "Done"
 
+pack_sidecar_auth:
+	@echo "Packaging auth sidecar service..."
+	cd ${SERVICES_FOLDER}/syllabus-auth && ${MVND_PACKAGE} && ${MV_JAR}-auth-sidecar.jar
+	@echo "Done"
 pack_acc_management:
 	@echo "Packaging account management service..."
 	cd ${SERVICES_FOLDER}/syllabus-account-management && ${MVND_PACKAGE} && ${MV_JAR}-account-management.jar
