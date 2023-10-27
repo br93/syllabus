@@ -163,10 +163,6 @@ services:
     healthcheck:
       test: exit 0
     depends_on:
-      auth-sidecar:
-        condition: service_healthy
-      settings-sidecar:
-        condition: service_healthy
       students:
         condition: service_healthy
     networks:
@@ -184,12 +180,6 @@ services:
     healthcheck:
       test: exit 0
     depends_on:
-      auth-sidecar:
-        condition: service_healthy
-      settings-sidecar:
-        condition: service_healthy
-      students:
-        condition: service_healthy
       core:
         condition: service_healthy
     networks:
