@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"os"
 	"time"
 
 	"github.com/br93/syllabus/syllabus-auth-go/initializers"
@@ -67,7 +66,7 @@ func GenerateToken(id uint) (string, error) {
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	tokenString, err := token.SignedString([]byte("1zR0z5FjTsLCdewChg1CVrfBBm2xp6qk"))
 
 	return tokenString, err
 }

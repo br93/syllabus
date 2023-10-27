@@ -1,8 +1,6 @@
 package initializers
 
 import (
-	"os"
-
 	"github.com/br93/syllabus/syllabus-auth-go/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,7 +10,7 @@ var DB *gorm.DB
 
 func DBConnection() {
 
-	dsn := os.Getenv("DB")
+	dsn := "host=syllabus-postgresql user=br93 password=root1234 dbname=auth_db port=5432 sslmode=disable"
 	connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
