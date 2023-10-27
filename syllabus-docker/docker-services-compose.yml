@@ -3,7 +3,7 @@ services:
   
   auth-go:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-auth-go.Dockerfile
     container_name: syllabus-auth-go
     ports:
@@ -14,7 +14,7 @@ services:
       - syllabus-network
   auth-sidecar:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-auth-sidecar.Dockerfile
     container_name: syllabus-auth-sidecar
     env_file:
@@ -33,7 +33,7 @@ services:
   
   settings-go:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-settings-go.Dockerfile
     container_name: syllabus-settings-go
     ports:
@@ -44,7 +44,7 @@ services:
       - syllabus-network
   settings-sidecar:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-settings-sidecar.Dockerfile
     container_name: syllabus-settings-sidecar
     env_file:
@@ -63,7 +63,7 @@ services:
   
   discovery-service:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-discovery-service.Dockerfile
     container_name: syllabus-discovery-service
     ports:
@@ -79,7 +79,7 @@ services:
   
   api-gateway:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-api-gateway.Dockerfile
     container_name: syllabus-api-gateway
     ports:
@@ -98,7 +98,7 @@ services:
 
   account-management:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-account-management.Dockerfile
     container_name: syllabus-account-management
     env_file:
@@ -116,7 +116,7 @@ services:
  
   settings-batch:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-settings-batch.Dockerfile
     container_name: syllabus-settings-batch
     env_file:
@@ -134,7 +134,7 @@ services:
 
   students:
     build:
-      context: ..
+      context: ./../syllabus-services
       dockerfile: ./syllabus-docker/syllabus-students.Dockerfile
     container_name: syllabus-students
     env_file:
