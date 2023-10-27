@@ -11,22 +11,39 @@ ENV_GO = GOOS=linux CGO_ENABLED=0
 BUILD_GO = go build -o $(APP_FOLDER)/$(APP)
 
 DOCKER_COMPOSE = docker-compose -f ./syllabus-docker
-DATABASE_UP = $(DOCKER_COMPOSE)/docker-db-compose.yml up
-KAFKA_UP = $(DOCKER_COMPOSE)/docker-kafka-compose.yml up
-SERVICE_UP = $(DOCKER_COMPOSE)/docker-services-compose.yml up
+DATABASE_COMPOSE = $(DOCKER_COMPOSE)/docker-db-compose.yml
+KAFKA_COMPOSE = $(DOCKER_COMPOSE)/docker-kafka-compose.yml
+SERVICE_COMPOSE = $(DOCKER_COMPOSE)/docker-services-compose.yml
 
-up: build_network
+up: build_network up_database up_kafka up_services
+
+up_database:
 	@echo "Starting database compose..."
-	$(DATABASE_UP) -d
-	@echo "Starting kafka compose..."
-	$(KAFKA_UP) -d
-	@echo "Starting service compose..."
-	$(SERVICE_UP) -d
+	$(DATABASE_COMPOSE) up -d
 	@echo "Done"
 
-up_build: down build_go pack_java
-	@echo "Building and starting..."
-	$(SERVICE_UP) --build -d
+up_kafka:
+	@echo "Starting kafka compose..."
+	$(KAFKA_COMPOSE) up -d
+	@echo "Done"
+
+up_services:
+	@echo "Starting service compose..."
+	$(SERVICE_COMPOSE) up -d
+	@echo "Done"
+
+up_build: down build_network up_database up_kafka build_go pack_java 
+	@echo "Building and starting service compose..."
+	$(SERVICE_COMPOSE) up --build -d
+	@echo "Cleaning untag images..."
+	docker rmi `docker images | grep "<none>" | awk {'print $3'}`
+	@echo "Done"
+
+down:
+	@echo "Stopping compose..."
+	$(DATABASE_COMPOSE) down
+	$(KAFKA_COMPOSE) down
+	$(SERVICE_COMPOSE) down
 	@echo "Done"
 
 build_network:
@@ -34,7 +51,7 @@ build_network:
 	docker network create -d bridge syllabus-network || true
 	@echo "Done" 
 
-build_clean:
+images_clean:
 	@echo "Cleaning untag images..."
 	docker rmi `docker images | grep "<none>" | awk {'print $3'}`
 	@echo "Done"
