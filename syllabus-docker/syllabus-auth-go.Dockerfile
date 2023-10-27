@@ -1,10 +1,4 @@
-#BUILD
-FROM golang:1.21.0-alpine3.18 AS build
-WORKDIR /app
+FROM alpine:3.18.4
 
-COPY syllabus-auth-go/ ./
-COPY syllabus-auth-go/.env-docker ./.env
-RUN go mod download
-
-RUN go build -o auth-go .
-CMD ["./auth-go"]
+COPY app/app-auth /app/auth
+CMD ["/app/auth"]

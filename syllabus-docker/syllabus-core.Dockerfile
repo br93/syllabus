@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jre-alpine
-COPY app/app-settings-batch.jar app/batch.jar
-COPY syllabus-docker/secrets/eureka_server_mysql_secret_config.sh /tmp/secret_config.sh
+COPY app/app-core.jar app/core.jar
+COPY syllabus-docker/secrets/eureka_server_secret_config.sh /tmp/secret_config.sh
 
 RUN apk upgrade --update-cache --available && \
     apk add openssl && \
@@ -8,4 +8,4 @@ RUN apk upgrade --update-cache --available && \
 RUN chmod +x /tmp/secret_config.sh
 
 ENTRYPOINT ["/tmp/secret_config.sh"]
-CMD ["java", "-jar", "/app/batch.jar"]
+CMD ["java", "-jar", "/app/core.jar"]
